@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphabounce 源码参考 · 原版 vs Eternal-Twin 重写</title>
+<style>
+  :root{
+    --bg:#0f1320; --panel:#171c2e; --panel2:#1f2740; --ink:#e8ecf6; --muted:#9aa6c4;
+    --line:#2b3454; --accent:#5b8cff; --accent2:#27c2a0; --warn:#ffb454; --red:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0f1a,#0f1320);color:var(--ink);
+    font-family:"Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;padding:32px}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-size:28px;margin:0 0 6px}
+  .sub{color:var(--muted);margin-bottom:24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;
+    box-shadow:0 8px 30px rgba(0,0,0,.25)}
+  h2{font-size:20px;margin:0 0 12px;color:#fff;border-left:4px solid var(--accent);padding-left:10px}
+  h3{font-size:15px;color:var(--accent2);margin:18px 0 8px}
+  code{background:var(--panel2);padding:2px 7px;border-radius:6px;font-size:13px;color:#cfe0ff;
+    font-family:"JetBrains Mono",Consolas,monospace}
+  pre{background:#0b0f1a;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-size:13px;color:#d6e2ff}
+  pre .c{color:var(--muted)} pre .k{color:var(--warn)} pre .f{color:#7fd1ff}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;background:var(--panel2)}
+  tr:hover td{background:rgba(91,140,255,.06)}
+  .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:20px;margin:2px 4px 2px 0}
+  .t-orig{background:rgba(255,180,84,.15);color:var(--warn)}
+  .t-et{background:rgba(39,194,160,.15);color:var(--accent2)}
+  .tree{font-family:"JetBrains Mono",Consolas,monospace;font-size:13px;white-space:pre;color:#bcd0ff;
+    background:#0b0f1a;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto}
+  .tree .d{color:#7fd1ff} .tree .x{color:var(--muted)}
+  .path{color:var(--muted);font-size:13px}
+  ul{margin:6px 0 6px 2px;padding-left:18px}
+  li{margin:4px 0}
+  .note{background:rgba(255,180,84,.08);border:1px solid rgba(255,180,84,.3);border-radius:10px;padding:12px 14px;color:#ffd9a3;font-size:13px}
+  a{color:var(--accent)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Alphabounce 源码参考手册</h1>
+  <div class="sub">原版 Motion Twin（Haxe → Flash SWF） 与 社区重写 Eternal-Twin（Haxe + TS/Node）的对照</div>
+
+  <div class="card">
+    <h2>① 仓库地图（你本地已克隆三份）</h2>
+    <table>
+      <tr><th>用途</th><th>本地路径</th><th>来源</th></tr>
+      <tr><td><span class="tag t-orig">原版子目录</span> 仅 Alphabounce</td><td><code>D:\Project\Self\alphabounce\</code></td><td>GitHub <code>motion-twin/WebGamesArchives</code> 的 <code>Alphabounce/</code></td></tr>
+      <tr><td><span class="tag t-orig">完整官方存档</span> 27 个游戏</td><td><code>D:\Project\Self\WebGamesArchives\</code></td><td>GitHub <code>motion-twin/WebGamesArchives</code>（≈3.3 GB）</td></tr>
+      <tr><td><span class="tag t-et">开源重写</span> 从零重写</td><td><code>D:\Project\Self\EternalTwin-Alphabounce\</code></td><td>GitLab <code>eternaltwin/alphabounce/alphabounce</code>（≈62 MB）</td></tr>
+    </table>
+    <p class="path">⚠ 注意：GitLab 上 <code>eternal-twin/eternal-twin</code> 仓库里的 <code>alphabounce/</code> 只是原版 <code>ab_game.swf</code> 的<b>镜像存档</b>（无源码），真正的重写在 <code>eternaltwin/alphabounce/alphabounce</code>。</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2><span class="tag t-orig">原版</span>目录结构</h2>
+      <div class="tree"><span class="d">alphabounce/</span>
+├─ <span class="d">client/</span>            <span class="x"># 游戏客户端(Haxe)</span>
+│  ├─ <span class="d">src/</span>           <span class="x"># 游戏逻辑 .hx</span>
+│  │  ├─ Manager.hx    <span class="x"># 主入口 main()</span>
+│  │  ├─ Game.hx Block.hx Bouncer.hx
+│  │  ├─ Level.hx Element.hx Event.hx
+│  │  ├─ navi/ lander/ el/ ev/ fx/  <span class="x"># 子模块</span>
+│  │  ├─ Api.hx Cs.hx Text*.hx Sound.hx
+│  │  └─ PrepareTexts.hx
+│  ├─ <span class="d">fla/</span> swf/ bmp/ <span class="x"># 美术/SWF</span>
+│  ├─ client.hxml prod.hxml
+│  ├─ Makefile swfmake.xml
+├─ <span class="d">com/</span>             <span class="x"># 共享数据/协议</span>
+│  ├─ Protocol.hx PlayerInfo.hx
+│  ├─ MissionInfo.hx ShopInfo.hx ZoneInfo.hx
+│  └─ *.data          <span class="x"># 嵌入资源</span>
+├─ <span class="d">design/fla/</span>      <span class="x"># Flash 设计源</span>
+└─ <span class="d">web/</span>             <span class="x"># web 包装/i18n/xml</span></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="tag t-et">重写</span>目录结构</h2>
+      <div class="tree"><span class="d">alphabounce/</span>
+├─ <span class="d">common/</span>          <span class="x"># 前后端共享(Haxe/TS)</span>
+│  ├─ src/  README.md
+├─ <span class="d">backend/</span>         <span class="x"># Node 服务端</span>
+│  ├─ <span class="d">src/</span>           <span class="x"># REST API + HTML 渲染</span>
+│  ├─ build.hxml parse.js README.md
+│  └─ package.json
+├─ <span class="d">frontend/</span>        <span class="x"># 浏览器游戏</span>
+│  ├─ <span class="d">src/</span>           <span class="x"># 游戏代码(PixiJS)</span>
+│  ├─ build.hxml package.json
+├─ compose.yaml        <span class="x"># Docker/Podman</span>
+├─ haxelib.json        <span class="x"># Haxe 依赖</span>
+├─ package.json yarn.lock
+├─ LICENSE.md          <span class="x"># AGPL-3.0</span>
+└─ TODOLIST.md         <span class="x"># 开发中的 bug</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>② 构建 / 运行方式</h2>
+    <div class="grid">
+      <div>
+        <h3><span class="tag t-orig">原版（难以独立构建）</span></h3>
+        <pre><span class="c"># 构建命令（来自 Makefile）</span>
+haxe prod.hxml
+cp swf/client.swf ../web/www/swf/game.swf
+
+<span class="c"># prod.hxml 关键参数</span>
+-swf swf/client.swf
+-swf-lib swf/gfx.swf   <span class="c"># 依赖美术库</span>
+-main Manager
+-cp src -cp ../com
+-swf-version 8 --flash-strict
+-D prod
+-cmd swfmake          <span class="k"># 需外部 swfmake 工具</span></pre>
+        <p class="note">依赖外部 <code>mt</code> Haxe 库与 <code>swfmake</code> 命令（不在仓库内）；产物是 Flash SWF，需旧版 Flash Player / Ruffle 才能运行；<b>不含服务端代码</b>。</p>
+      </div>
+      <div>
+        <h3><span class="tag t-et">重写（现代可一键运行）</span></h3>
+        <pre><span class="c"># 本地环境</span>
+haxelib install haxelib.json --always
+yarn install --immutable
+yarn run start        <span class="c"># 构建+启动服务</span>
+
+<span class="c"># 或用容器（需 Redis）</span>
+docker compose --file ./compose.yaml up --build
+<span class="c"># 镜像：registry.gitlab.com/</span>
+<span class="c">#   eternaltwin/alphabounce/alphabounce:latest</span></pre>
+        <p class="note">技术栈：Haxe 4.3.7 + Node 24 + Yarn + Redis；渲染用 PixiJS；构建由 <code>build.hxml</code> + Node 脚本编排，浏览器直接可玩。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>③ 实现差异对照</h2>
+    <table>
+      <tr><th>维度</th><th><span class="tag t-orig">原版 Motion Twin</span></th><th><span class="tag t-et">Eternal-Twin 重写</span></th></tr>
+      <tr><td>语言</td><td>Haxe（编译为 AVM1/SWF）</td><td>Haxe + TypeScript/Node</td></tr>
+      <tr><td>渲染</td><td>Adobe Flash / MovieClip</td><td>PixiJS（WebGL/Canvas）</td></tr>
+      <tr><td>服务端</td><td>无（仅客户端+数据定义）</td><td>完整 Node 后端（REST API + HTML）</td></tr>
+      <tr><td>数据库</td><td>—</td><td>Redis</td></tr>
+      <tr><td>部署</td><td>Flash SWF（已淘汰）</td><td>Docker/OCI 容器，浏览器直跑</td></tr>
+      <tr><td>许可证</td><td>存档，未明示开源协议</td><td>AGPL-3.0-or-later</td></tr>
+      <tr><td>网络协议</td><td><code>com/Protocol.hx</code> 定义请求/响应枚举</td><td>REST API（backend 重写）</td></tr>
+      <tr><td>代码组织</td><td><code>client/src</code> 单块 + <code>com</code> 共享</td><td><code>common/backend/frontend</code> 三层分离</td></tr>
+      <tr><td>状态</td><td>2007 年发布，已停更</td><td>开发中（TODOLIST 列有落地崩溃等 bug）</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>④ 建议阅读入口</h2>
+    <div class="grid">
+      <div>
+        <h3><span class="tag t-orig">原版</span></h3>
+        <ul>
+          <li><code>client/src/Manager.hx</code> — 主入口、场景/菜单切换</li>
+          <li><code>client/src/Game.hx</code>、<code>Block.hx</code>、<code>Bouncer.hx</code> — 核心玩法</li>
+          <li><code>com/Protocol.hx</code> — 网络协议与玩家数据结构</li>
+          <li><code>com/ZoneInfo.hx</code>、<code>MissionInfo.hx</code> — 关卡/任务数据</li>
+        </ul>
+      </div>
+      <div>
+        <h3><span class="tag t-et">重写</span></h3>
+        <ul>
+          <li><code>README.md</code> — 环境/构建/部署总览</li>
+          <li><code>frontend/src/</code> — 浏览器游戏逻辑（对照原版 Game/Block）</li>
+          <li><code>backend/src/</code> — 服务端 API（替代原版 Protocol）</li>
+          <li><code>common/src/</code> — 共享类型/逻辑</li>
+          <li><code>TODOLIST.md</code> — 当前未完成项，定位改造点</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    一句话总结：原版是「Haxe 写、Flash 跑、只有客户端」的历史源码；Eternal-Twin 是「同样用 Haxe、但加了 Node 后端 + Redis + PixiJS 渲染、AGPL 开源、浏览器可玩」的现代重写。研究玩法逻辑看原版 <code>client/src</code>，要改造/运行看重写版。
+  </div>
+</div>
+</body>
+</html>
