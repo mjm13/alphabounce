@@ -1,0 +1,112 @@
+# AGENTS.md — Alphabounce 安卓复刻
+
+> [agents.md](https://agents.md/) 格式。本文每轮进上下文，因此只放**每轮都用得到**的运行时事实与可执行命令；领域细节走渐进披露（`docs/llms.txt` 文档路由、`.cursor/rules/*`、skills）。xijia 门禁见 `.cursor/rules/00-workflow.mdc`。Gate-3 **有限度**增量维护（先就地替换，再考虑新增）；未命中写 `Living Docs: no-op`。
+
+<!-- 追加限度（勿删；细则见 docs/process/knowledge-maintenance.md）：1) 同一事实已在文中 → 改写原句，不新增段落；2) 仅单一领域/阶段需要 → 写入对应 doc 或 rule，此处只留一行指针；3) 新增 ≥3 行时同轮评估能否下沉等量旧内容；4) 禁止镜像目录树、代码文件清单、文档树路由。 -->
+
+## Project overview
+
+Alphabounce 是 Motion Twin 物理打砖块游戏《AlphaBounce》的安卓复刻（Godot 4 + GDScript，纯单机）。目标：在安卓平台还原核心玩法（球/挡板/砖块物理、增益减益、关卡生成、经济与元进度）。
+
+- **Initial modules**：游戏核心玩法（球/挡板/砖块物理与碰撞）、关卡数据加载
+- **Stack**：Godot 4（GDScript/C#）+ 安卓导出；纯单机，无后端/数据库
+- **Maintainer**：meijianming
+- **Backend root**：无
+- **Frontend root**：android（若无前端写「无」）
+- **UI reference**：<待补充：原型路径；无则写「无」>
+- **能力 → 代码坐标**：<待补充，或链接 `docs/capability-map.md`>（目录与入口读代码即得，本文不镜像）
+
+## Dev environment tips
+
+- 命令须在对应子项目根目录执行（后端 `无/`、前端 `android/`）
+- 若使用数据库：开发库与集成测试库须隔离（集成测勿连开发库清数据）
+- 本地全栈：后端与前端通常需两个终端；前端 dev server 代理至后端 API
+- Git 长期分支约定见 `.cursor/rules/46-git-branching.mdc`（init 后默认 `dev` / `main`）
+- 日常需求入口：`/xijia:start`
+
+## Build and test commands
+
+> 仅真实可执行命令；由 inbox 工程基线 / 运行基线需求 Gate-3 填实。
+
+```bash
+# Godot 二进制（本地工具链，位于 tools/godot/，不入库；详见 android/export_presets.cfg 的 SDK/JDK 路径）
+GODOT=tools/godot/Godot_v4.7.1-stable_win64.exe
+
+# 工程校验（解析所有脚本/场景，无报错即 exit 0）
+$GODOT --headless --path android --quit
+
+# 开发预览（PC 窗口运行主场景）
+$GODOT --path android
+
+# 安卓导出 debug APK（SDK/JDK 路径已写死在 android/export_presets.cfg）
+$GODOT --headless --export-debug "Android" android/build/Alphabounce-debug.apk
+
+# 安卓导出 release APK
+$GODOT --headless --export-release "Android" android/build/Alphabounce-release.apk
+
+# 安装到设备/模拟器（adb 来自 Android SDK platform-tools）
+adb install -r android/build/Alphabounce-debug.apk
+adb shell am start -n org.godotengine.alphabounce/org.godotengine.godot.GodotApp
+```
+
+**CI**：`.github/workflows/ci.yml`（init 占位）；命令须与上文一致。未用 GitHub Actions 时在 `docs/process/release-checklist.md` 声明「仅本地 CI」。
+
+## Testing instructions
+
+- 改代码后运行上文 **Build and test commands** 中对应 test/lint/build，直至通过再提请验收
+- 测试栈：Godot 内置校验（`godot --headless --path android --quit` 解析工程）+ 手动 PC 预览；GDScript 轻量，无独立单测框架，以工程校验与手动验证为主
+- 约定：Gate-1 切片实现期间按需求切片 `Test:`/`Done:` 测；**全量测试**仅最后一切片或 regression
+- Mock 边界：允许 mock 外部接口；本项目无后端/DB，暂无 DB mock 约束
+
+## Agent coding behavior（实现阶段）
+
+本节只写**本项目特有**的实现期约定，范围为已获 Gate-1 批准后的写代码 diff；Gate-0~3、破坏性 DB、发布门禁优先。通用编码素养与变更边界见 `.cursor/rules/41-change-boundary.mdc`。
+
+**取舍顺序**（停在第一个可行项）：Gate-1/AC 范围内？→ 代码库已有可复用？→ 标准库或平台内置？→ 已安装依赖？→ 最小 diff。**不新增**未在 Gate-1 批准的依赖。
+
+**不简化**：信任边界校验、防数据丢失的错误处理、安全与脱敏、Gate-2 要求的测试与 UI 证据、comment-sync 明确要求的内容。
+
+**Bug 修复**：优先在共享函数/服务处修一次（查全部 caller），不顺手重构无关代码。
+
+### Gate-1 切片 verify 顺序（实现阶段）
+
+1. **禁止**在首个切片未完成前运行全量测试（见 **Build and test commands** 中全量命令）
+2. **顺序**：单文件/单模块测 → 前端单 Spec 测 → 最后全量 + guard（如 `pipeline_guard --check-ui-pattern`）
+3. 测试命令须**前台**执行（Shell `block_until_ms` ≥ 90000）；禁止 PowerShell `| Select-Object -Last N` 作为唯一输出源
+4. 组件测试档位禁止后台 dev server；Playwright/集成档位才按需启停 server
+
+DB bootstrap（如 `init_db`）改动后，先跑一个最小 smoke，再扩全量。
+
+## Observability
+
+> 字段语义见 `.cursor/rules/20-backend.mdc`「日志输出」。init 后在此填写项目 schema（本节为该 schema 的 SSOT）。
+
+- **Log format**：<待补充>
+- **Required fields**：<待补充，如 ts / level / trace_id>
+- **Correlation**：<待补充，入站头名、向下游传播方式>
+- **Redaction**：<待补充，统一 redaction 落点>
+
+## Security
+
+- **Secrets**：真实密钥不入库；`android/debug.keystore` 密码见 `android/keystore.local.env`（已 gitignore）；`tools/`（Godot/JDK/Android SDK）工具链不入库，仅本地构建用
+- **High-risk operations**：清库/重置等见 `.cursor/rules/22-db-destructive-safety.mdc`；本项目额外项 <待补充>
+- **Do not modify without approval**：见 `.cursor/rules/00-workflow.mdc`「Approval Gates」；本项目额外项 <待补充>
+
+## Commit and PR instructions
+
+- 提交规范：遵循 `.cursor/skills/xijia-git-commit` 技能
+- Gate-2 收尾：`python .cursor/hooks/pipeline_guard.py --check-release --req <requirement-file>`
+- Gate-3 归档：`python .cursor/hooks/pipeline_guard.py --check-closeout --req <shipped-requirement>`
+- 发布前审计：`python .cursor/hooks/pipeline_guard.py --check-release-readiness`
+- 合并前检查：上文 **Build and test commands** 的 test / lint / build 全绿
+
+## Xijia workflow
+
+| 场景 | 入口 |
+| --- | --- |
+| 推进需求（默认） | `/xijia:start` 或自然语言 → `xijia-feature-pipeline` |
+| 工程基线（init 后首批） | inbox 首个种子需求（通常后端→前端→运行基线） |
+| 登记缺陷 | `/xijia:defect` |
+| 项目速览 | `/xijia:overview` |
+
+其余入口（`/xijia:adopt`、`/xijia:prd`、`/xijia:release`、`/xijia:backfill-index`、`/xijia:status`）与阶段对照见 `docs/process/project-lifecycle.md`。

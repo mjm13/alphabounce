@@ -1,0 +1,75 @@
+# 软件项目生命周期（Alphabounce 安卓复刻）
+
+> 活文档：说明本项目从冷启动到发布的阶段划分，以及与 xijia 命令/规则的对应关系。init 生成骨架；Gate-3 按实际栈与流程增量修正。
+
+## 阶段总览
+
+| 阶段 | 典型产出 | xijia 入口 / 规则 |
+| --- | --- | --- |
+| 项目初始化（空仓库） | 文档、栈技能、空目录、工程基线种子需求 | `/xijia:init` → [`05-project-init.mdc`](../../.cursor/rules/05-project-init.mdc) |
+| **历史项目接入** | manifest、扫描草稿、Adoption Readiness | `/xijia:adopt` → [`05b-project-adopt.mdc`](../../.cursor/rules/05b-project-adopt.mdc) |
+| 工程基线实现 | 可跑前后端骨架、AGENTS 真实命令 | `/xijia:start` 推 inbox `*-后端/前端工程初始化` |
+| 空目录补齐 | 仅空 backend/frontend（非冷启动） | `/xijia:init` supplement-only（code-shell 阶段） |
+| PRD→需求 | inbox 需求文档、Gate-0 闭环 | `/xijia:prd` → `xijia-prd-to-requirement`（建议工程基线 Gate-3 后） |
+| 需求研发 | 实现、verify、Gate-0~3 | `/xijia:start` → [`00-workflow.mdc`](../../.cursor/rules/00-workflow.mdc) |
+| 集成 / CI | 流水线、构建证据 | `.github/workflows/ci.yml`；命令见 `AGENTS.md` |
+| 发布 | dev→main、变更说明、冒烟 | `/xijia:release` → [`47-release-lifecycle.mdc`](../../.cursor/rules/47-release-lifecycle.mdc) |
+| 运维 / 事故 | Runbook、复盘 | [`incident-response.md`](incident-response.md) |
+| 缺陷 / hotfix | defect inbox、修复、回合 dev | `/xijia:defect` → `/xijia:start`；[`46-git-branching.mdc`](../../.cursor/rules/46-git-branching.mdc) |
+| 知识沉淀 | domain/ADR/patterns/capability-map | Gate-3 `xijia-sync-knowledge` |
+| 能力索引（活文档） | Gate-3 动态合并 `docs/capability-map.md` | `extract_capability_index.py` |
+| 项目速览 | 模块/能力/BC 关系只读聚合 | `/xijia:overview` |
+| 索引冷启动回填 | shipped 历史一次性 merge | `/xijia:backfill-index` |
+
+## 与「单需求闭环」的关系
+
+- **Gate-2**：需求级验收（本需求 AC 是否满足）。
+- **Release Gate**：发布级验收（dev 集成的多个需求是否可上线）——见 [`release-checklist.md`](release-checklist.md)。
+- **需求完成 ≠ 可发布**：须单独走 `/xijia:release` 与 Release Gate 人审。
+
+## 默认路径（目标态）
+
+```
+/xijia:init
+  → docs-render + skills + code-shell + 14 位时间戳种子需求
+  → /xijia:start 20260818205718-后端工程初始化
+    → （20260818205718-前端工程初始化）
+    → （20260818205718-本地运行与CI基线）
+  → PRD转inbox / /xijia:defect → /xijia:start（业务循环）
+  → CI 绿 → /xijia:release → dev 合并 main → 上线后 smoke
+```
+
+历史多模块默认路径：
+
+```
+/xijia:adopt scaffold → preflight → discover → content → verify
+  → /xijia:prd 或 /xijia:start（业务循环）
+```
+
+## 未纳入基座（项目外）
+
+- 产品发现 / 路线图编写（消费 backlog + 外源 PRD）
+- 完整产品管理工具（Jira/Linear 等）
+
+## 维护
+
+- 流程变更：更新本文件 + 相关 `.cursor/rules/`；重大变更写 ADR。
+- 栈相关命令：只改 `AGENTS.md`，不在基座规则写死栈名。
+
+## 技能地图（常用入口）
+
+| 意图 | 技能 / 命令 |
+| --- | --- |
+| 初始化（空仓库） | `xijia-project-init` / `/xijia:init` |
+| 历史接入 | `xijia-project-adopt` / `/xijia:adopt` |
+| 空目录补齐 | `xijia-project-init` supplement-only / `/xijia:init` |
+| 推进需求 | `xijia-feature-pipeline` / `/xijia:start` → `xijia-ops-pipeline` |
+| PRD→inbox | `/xijia:prd` → `xijia-prd-to-requirement` |
+| 缺陷登记 | `/xijia:defect` → `xijia-defect-to-requirement` |
+| Gate-3 | `xijia-sync-knowledge` |
+| 项目速览 | `/xijia:overview` → `xijia-project-overview` |
+| 索引回填 | `/xijia:backfill-index` → `xijia-backfill-index` |
+| 发布 | `xijia-release` / `/xijia:release` |
+| 状态 | `/xijia:status` |
+
+其余 OpenSpec / Superpowers 技能按需加载；绿黄档勿单独跳 `opsx-*` 除非红档子步骤。

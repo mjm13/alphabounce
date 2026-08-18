@@ -1,0 +1,14 @@
+schema: spec-driven
+
+context: |
+  Project: Alphabounce 安卓复刻
+  Goal: 将 Motion Twin 的 2D 物理打砖块游戏 Alphabounce 复刻到安卓平台；首里程碑交付可玩 MVP demo（单机、无后端）。
+  Modules: 游戏核心玩法（球/挡板/砖块物理与碰撞）、关卡数据加载
+  Stack: Godot 4（GDScript/C#）+ 安卓导出；纯单机，无后端/数据库
+
+rules:
+  design:
+    - Must include scope boundaries: In Scope / Out of Scope / Open Questions & Deferred
+    - Must state architecture choice for this change and why
+  tasks:
+    - Keep tasks atomic and verifiable

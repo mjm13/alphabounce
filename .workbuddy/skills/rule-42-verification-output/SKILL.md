@@ -1,0 +1,37 @@
+---
+name: rule-42-verification-output
+description: "验证输出门禁（完成声明、verify、Gate-2 证据、收尾阶段加载）"
+agent_created: true
+---
+
+# 目标
+
+约定本项目「什么算做完」中**模型拿不到的那部分**：验收包形态、审批人身份、UI 证据档位、编码协议。
+
+验收包应含哪些字段，SSOT 在 `xijia-ops-pipeline/references/closeout-steps.md` 步骤 3；本规则不复述。
+
+# 约束
+
+1. 若触达核心业务代码，verify 阶段调用 `xijia-comment-enhancer`（见 `44-comment-sync.mdc`）。
+2. verify 阶段给出 `Code Review` 结果（done 或 skipped+reason）。
+3. 给出 `xijia-quality-judge` 判定（`pass|revise`），`revise` 不得宣告完成。
+4. **单回合单门禁**：verify 先输出极简状态块；「现在请你」仅对应当前门禁一条用户动作。Gate-2 验收摘要**仅当** `当前门禁=Gate-2` 时生成，且放在「下一步命令」之后。模板见 `xijia-ops-pipeline/references/session-recovery.md`。
+5. **下一步命令（硬约束）**：verify / `/xijia:start` 须用 session-recovery 极简模板：`### 下一步命令` 下固定 `Agent：` / `你：`。不得用 AC 检查单、`--check-release` 全文或默认展开的 Intake/探针详情代替。
+6. **审批人身份（Gate-0 / Gate-1 / Gate-2 硬约束）**：
+   - **仅 `待*` 态**不写审批人/日期；**其它 Gate 状态**须写 `审批人` + 日期。
+   - 通过态：Gate-0=`已通过`，Gate-1=`已批准`，Gate-2=`已验收`；**审批人 = `git config user.name`**（可选 email）。
+   - **禁止**泛称「用户」「人工」「验收人」。细则见 `docs/pitfalls/gate-approver-git-identity.md`。
+7. **UI 运行时证据（按 Gate-1 档位）**：读取 frontmatter `UI验收证据`（Gate-1 触达 UI 时用户确认；默认 **组件测试**）。三个档位取值 `组件测试｜Playwright｜集成测试` 是 guard 校验的**契约枚举**（`parse_frontmatter_ui_evidence`），不是技术栈基线约束；具体引擎与命令见 `AGENTS.md`。
+    - `组件测试`：组件测 + 验收记录写命令/结果（可含 `frontend/tests/`）；`lint`/`build` 不构成 UI AC 证据。
+    - `Playwright`：须已执行的 `webapp-testing` 可复跑记录与截图/断言产物。
+    - `集成测试`：须全栈/API+UI 联调可复跑命令与证据（如 `parity`/`with_server`/`verify-frontend`）。
+    禁止以人工点测或仅浏览器 MCP 手点作为 Gate-2 UI AC 正式证据。命令见 `xijia-frontend-test` / `gate1-plan-template.md`「UI 验收证据约定」。
+8. **Gate-1 切片 verify 顺序**：实现阶段按 `AGENTS.md`「Gate-1 切片 verify 顺序」执行（单文件/Spec 优先，全量测仅最后一项；后端单测前台执行；组件测试档位禁止后台 dev server）。
+9. **Windows UTF-8 / BOM（硬约束）**：禁止经破坏编码的文本管道改写源码/文档；协议见技能 `xijia-safe-file-write` 与 `docs/pitfalls/windows-powershell-utf8-bom.md`。新建/改写 inbox requirement 同样须加载该技能。
+10. **Gate-2 签字后同轮 Gate-3（硬约束）**：Gate-2 留痕后 **同轮**输出 Gate-3 执行摘要（trigger/preflight/sync/Move/closeout），禁止仅回复「下一步请确认 Gate-3」。`--check-release` blocking 在 Gate-3 链内修复，不得作为停轮理由。
+
+# 输出要点
+
+- 必出极简状态块 + `### 下一步命令`（完整样例见 session-recovery）。
+- 本回合须留痕时，在其后附「验证证据」：已执行命令、未执行项、Comment Sync、Quality Judge、release guard 等（字段清单见 `xijia-ops-pipeline/references/closeout-steps.md`）。
+- 单需求 verify：本地可执行命令证据即可。批次发布另须 `/xijia:release` + `check-release-readiness`。

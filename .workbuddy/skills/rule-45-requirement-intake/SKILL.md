@@ -1,0 +1,92 @@
+---
+name: rule-45-requirement-intake
+description: "需求完整性闸门（Gate-0）schema 契约；程序细节见 .cursor/templates/requirements/gate0-intake.md [globs:- docs/requirements/**]"
+agent_created: true
+---
+
+# 文件命名
+
+- 格式：`<YYYYMMDDHHMMSS>-<简述>.md`（14 位时间戳到秒，例：`20260720100730-用户导入批量校验.md`、`20260810140100-API编排.md`）
+- 简述**优先中文**，可含英文/缩写/数字；创建于 `inbox/`，归档至 `shipped/`。
+- **无需序号连续/无 counter**：秒级时间戳天然唯一可排序；批量创建同秒时后一篇秒数 +1。ownership 由 git author 承载，不进文件名。
+- 仅接受 14 位时间戳前缀；三位序号前缀不兼容。
+- 重复前缀兜底：`python .cursor/hooks/pipeline_guard.py --check-req-ids`（扫 inbox∪shipped 查重复 14 位前缀）。
+- **写文件协议**：新建或改写 requirement（含 PRD 多篇落盘、Gate-0 回写）前须加载技能 `xijia-safe-file-write`；禁止用 PowerShell/`python <<` heredoc 写 md。
+
+# 文档结构（guard 可解析）
+
+模板：`.cursor/templates/requirements/requirements-template.md`（索引见 `.cursor/templates/README.md`）
+
+| 章节 | 门禁 |
+| --- | --- |
+| YAML properties | Gate-0/1/2（`分级理由`、`类型判型结论`、`DDD主类`、Gate 状态；**仅人工确认通过后**追加审批人/日期；审批人须 git user.name，禁「用户」） |
+| `# Gate-0 …` / `## 原始诉求` / `## 歧义登记` | Gate-0（原话逐字保留；多义表述须至少两种读法 + 用户文字确认；静态原型不得确认动态行为） |
+| `## 业务目标` / `## 用例 / 用户故事` | Gate-0（业务/混合非空；技术/缺陷可写 `不适用（类型=技术\|缺陷）`） |
+| `## 范围与切片` | Gate-0（In Scope 只写**能力边界**，不写 GWT；Out of Scope 写排除原因与重开触发；含 OQ-/DEF-） |
+| `## 约束引用` | intake 弱校验（Agent 检索写入具体 path；流程文件不得硬编码 path 清单；UI pattern → Gate-1 `AC-UI-*`） |
+| `## 数据流闭环表` | Gate-0 **硬**（行名用能力简述，与 In Scope 一致） |
+| `## 原型对齐与偏离` | Gate-0 |
+| `# Gate-1 …` / `## 页面布局预览`（可选） / `## 验收标准` / `## 实现方案` | Gate-1（无原型+UI 时写布局预览；**验收标准为可执行验收真相源**；实现方案含复用表/切片/回归） |
+| `# Gate-2 …` / `## 验收记录` | Gate-2（一屏验收包；引用 Gate-1 `AC-*`，不重复定义验收标准） |
+| `# Gate-3 …` / `## 实现记录与沉淀` | Gate-3（Experience Reuse / Capability / Living Docs / Flow / Patterns / Pitfalls / **Domain**） |
+
+通用、技术、缺陷与 seed 模板均使用上述 Gate 顺序。requirement 仅支持「H1 需求名 + H1 Gate-0..3 + H2 具体环节」；H1 Gate 必须严格按 `Gate-0 → Gate-1 → Gate-2 → Gate-3` 各出现一次，不允许额外 H1；每个必需 H2 必须位于对应 Gate 父层，可选 H2 也必须位于某个 Gate 下。具体环节必须为 H2，旧 H1 环节标题不兼容。按需片段见 `.cursor/templates/requirements/section-fragments.md`；Gate-1 补齐见 `.cursor/templates/requirements/gate1-plan-template.md`。
+
+**禁止**另建独立 H1「目标与非目标」「验收标准」「任务分解」。Gate-1 下 H2 `## 验收标准` **必须**存在（可执行真相源）。`类型=混合|业务` 须在「范围与切片/领域影响」记录 BC、术语、INV；`类型=技术|缺陷` 须 `DDD主类=D`。
+
+# 追溯规则
+
+| artifact | 规则 |
+| --- | --- |
+| Gate-0 In Scope | 能力边界 bullet，**无** AC-* GWT |
+| Gate-1 `## 验收标准` | 每条 In-Scope 能力 ≥1 条 `AC-*` + 反例；切片拆解 `[AC-*]` 映射 |
+| 数据流闭环表 | 行名 = 能力简述（与 In Scope 一致） |
+| Gate-2 验收记录 | AC 列只引用 Gate-1 编号 |
+| 约束引用 → AC-UI | UI pattern 命中时在 **Gate-1** 写 `AC-UI-*` |
+
+# Gate-0 verdict
+
+`已通过 | 部分通过 | 已驳回`（初始草稿 `待确认`）— 程序维度、二次确认、Intake Score、类型判型见：
+
+**`.cursor/templates/requirements/gate0-intake.md`**
+
+- **部分通过**：仅当歧义登记 / 数据流闭环表 / Open Questions 中仍有待确认或未闭环。
+- **DEF-\***：本期明确排除/延期，**不**因存在 DEF 而标部分通过。
+
+PRD 转需求流程见 `xijia-prd-to-requirement`（含 Step 1.2 原型硬停、1.5 codegraph、1.7 capability-map）。**PRD 落盘时按分档写满 Gate-1**（无原型+UI 时 **`## 页面布局预览`** → 验收标准+实现方案；红档说明 OpenSpec，见 `.cursor/templates/requirements/gate1-by-tier.md`）。`--check-plan` fail 时才由 A.0.5 增量补全。
+
+# frontmatter（判型时必填）
+
+- `分级`：绿 | 绿-轻量 | 黄 | 红
+- `类型`：业务 | 技术 | 混合 | 缺陷
+- `状态`：待处理 | 已交付 | 已归档 | 积压
+- `openspec变更`：`分级=红` 时必填
+- `分级理由` / `类型判型结论` / `DDD主类`
+- `Gate-0` / `Gate-1` / `Gate-2`：`待确认`/`待批准`/`待验收` 仅写状态；**其它状态**须 `状态:…；审批人:<git user.name>；YYYY-MM-DD`
+- Gate-0 状态取值：`待确认` | `部分通过` | `已通过` | `已驳回`
+
+`分级` / `类型` / `状态` 与 Gate-0/1/2 台账只从 YAML properties 读取；正文分级、判型或 Gate 表不兼容。仅 `--check-intake` / `--check-plan` 显式传入 `--tier` 时允许覆盖缺失的 `分级`。
+
+交互/状态类 AC（写在 Gate-1 `## 验收标准`）必须可证伪：至少一条写明 GIVEN 初态 / WHEN 操作 / THEN 不同末态，并附「反例（本 AC 排除）」。UI 可见行为的 Gate-2 证据须来自已执行的 `webapp-testing` 技能产出的可复跑浏览器记录与截图/断言产物（组件/单元测可作非浏览器补充）；禁止以用户实机确认或人工点测作为正式证据；lint/build 不构成 UI AC 通过证据。引擎与命令见 `AGENTS.md` / `xijia-frontend-test`。
+
+# 机器校验
+
+```bash
+python .cursor/hooks/pipeline_guard.py --check-intake --req docs/requirements/inbox/<file>.md
+python .cursor/hooks/pipeline_guard.py --check-plan --req docs/requirements/inbox/<file>.md
+```
+
+- `--check-intake`：结构 H2 存在 + Gate-0 业务目标/用例内容；Gate-1 验收标准/实现方案**仅验标题**（内容密度留给 plan）。
+- `--check-plan`：Gate-1 验收标准（AC-* + 反例）+ 实现方案（复用/切片/回归）；PRD 落盘后应已可过；红档且 OpenSpec 包齐备可跳过；红档无包按黄档校验。
+
+`green-trivial`：`--tier green-trivial` 且文档以「无数据流」或「无新增数据流」等价措辞声明 `(green-trivial)`；验收标准可写 `不适用（green-trivial）`。
+
+缺陷简化：`类型=缺陷` 且明确声明「缺陷修复无新增数据流」时，可不填闭环表；若改变 Source/Process/Sink，仍须按能力填写闭环表。
+
+# 与证据链
+
+数据来源不明 → `[待确认]`，见 `40-evidence-chain.mdc`。
+
+# Deferred
+
+`DEF-*` / `已驳回` 产出须写入 `docs/requirements/backlog.md` 后方可收尾。存在 DEF 且正文无待确认断点时，Gate-0 应标 `已通过`（非部分通过）。

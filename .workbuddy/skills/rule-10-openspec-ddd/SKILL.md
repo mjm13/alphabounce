@@ -1,0 +1,17 @@
+---
+name: rule-10-openspec-ddd
+description: "OpenSpec 产物中的 DDD 契约约束 [globs:- docs/openspec/**]"
+agent_created: true
+---
+
+# 规则
+
+- 先判定 change type：`business` / `technical` / `hybrid`。
+- **business / hybrid 的业务部分**：`design.md` 必须包含「领域设计」并引用：
+  - 聚合不变量 `INV-xxx`
+  - UL 的 `Aliases to AVOID`
+  - 对应草稿路径 `docs/openspec/changes/<name>/domain/`
+- **technical / UI 壳层 change**：不得虚构领域模型或新限界上下文。
+- `spec.md` 的 AC 使用 EARS：`WHEN <trigger> THE SYSTEM SHALL <behavior>`（复杂条件可补 `IF/WHILE/WHERE`）。
+- 业务术语优先来自 `docs/domain/ubiquitous-language.md`；新增术语写回 change 草稿 UL。
+- 若变更涉及下线能力，使用 `REMOVED Requirements` 并触发人工确认。

@@ -1,0 +1,117 @@
+---
+name: rule-05-project-init
+description: "空仓库初始化规则（仅在 /xijia:init 或冷启动意图时启用）"
+agent_created: true
+---
+
+# 初始化路由规则
+
+当用户意图为以下任一项时，优先进入初始化路径，而不是普通需求路径：
+
+- 初始化项目
+- 从零搭建文档骨架
+- 新项目冷启动
+- 生成 AGENTS/docs 初始结构
+
+对应入口：
+
+- 手动：`/xijia:init`
+- 自动：`xijia-project-init` skill
+
+历史多模块接入见 [`05b-project-adopt.mdc`](05b-project-adopt.mdc) 与 `/xijia:adopt`（**勿**用 init 处理已有代码工作区）。
+
+冷启动主路径（方案 D+）：
+
+```text
+/xijia:init
+  → docs-render（文档基座）
+  → skills-bootstrap
+  → code-shell（空代码目录，合并在 init 内）
+  → seed-bootstrap-reqs（后端 / 条件满足时 前端 / 有 DB 时 运行基线；均用时间戳命名 + frontmatter `种子: true`）
+  → /xijia:start <YYYYMMDDHHMMSS-后端工程初始化>
+```
+
+- 空目录事后补齐：复用 `/xijia:init` 的 **supplement-only** 模式（仅执行 code-shell 阶段；不重复种子化需求）
+
+# 初始化边界
+
+初始化属于技术 change（项目骨架/流程基建），遵循以下边界：
+
+1. 处理文档骨架 + **空代码目录** + **工程基线需求种子化**；**不**实现业务功能，**不**在 init 内直接跑框架 CLI 生成可跑工程
+2. 不覆盖已有文件（默认空仓库模式）；已有非空代码根不种子化「从零工程初始化」
+3. 技术栈必须先确认，再安装技能
+4. 技能安装结果必须可追溯（候选/评分/来源/结果）
+5. 基线规则与技能保持技术栈无关，栈具体测试/实现细节由确认技术栈后安装的技能 + `/xijia:start` 推种子需求提供
+6. 初始化完成前必须通过 `self-check`（文件、frontmatter、入口可用性、漂移扫描）
+7. 任一自检失败状态置为 `blocked`，不得宣告 `done`
+8. Stage 名：`docs-render`（禁止用 `scaffold` 指文档阶段）、`code-shell`、`seed-bootstrap-reqs`
+
+# Guard 与模式
+
+默认模式：`empty-repo`
+
+- 若仓库存在 `docs/` 或 `AGENTS.md`，默认停止并提示改用 `/xijia:start`
+- 仅在用户明确要求时启用 `supplement-only`（仅新增缺失文件）
+- `supplement-only` 不得覆盖任何已存在文件
+
+# 技能安装规则
+
+在用户确认技术栈后，执行技能安装：
+
+0. 默认策略为 `auto install`；仅当用户明确选择 `recommendation-only` 时可跳过安装
+1. 每个技术栈选择评分最高的 2-3 个技能
+2. 评分至少考虑：生态适配、活跃度、社区采用、规范完整度、安装稳定性
+3. 目标路径统一为 `.cursor/skills/`
+4. 若安装工具写入 `.agents/skills/`，必须搬运并校验
+5. 校验 `SKILL.md` frontmatter：`name` 与目录一致
+6. `auto install` 模式下若安装成功数为 0，**允许** init 继续完成（文档骨架仍须交付）；不得因此单独置 `blocked`
+7. 安装结果必须附客观证据：执行命令、成功/失败、失败重试或降级原因
+
+# 初始化交付最小集（必须包含）
+
+- `AGENTS.md`
+- `docs/constitution.md`
+- `docs/README.md`
+- `docs/llms.txt`
+- `docs/decisions/0001-project-bootstrap.md`
+- `docs/domain/README.md`
+- `.cursor/templates/requirements/requirements-template.md`（公共 SSOT；guard 依赖 YAML Gate properties 及 Gate-3 `## 实现记录与沉淀` / Gate-0 `## 约束引用`；索引见 `.cursor/templates/README.md`）
+- `.cursor/templates/requirements/technical-requirement-template.md`
+- `docs/requirements/backlog.md`
+- `docs/requirements/shipped/README.md`
+- `docs/requirements/inbox/README.md`
+- `docs/openspec/config.yaml`
+- `docs/openspec/changes/archive/README.md`
+- `docs/archive/README.md`
+- `docs/process/knowledge-maintenance.md`
+- `docs/process/project-lifecycle.md`
+- `docs/process/release-checklist.md`
+- `docs/process/incident-response.md`
+- `.cursor/templates/requirements/defect-template.md`
+- `.github/workflows/ci.yml`（CI 占位；未使用 GitHub 时在 AGENTS/checklist 声明「仅本地 CI」）
+
+条件交付（空仓且路径新建时）：
+
+- 空代码目录（`backend_path` / 条件满足时 `frontend_path`）
+- inbox 种子（时间戳命名 + frontmatter `种子: true`）：`<时间戳>-后端工程初始化.md`；需要前端时 `<时间戳>-前端工程初始化.md`；需要数据库时 `<时间戳>-本地运行与CI基线.md`
+
+补充约束：
+
+- `docs/architecture.md`、`docs/capability-map.md` 按需创建，不在 init 阶段预生成
+- 上述文件仅允许在需求收尾阶段依据实际改动创建/更新（🔴：`xijia-sync-knowledge`；🟢/🟡：完成收尾的文档同步步骤）
+- `AGENTS.md` 在 init 仅生成占位段；实质运行信息在工程基线需求 **Gate-3** 按触发表增量补充（见 `docs/process/knowledge-maintenance.md`）
+- `docs/domain/*`（context-map / domain-model / ubiquitous-language）按需创建：首个业务 change 收尾时若不存在则创建，init 阶段不预生成；init 的 `docs/domain/` 只含 `README.md`
+- 不创建 `docs/domain/developing/`：🔴 领域草稿置于对应 change 文件夹 `docs/openspec/changes/<name>/domain/`，归档后提升到 `docs/domain/`
+
+# 输出要求
+
+初始化完成后必须输出结构化状态块，包含：
+
+- 阶段（guard/interview/manifest-confirm/docs-render/skills-bootstrap/code-shell/seed-bootstrap-reqs/self-check/done）
+- 模式（empty-repo/supplement-only）
+- 新增清单与跳过清单（含 CodeShell、Seeded Requirements）
+- 技术栈确认结果
+- 技能评分与安装结果
+- 安装证据（命令与关键输出摘要）
+- 自检结果（requiredFiles/frontmatterValidity/entrypointAvailability/driftScan/policyFlowDrift）
+- 下一步（`/xijia:start docs/requirements/inbox/<YYYYMMDDHHMMSS-后端工程初始化>.md`）

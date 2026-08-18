@@ -1,0 +1,15 @@
+# Toolchain (downloaded locally, not committed)
+tools/
+
+# Godot Android build output
+android/build/
+android/.godot/
+android/export.cfg
+
+# Keystore + local secrets
+android/debug.keystore
+android/keystore.local.env
+
+# OS / editor temp
+*.tmp
+.DS_Store

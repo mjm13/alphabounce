@@ -1,0 +1,46 @@
+---
+description: Git 双分支策略（dev/main、checkout、commit、push、merge、发布合并）
+alwaysApply: false
+defends: "Agent 自行 commit/push 或直接合入 main。L3 不可逆动作的授权边界，不到期。"
+---
+
+# Git 分支策略
+
+本仓库**仅保留两条长期分支**：
+
+| 分支 | 职责 |
+| --- | --- |
+| `dev` | 日常开发集成分支；需求实现、缺陷修复、文档/配置变更均在此集成 |
+| `main` | 发布基线；仅接收自 `dev` 的发布合并，**禁止**在 `main` 直接实现需求代码 |
+
+# 开发流转
+
+1. 开始工作前：`git checkout dev`，并与远端 `dev` 同步（`git pull`）。
+2. 实现、测试、Gate 收尾、文档 sync 均在 `dev` 上完成并 push。
+3. **发布**：`dev` 验证通过（Gate-2、测试/构建等可执行证据齐全）后，运行 `/xijia:release` 与 `check-release-readiness`，Release Gate 人审后再将 `dev` 合并入 `main`（详见 `47-release-lifecycle.mdc`）。
+4. **紧急线上修复**：基于 `main` 修复 → 合入 `main` → **必须回合** `dev`，避免发布分支领先开发分支。
+
+# 分支命名（不再使用）
+
+- 不创建长期存在的 `feature/*`、`fix/*`、`hotfix/*`、`spike/*` 远端分支。
+- 探针（spike）可在本地时间盒验证，交付代码统一进入 `dev`。
+- 已合并的历史 feature 分支应删除，仅保留 `dev` 与 `main`。
+
+# 工作区隔离（可选）
+
+并行需求或 `tier=red` 长周期任务若需隔离，可用 `git worktree` 基于 **`dev`** 开独立目录（`.worktrees/<name>/`），而非另建长期 feature 分支：
+
+1. 目录统一为 `.worktrees/<name>`，且 `.worktrees/` 必须被 `.gitignore` 忽略。
+2. worktree 内 commit 最终仍合回 `dev` 交付。
+3. `green-trivial` 小改动可直接在 `dev` 工作区完成，不强制 worktree。
+
+# 安全门禁
+
+1. 切换分支 / 拉代码前先 `git status`；存在用户未提交改动时 stop-and-report，不得覆盖。
+2. `commit` / `push` / 合并到 `main` 需用户显式触发。
+3. 合并到 `main` 前确认 `dev` 上 verify 证据齐全。
+
+# 与现有流程关系
+
+- 需求分级/门禁继续遵循 `00-workflow.mdc` 与 `xijia-ops-pipeline`。
+- 发布级门禁见 `47-release-lifecycle.mdc`；本规则仅定义 Git 分支策略，不替代 Gate-0/1/2 与 Release Gate。
