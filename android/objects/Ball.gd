@@ -14,10 +14,22 @@ func _ready() -> void:
 	shape.shape = RectangleShape2D.new()
 	shape.shape.size = Vector2(SIZE, SIZE)
 	add_child(shape)
-	var vis := ColorRect.new()
-	vis.size = Vector2(SIZE, SIZE)
-	vis.color = Color(1.0, 0.86, 0.25)
-	vis.position = -vis.size / 2.0
+	# 视觉：EternalTwin 主球精灵，等比缩放适配球尺寸。
+	var vis: CanvasItem
+	var sprite := Sprite2D.new()
+	sprite.name = "Vis"
+	sprite.texture = load("res://assets/sprites/ballMain/ball_main0001.png")
+	if sprite.texture != null:
+		var tex := sprite.texture.get_size()
+		var s := SIZE / maxf(tex.x, tex.y)
+		sprite.scale = Vector2(s, s)
+		vis = sprite
+	else:
+		var fb := ColorRect.new()
+		fb.size = Vector2(SIZE, SIZE)
+		fb.color = Color(1.0, 0.86, 0.25)
+		fb.position = -fb.size / 2.0
+		vis = fb
 	add_child(vis)
 
 func launch(dir: Vector2) -> void:

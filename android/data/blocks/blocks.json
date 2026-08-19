@@ -1,0 +1,470 @@
+{
+  "blocks": [
+    {
+      "id": "normal_01",
+      "name": "标准砖-1",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#7CFC00",
+      "drop_letter": true,
+      "drop_letter_char": "A"
+    },
+    {
+      "id": "normal_02",
+      "name": "标准砖-2",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#32CD32",
+      "drop_letter": true,
+      "drop_letter_char": "B"
+    },
+    {
+      "id": "normal_03",
+      "name": "标准砖-3",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#00CED1",
+      "drop_letter": true,
+      "drop_letter_char": "C"
+    },
+    {
+      "id": "normal_04",
+      "name": "标准砖-4",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#1E90FF",
+      "drop_letter": true,
+      "drop_letter_char": "D"
+    },
+    {
+      "id": "normal_05",
+      "name": "标准砖-5",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#FF8C00",
+      "drop_letter": true,
+      "drop_letter_char": "E"
+    },
+    {
+      "id": "normal_06",
+      "name": "标准砖-6",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#FFD700",
+      "drop_letter": true,
+      "drop_letter_char": "F"
+    },
+    {
+      "id": "normal_07",
+      "name": "标准砖-7",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#FF69B4",
+      "drop_letter": true,
+      "drop_letter_char": "G"
+    },
+    {
+      "id": "normal_08",
+      "name": "标准砖-8",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#BA55D3",
+      "drop_letter": true,
+      "drop_letter_char": "H"
+    },
+    {
+      "id": "normal_09",
+      "name": "标准砖-9",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#20B2AA",
+      "drop_letter": true,
+      "drop_letter_char": "I"
+    },
+    {
+      "id": "normal_10",
+      "name": "标准砖-10",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#9ACD32",
+      "drop_letter": true,
+      "drop_letter_char": "J"
+    },
+    {
+      "id": "normal_11",
+      "name": "标准砖-11",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#00FA9A",
+      "drop_letter": true,
+      "drop_letter_char": "K"
+    },
+    {
+      "id": "normal_12",
+      "name": "标准砖-12",
+      "behavior": 0,
+      "hp": 1,
+      "score": 10,
+      "color": "#48D1CC",
+      "drop_letter": true,
+      "drop_letter_char": "L"
+    },
+    {
+      "id": "durable_01",
+      "name": "高耐久砖-1",
+      "behavior": 1,
+      "hp": 2,
+      "score": 20,
+      "color": "#B22222",
+      "drop_letter": true,
+      "drop_letter_char": "M"
+    },
+    {
+      "id": "durable_02",
+      "name": "高耐久砖-2",
+      "behavior": 1,
+      "hp": 3,
+      "score": 25,
+      "color": "#CD5C5C",
+      "drop_letter": true,
+      "drop_letter_char": "N"
+    },
+    {
+      "id": "durable_03",
+      "name": "高耐久砖-3",
+      "behavior": 1,
+      "hp": 4,
+      "score": 30,
+      "color": "#8B0000",
+      "drop_letter": true,
+      "drop_letter_char": "O"
+    },
+    {
+      "id": "durable_04",
+      "name": "高耐久砖-4",
+      "behavior": 1,
+      "hp": 5,
+      "score": 35,
+      "color": "#A52A2A",
+      "drop_letter": true,
+      "drop_letter_char": "P"
+    },
+    {
+      "id": "durable_05",
+      "name": "高耐久砖-5",
+      "behavior": 1,
+      "hp": 2,
+      "score": 20,
+      "color": "#DC143C",
+      "drop_letter": true,
+      "drop_letter_char": "Q"
+    },
+    {
+      "id": "durable_06",
+      "name": "高耐久砖-6",
+      "behavior": 1,
+      "hp": 3,
+      "score": 25,
+      "color": "#FF4500",
+      "drop_letter": true,
+      "drop_letter_char": "R"
+    },
+    {
+      "id": "durable_07",
+      "name": "高耐久砖-7",
+      "behavior": 1,
+      "hp": 4,
+      "score": 30,
+      "color": "#C71585",
+      "drop_letter": true,
+      "drop_letter_char": "S"
+    },
+    {
+      "id": "durable_08",
+      "name": "高耐久砖-8",
+      "behavior": 1,
+      "hp": 5,
+      "score": 35,
+      "color": "#DB7093",
+      "drop_letter": true,
+      "drop_letter_char": "T"
+    },
+    {
+      "id": "durable_09",
+      "name": "高耐久砖-9",
+      "behavior": 1,
+      "hp": 2,
+      "score": 20,
+      "color": "#8B008B",
+      "drop_letter": true,
+      "drop_letter_char": "U"
+    },
+    {
+      "id": "durable_10",
+      "name": "高耐久砖-10",
+      "behavior": 1,
+      "hp": 3,
+      "score": 25,
+      "color": "#9932CC",
+      "drop_letter": true,
+      "drop_letter_char": "V"
+    },
+    {
+      "id": "durable_11",
+      "name": "高耐久砖-11",
+      "behavior": 1,
+      "hp": 4,
+      "score": 30,
+      "color": "#6A5ACD",
+      "drop_letter": true,
+      "drop_letter_char": "W"
+    },
+    {
+      "id": "durable_12",
+      "name": "高耐久砖-12",
+      "behavior": 1,
+      "hp": 5,
+      "score": 35,
+      "color": "#483D8B",
+      "drop_letter": true,
+      "drop_letter_char": "X"
+    },
+    {
+      "id": "unbreak_01",
+      "name": "不可破砖-1",
+      "behavior": 2,
+      "hp": 0,
+      "score": 0,
+      "color": "#759BA4",
+      "drop_letter": false
+    },
+    {
+      "id": "unbreak_02",
+      "name": "不可破砖-2",
+      "behavior": 2,
+      "hp": 0,
+      "score": 0,
+      "color": "#708090",
+      "drop_letter": false
+    },
+    {
+      "id": "unbreak_03",
+      "name": "不可破砖-3",
+      "behavior": 2,
+      "hp": 0,
+      "score": 0,
+      "color": "#2F4F4F",
+      "drop_letter": false
+    },
+    {
+      "id": "unbreak_04",
+      "name": "不可破砖-4",
+      "behavior": 2,
+      "hp": 0,
+      "score": 0,
+      "color": "#556B2F",
+      "drop_letter": false
+    },
+    {
+      "id": "unbreak_05",
+      "name": "不可破砖-5",
+      "behavior": 2,
+      "hp": 0,
+      "score": 0,
+      "color": "#696969",
+      "drop_letter": false
+    },
+    {
+      "id": "unbreak_06",
+      "name": "不可破砖-6",
+      "behavior": 2,
+      "hp": 0,
+      "score": 0,
+      "color": "#808080",
+      "drop_letter": false
+    },
+    {
+      "id": "multi_01",
+      "name": "多段砖-1",
+      "behavior": 3,
+      "hp": 1,
+      "score": 25,
+      "color": "#FFA500",
+      "drop_letter": true,
+      "drop_letter_char": "Y",
+      "stages": [
+        3,
+        2
+      ]
+    },
+    {
+      "id": "multi_02",
+      "name": "多段砖-2",
+      "behavior": 3,
+      "hp": 1,
+      "score": 25,
+      "color": "#FF8C00",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "stages": [
+        4,
+        2
+      ]
+    },
+    {
+      "id": "multi_03",
+      "name": "多段砖-3",
+      "behavior": 3,
+      "hp": 1,
+      "score": 25,
+      "color": "#FF7F50",
+      "drop_letter": true,
+      "drop_letter_char": "Y",
+      "stages": [
+        2,
+        3
+      ]
+    },
+    {
+      "id": "multi_04",
+      "name": "多段砖-4",
+      "behavior": 3,
+      "hp": 1,
+      "score": 25,
+      "color": "#FF6347",
+      "drop_letter": true,
+      "drop_letter_char": "Y",
+      "stages": [
+        5,
+        1
+      ]
+    },
+    {
+      "id": "multi_05",
+      "name": "多段砖-5",
+      "behavior": 3,
+      "hp": 1,
+      "score": 25,
+      "color": "#FFA07A",
+      "drop_letter": true,
+      "drop_letter_char": "Y",
+      "stages": [
+        3,
+        3
+      ]
+    },
+    {
+      "id": "multi_06",
+      "name": "多段砖-6",
+      "behavior": 3,
+      "hp": 1,
+      "score": 25,
+      "color": "#FFB347",
+      "drop_letter": true,
+      "drop_letter_char": "Y",
+      "stages": [
+        4,
+        3
+      ]
+    },
+    {
+      "id": "special_01",
+      "name": "特殊砖-1",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#FFFF00",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 0
+    },
+    {
+      "id": "special_02",
+      "name": "特殊砖-2",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#FF00FF",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 1
+    },
+    {
+      "id": "special_03",
+      "name": "特殊砖-3",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#00FFFF",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 2
+    },
+    {
+      "id": "special_04",
+      "name": "特殊砖-4",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#FF1493",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 3
+    },
+    {
+      "id": "special_05",
+      "name": "特殊砖-5",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#00FF00",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 4
+    },
+    {
+      "id": "special_06",
+      "name": "特殊砖-6",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#FF0000",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 5
+    },
+    {
+      "id": "special_07",
+      "name": "特殊砖-7",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#9400D3",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 6
+    },
+    {
+      "id": "special_08",
+      "name": "特殊砖-8",
+      "behavior": 4,
+      "hp": 1,
+      "score": 30,
+      "color": "#00BFFF",
+      "drop_letter": true,
+      "drop_letter_char": "Z",
+      "special_id": 7
+    }
+  ]
+}

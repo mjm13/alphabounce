@@ -15,10 +15,21 @@ func _ready() -> void:
 	shape.shape = RectangleShape2D.new()
 	shape.shape.size = Vector2(SIZE, HEIGHT)
 	add_child(shape)
-	var vis := ColorRect.new()
-	vis.size = Vector2(SIZE, HEIGHT)
-	vis.color = Color(0.85, 0.30, 0.40)
-	vis.position = -vis.size / 2.0
+	# 视觉：优先用 EternalTwin 真实砖块精灵，按碰撞盒尺寸自适应缩放。
+	var vis: CanvasItem
+	var sprite := Sprite2D.new()
+	sprite.name = "Vis"
+	sprite.texture = load("res://assets/sprites/mcBlock/01.png")
+	if sprite.texture != null:
+		var tex := sprite.texture.get_size()
+		sprite.scale = Vector2(SIZE / tex.x, HEIGHT / tex.y)
+		vis = sprite
+	else:
+		var fb := ColorRect.new()
+		fb.size = Vector2(SIZE, HEIGHT)
+		fb.color = Color(0.85, 0.30, 0.40)
+		fb.position = -fb.size / 2.0
+		vis = fb
 	add_child(vis)
 	_refresh_color()
 
@@ -31,10 +42,13 @@ func take_hit() -> void:
 	else:
 		_refresh_color()
 
-# 耐久越低颜色越暗，提供视觉反馈。
+# 耐久越低越暗，提供视觉反馈（精灵用 modulate，占位回退用 color）。
 func _refresh_color() -> void:
-	var vis := get_node_or_null("ColorRect")
+	var vis := get_node_or_null("Vis")
 	if vis == null:
 		return
 	var t := clampf(float(durability) / float(max(1, max_durability)), 0.15, 1.0)
-	vis.color = Color(0.85 * t + 0.15, 0.30 * t + 0.10, 0.40 * t + 0.15)
+	if vis is Sprite2D:
+		vis.modulate = Color(t, t, t)
+	else:
+		vis.color = Color(0.85 * t + 0.15, 0.30 * t + 0.10, 0.40 * t + 0.15)

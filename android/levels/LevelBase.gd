@@ -1,7 +1,7 @@
 extends Node2D
 
 # AB-P1 核心玩法 MVP 管理器：挡板/球/砖块/墙/HUD/胜负/重开。
-# 2026-08-19 v1.1 viewport: 加入版本号 + 调试信息（VP/win/disp/stretch）以诊断横屏铺满问题。
+# 2026-08-19 v1.2 diag: 加入实时诊断日志面板（FPS/球状态/触控/物理帧/碰撞计数/输入事件流）。
 
 const START_LIVES := 3
 const COLS := 9
@@ -10,7 +10,7 @@ const BLOCK_W := 120.0
 const BLOCK_H := 50.0
 const GAP := 16.0
 const SCORE_PER_BLOCK := 100
-const BUILD_TAG := "viewport"
+const BUILD_TAG := "diag"
 
 const PadScript := preload("res://objects/Pad.gd")
 const BallScript := preload("res://objects/Ball.gd")
@@ -28,6 +28,21 @@ var lives_label: Label
 var message_label: Label
 var version_label: Label
 var debug_label: Label
+var diag_label: Label  # 实时诊断面板
+
+# ---- 诊断计数器 ----
+var _frame_count := 0
+var _physics_tick := 0
+var _collision_count := 0
+var _fps_accum := 0.0
+var _fps_frames := 0
+var _fps_displayed := 0.0
+var _fps_timer := 0.0
+var _last_touch_x := -1.0
+var _touch_active := false
+var _input_log: Array[String] = []  # 最近 N 条输入事件
+const INPUT_LOG_MAX := 6
+var _diag_lines: Array[String] = []
 
 func _ready() -> void:
 	call_deferred("_build")
@@ -60,6 +75,14 @@ func _on_size_changed() -> void:
 	_position_lives_label()
 	_position_version_label()
 	_update_debug_label()
+	_position_diag_label()
+
+func _position_diag_label() -> void:
+	if diag_label == null:
+		return
+	var vps := _vp()
+	diag_label.size = Vector2(vps.x * 0.52, 320)
+	diag_label.position = Vector2(16, vps.y - 340)
 
 func _build_walls() -> void:
 	# 左、右、上三堵不可见静态墙；底部留空（球落底=判负）。
@@ -130,6 +153,14 @@ func _build_hud() -> void:
 	_position_debug_label()
 	_update_debug_label()
 
+	# ===== 实时诊断日志面板（左下角，半透明深色背景）=====
+	diag_label = Label.new()
+	diag_label.name = "DiagLabel"
+	diag_label.add_theme_color_override("font_color", Color(0.75, 0.95, 0.80))
+	diag_label.add_theme_font_size_override("font_size", 18)
+	hud.add_child(diag_label)
+	_position_diag_label()
+
 func _position_lives_label() -> void:
 	if lives_label == null:
 		return
@@ -170,6 +201,43 @@ func _update_debug_label() -> void:
 	var aspect := str(ProjectSettings.get_setting("display/window/stretch/aspect", "?"))
 	debug_label.text = "VP %dx%d  win %dx%d  disp %dx%d  stretch=%s aspect=%s" % [int(vp.x), int(vp.y), int(win.x), int(win.y), int(disp.x), int(disp.y), mode, aspect]
 
+func _update_diag_label() -> void:
+	if diag_label == null:
+		return
+	_diag_lines.clear()
+
+	# --- 第 1 行：帧率与时间 ---
+	_diag_lines.append("[DIAG] FPS %.1f | frame %d | phys_tick %d | state=%s" % [_fps_displayed, _frame_count, _physics_tick, state])
+
+	# --- 第 2 行：球状态 ---
+	if ball != null and is_instance_valid(ball):
+		var bv := ball.velocity if ball.velocity != null else Vector2.ZERO
+		var bp := ball.global_position
+		var speed := bv.length()
+		var angle := rad_to_deg(atan2(bv.y, bv.x))
+		_diag_lines.append("BALL pos(%.0f,%.0f) vel(%.0f,%.0f) spd=%.0f ang=%.1f°" % [bp.x, bp.y, bv.x, bv.y, speed, angle])
+	else:
+		_diag_lines.append("BALL (null)")
+
+	# --- 第 3 行：挡板状态 ---
+	if paddle != null and is_instance_valid(paddle):
+		_diag_lines.append("PAD  pos(%.0f,%.0f) hw=%.0f | touch_x=%.0f active=%s" % [paddle.global_position.x, paddle.global_position.y, paddle.half_width, _last_touch_x, _touch_active])
+	else:
+		_diag_lines.append("PAD  (null)")
+
+	# --- 第 4 行：碰撞与游戏数据 ---
+	_diag_lines.append("DATA collisions=%d | blocks_left=%d | score=%d | lives=%d" % [_collision_count, blocks_remaining, score, lives])
+
+	# --- 第 5+ 行：输入事件流 ---
+	if _input_log.size() > 0:
+		_diag_lines.append("--- INPUT LOG ---")
+		for i in range(_input_log.size()):
+			_diag_lines.append("  [%d] %s" % [i, _input_log[i]])
+	else:
+		_diag_lines.append("--- INPUT: (none yet) ---")
+
+	diag_label.text = "\n".join(_diag_lines)
+
 func _build_paddle() -> void:
 	paddle = PadScript.new()
 	paddle.position = Vector2(_vp().x / 2.0, _vp().y * 0.82)
@@ -199,14 +267,42 @@ func _reset_ball() -> void:
 	add_child(ball)
 
 func _process(_delta: float) -> void:
+	_frame_count += 1
+	# FPS 计算（每秒刷新一次显示值）
+	_fps_accum += _delta if _delta > 0.0 else 0.016
+	_fps_frames += 1
+	_fps_timer += _delta
+	if _fps_timer >= 1.0:
+		if _fps_frames > 0:
+			_fps_displayed = _fps_frames / _fps_timer
+		_fps_timer = 0.0
+		_fps_frames = 0
+		_fps_accum = 0.0
+
 	if state == "playing":
 		paddle.follow_pointer(get_global_mouse_position().x)
+		# 记录触控/鼠标 X（用于诊断输入是否正常）
+		_last_touch_x = get_global_mouse_position().x
+		_touch_active = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+
+	_update_diag_label()
 
 func _physics_process(_delta: float) -> void:
+	_physics_tick += 1
 	if state != "playing" or ball == null:
 		return
+	# 碰撞检测：球速度突变 = 发生了反弹/碰撞
+	var prev_vel := ball.velocity if ball.velocity != null else Vector2.ZERO
 	if ball.global_position.y > _vp().y - 10.0:
 		_on_ball_lost()
+	# 下一帧再检测速度变化（move_and_collide 在 _physics_process 内执行）
+	call_deferred("_check_collision", prev_vel)
+
+func _check_collision(prev_vel: Vector2) -> void:
+	if ball == null or not is_instance_valid(ball):
+		return
+	if ball.velocity != prev_vel and prev_vel.length_squared() > 0:
+		_collision_count += 1
 
 func _on_ball_lost() -> void:
 	lives -= 1
@@ -237,6 +333,21 @@ func _show_message(msg: String) -> void:
 		message_label.visible = true
 
 func _input(event: InputEvent) -> void:
+	# 记录输入事件到日志（用于诊断触控/按键是否正常到达）
+	var entry := ""
+	if event is InputEventScreenTouch:
+		entry = "TOUCH %s pos(%.0f,%.0f)" % ["DOWN" if event.pressed else "UP", event.position.x, event.position.y]
+	elif event is InputEventScreenDrag:
+		entry = "DRAG  pos(%.0f,%.0f)" % [event.position.x, event.position.y]
+	elif event is InputEventMouseButton:
+		entry = "MOUSE %s btn=%d" % ["DOWN" if event.pressed else "UP", event.button_index]
+	elif event is InputEventMouseMotion:
+		pass  # 太频繁，跳过
+	if entry != "":
+		_input_log.append(entry)
+		if _input_log.size() > INPUT_LOG_MAX:
+			_input_log.pop_front()
+
 	if state == "won" or state == "lost":
 		if (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed):
 			get_tree().reload_current_scene()

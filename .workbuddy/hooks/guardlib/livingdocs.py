@@ -19,13 +19,15 @@ DOC_ANCHOR_RE = re.compile(r"(?<![\w./#-])([\w./\-]+\.(?:java|py|ts|tsx|js|jsx|v
 ARCHITECTURE_REL = "docs/architecture.md"
 STACK_STALE_PATTERNS = tuple(
     (label, re.compile(pattern, re.I)) for label, pattern in (
-        ("Spring Boot", r"Spring\s*Boot"), ("Flyway", r"\bFlyway\b"), ("MyBatis", r"\bMyBatis\b"),
-        ("Maven", r"\bMaven\b"), ("JUnit", r"\bJUnit\b"), ("@SpringBootTest", r"@SpringBootTest\b"),
+        ("Unity", r"\bUnity\b"), ("Unreal Engine", r"Unreal\s*Engine"), ("Cocos", r"\bCocos\b"),
+        ("Spring Boot", r"Spring\s*Boot"), ("FastAPI", r"\bFastAPI\b"), ("Vue3", r"\bVue3\b"),
     )
 )
 STACK_DRIFT_SCAN_FILES = ("README.md", "AGENTS.md", "docs/constitution.md", "docs/openspec/config.yaml")
-STACK_TRUTH_MARKERS = ("FastAPI", "Vue3", "Element Plus", "SQLAlchemy", "Alembic", "metric_hub")
-README_STACK_MARKERS = ("FastAPI", "Vue3", "MySQL", "backend", "frontend")
+# 注：原模板为 Web 栈标记（FastAPI/Vue3/...），对 Godot/Android 游戏项目不适用；
+# 已改为本工程真实栈标记（2026-08-19，meijianming）。
+STACK_TRUTH_MARKERS = ("Godot", "GDScript", "Android")
+README_STACK_MARKERS = ("Godot", "GDScript", "Android", "game")
 
 
 def collect_links_from_text(text: str, source_rel: str) -> list[str]:

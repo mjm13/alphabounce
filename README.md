@@ -4,7 +4,7 @@
 
 - 目标：将 Motion Twin 的 2D 物理打砖块游戏 Alphabounce 复刻到安卓平台；首里程碑交付可玩 MVP demo（单机、无后端）。
 - 首批模块：游戏核心玩法（球/挡板/砖块物理与碰撞）、关卡数据加载
-- 技术栈（已确认）：Godot 4（GDScript/C#）+ 安卓导出；纯单机，无后端/数据库（Gate-3：栈变化时须与 `docs/architecture.md` 同步；运行 `python .cursor/hooks/pipeline_guard.py --check-stack-drift`）
+- 技术栈（已确认）：Godot 4（GDScript/C#）+ 安卓导出；纯单机，无后端/数据库（Gate-3：栈变化时须与 `docs/architecture.md` 同步；运行 `python .workbuddy/hooks/pipeline_guard.py --check-stack-drift`）
 
 ## 仓库导航
 

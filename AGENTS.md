@@ -38,14 +38,19 @@ $GODOT --headless --path android --quit
 # 开发预览（PC 窗口运行主场景）
 $GODOT --path android
 
+# 一键可复现构建（推荐）：解压导出模板 → headless 导出 → zipalign → apksigner 签名 → 验签
+# 产物：android/build/alphabounce-debug.apk（已签名、可安装；apksigner verify 通过）
+bash tools/build_android.sh
+
 # 安卓导出 debug APK（需 --path android；SDK/JDK 与预构建模板路径见 android/export_presets.cfg）
-$GODOT --headless --path android --export-debug "Android" android/build/Alphabounce-debug.apk
+# 注：本命令产出的是「未签名」APK，需自行 zipalign + apksigner 签名；一键构建见上行
+$GODOT --headless --path android --export-debug "Android" android/build/alphabounce-debug.apk
 
 # 安卓导出 release APK
-$GODOT --headless --path android --export-release "Android" android/build/Alphabounce-release.apk
+$GODOT --headless --path android --export-release "Android" android/build/alphabounce-release.apk
 
 # 安装到设备/模拟器（adb 来自 Android SDK platform-tools）
-adb install -r android/build/Alphabounce-debug.apk
+adb install -r android/build/alphabounce-debug.apk
 # 注意：当前采用预构建模板导出（gradle_build=false），APK 包名为模板默认 com.example.alphabounce
 # 若切到 Gradle 构建并改写包名为 org.godotengine.alphabounce，下行包名需同步修改
 adb shell am start -n com.example.alphabounce/org.godotengine.godot.GodotApp
