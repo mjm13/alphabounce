@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphabounce 安卓端技术选型</title>
+<style>
+  :root{
+    --bg:#0f1320; --panel:#171c2e; --panel2:#1f2740; --ink:#e8ecf6; --muted:#9aa6c4;
+    --line:#2b3454; --accent:#5b8cff; --accent2:#27c2a0; --warn:#ffb454; --red:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0f1a,#0f1320);color:var(--ink);
+    font-family:"Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;padding:32px}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-size:28px;margin:0 0 6px}
+  .sub{color:var(--muted);margin-bottom:24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;
+    box-shadow:0 8px 30px rgba(0,0,0,.25)}
+  h2{font-size:20px;margin:0 0 12px;color:#fff;border-left:4px solid var(--accent);padding-left:10px}
+  h3{font-size:15px;color:var(--accent2);margin:18px 0 8px}
+  code{background:var(--panel2);padding:2px 7px;border-radius:6px;font-size:13px;color:#cfe0ff;
+    font-family:"JetBrains Mono",Consolas,monospace}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;background:var(--panel2)}
+  tr:hover td{background:rgba(91,140,255,.06)}
+  .tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:20px;margin:2px 4px 2px 0}
+  .t-rec{background:rgba(39,194,160,.15);color:var(--accent2)}
+  .t-alt{background:rgba(255,180,84,.15);color:var(--warn)}
+  .t-bad{background:rgba(255,107,107,.15);color:var(--red)}
+  ul{margin:6px 0 6px 2px;padding-left:18px}
+  li{margin:4px 0}
+  .note{background:rgba(255,180,84,.08);border:1px solid rgba(255,180,84,.3);border-radius:10px;padding:12px 14px;color:#ffd9a3;font-size:13px}
+  .rec{background:rgba(39,194,160,.08);border:1px solid rgba(39,194,160,.35);border-radius:10px;padding:14px 16px;color:#bdf3e6;font-size:14px}
+  .path{color:var(--muted);font-size:13px}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:10px 0}
+  .step .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--accent);color:#0b0f1a;
+    font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .step .b{font-size:14px}
+  b.hl{color:var(--accent2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Alphabounce 安卓端技术选型</h1>
+  <div class="sub">依据《Alphabounce 源码参考》—— 原版(Haxe→Flash) 与 Eternal-Twin 重写(Haxe→JS + PixiJS) 对照，目标是让游戏在 Android 上运行</div>
+
+  <div class="card">
+    <h2>① 现状与硬约束（来自源码参考）</h2>
+    <table>
+      <tr><th>版本</th><th>技术形态</th><th>安卓可行性</th></tr>
+      <tr>
+        <td><span class="tag t-bad">原版</span> Motion Twin</td>
+        <td>Haxe 编译为 AVM1 / <b>Flash SWF</b>；只有客户端，无服务端；依赖外部 <code>mt</code> 库与 <code>swfmake</code></td>
+        <td><b>不可行。</b> Flash 已停更，Android 不内置 Flash Player，Ruffle 也仅在浏览器内可行且非安卓原生。原版路线直接淘汰。</td>
+      </tr>
+      <tr>
+        <td><span class="tag t-rec">重写</span> Eternal-Twin</td>
+        <td>Haxe→<b>JS</b> 前端 + <b>PixiJS(WebGL)</b> 渲染；Node + Redis 后端；Docker 部署；浏览器直跑</td>
+        <td><b>可行，且是现成入口。</b> 本质已是一个 Web 游戏，安卓化的核心是"用 WebView 把它装进安卓壳"。</td>
+      </tr>
+    </table>
+    <p class="rec"><b>核心判断：</b>源码已有 Web 形态（PixiJS/WebGL），所以安卓化的关键不是重写游戏逻辑，而是<b>选择一种把 Web 游戏运行在 Android 上的封装方式</b>，并把"后端依赖"降到最低。</p>
+  </div>
+
+  <div class="card">
+    <h2>② 三条安卓化路线</h2>
+    <div class="step"><div class="n">A</div><div class="b"><b>WebView 封装（推荐）</b>—— 把前端静态站点塞进安卓 WebView，用 Capacitor 或原生 WebView 产出 APK/AAB。源码复用度最高、工作量最小。</div></div>
+    <div class="step"><div class="n">B</div><div class="b"><b>原生重写</b>—— 用 Kotlin + OpenGL/游戏引擎从零移植玩法。性能可控但等于重做，违背"复用源码"的目标，<b>不推荐</b>。</div></div>
+    <div class="step"><div class="n">C</div><div class="b"><b>PWA 免打包</b>—— Chrome "添加到主屏幕"，零构建。最简单但拿不到真正 APK、上架受限，适合快速验证。</div></div>
+  </div>
+
+  <div class="card">
+    <h2>③ 方案对比</h2>
+    <table>
+      <tr><th>维度</th><th><span class="tag t-rec">A. WebView 封装</span></th><th><span class="tag t-alt">B. 原生重写</span></th><th><span class="tag t-alt">C. PWA</span></th></tr>
+      <tr><td>复用现有源码</td><td>高（直接复用 frontend/ PixiJS）</td><td>极低（仅参考玩法）</td><td>高</td></tr>
+      <tr><td>工作量</td><td>中（封装+适配）</td><td>极高（重做）</td><td>极低</td></tr>
+      <tr><td>性能</td><td>良（WebGL，2D 足够）</td><td>最优</td><td>良</td></tr>
+      <tr><td>真实 APK/AAB</td><td>✓</td><td>✓</td><td>✗</td></tr>
+      <tr><td>可上架 Google Play</td><td>✓（AAB）</td><td>✓</td><td>✗（需 TWA 包装才勉强）</td></tr>
+      <tr><td>离线可玩</td><td>✓</td><td>✓</td><td>需 Service Worker 缓存</td></tr>
+      <tr><td>触控/输入改造</td><td>需加触摸映射</td><td>原生支持</td><td>需加触摸映射</td></tr>
+      <tr><td>维护成本</td><td>低（跟进前端更新即可）</td><td>高</td><td>低</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>④ 推荐方案：WebView 封装 + 后端本地化</h2>
+    <ul>
+      <li><b>渲染层：</b>保留 <b>PixiJS（WebGL）</b>。Android <b>WebView 自 Android 5.0(API 21) 起支持 WebGL</b>（需开启硬件加速）；低端机可让 PixiJS 回退到 <b>Canvas</b> 渲染。</li>
+      <li><b>封装层：</b><span class="tag t-rec">首选 Capacitor 6/7</span>（维护活跃、插件生态好、<code>cap sync</code> 一键同步到 Gradle 工程）；若想零框架依赖，可用 <b>Kotlin 原生 WebView</b> 加载本地 <code>index.html</code>，体积最小、可控性最强。</li>
+      <li><b>后端策略（关键）：</b>Alphabounce 是单人打砖块玩法，<b>核心游戏逻辑不需要服务端</b>。把分数/存档从 <b>Redis 改为 localStorage / IndexedDB</b>；账号与"全球排行榜"作为可选模块，指向一个<b>远程部署的 Node+Redis（Docker 上云）</b>，App 通过 HTTPS 调用。这样安卓包本身是纯前端、可离线。</li>
+      <li><b>构建链：</b>Haxe(<code>js</code> target, 沿用 <code>frontend/build.hxml</code>) → 打包为静态站点 → Capacitor <code>sync</code> → Gradle 构建 <b>APK / AAB</b>。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>⑤ 技术栈清单</h2>
+    <table>
+      <tr><th>层</th><th>选型</th><th>说明</th></tr>
+      <tr><td>游戏源码</td><td>Eternal-Twin <code>frontend/src</code>（Haxe→JS + PixiJS）</td><td>直接复用，不改玩法</td></tr>
+      <tr><td>构建</td><td>Haxe 4.3.x（<code>js</code> target）+ 打包工具(Vite/Webpack)</td><td>产出 <code>index.html</code> + assets</td></tr>
+      <tr><td>渲染</td><td>PixiJS v8（WebGL，Canvas 回退）</td><td>2D 打砖块性能绰绰有余</td></tr>
+      <tr><td>安卓封装</td><td>Capacitor + <code>@capacitor/android</code>（或 Kotlin 原生 WebView）</td><td>产出 APK/AAB</td></tr>
+      <tr><td>本地存储</td><td>localStorage / IndexedDB</td><td>替代 Redis 的本地分数/存档</td></tr>
+      <tr><td>可选远程后端</td><td>Node + Redis（Docker 部署到云）+ HTTPS API</td><td>仅全球榜/账号需要</td></tr>
+      <tr><td>构建环境</td><td>Android SDK 34+ / Gradle / Android Studio</td><td>最低系统 Android 5.0 (API 21)，建议 7.0+</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>⑥ 从现有代码到安卓 APK 的迁移步骤</h2>
+    <div class="step"><div class="n">1</div><div class="b">取 Eternal-Twin <code>frontend/src</code>（PixiJS 游戏主体），确认 <code>build.hxml</code> 能编译出 JS。</div></div>
+    <div class="step"><div class="n">2</div><div class="b"><b>抽象 API 层：</b>把对 backend 的调用抽成可配置接口（<code>local</code> / <code>remote</code>），默认走本地存储，避免安卓包依赖 Node。</div></div>
+    <div class="step"><div class="n">3</div><div class="b">Haxe 编译为 JS bundle，用 Vite 等打包成静态站点（<code>index.html</code> + 资源）。</div></div>
+    <div class="step"><div class="n">4</div><div class="b"><b>加触摸控制：</b>把鼠标/键盘输入映射为触摸事件（拖动控制挡板 Bouncer，点击发射）。这是原版没有、安卓必须的改造点。</div></div>
+    <div class="step"><div class="n">5</div><div class="b"><code>npx cap init</code> → <code>cap add android</code> → <code>cap sync</code>，生成 Android 工程。</div></div>
+    <div class="step"><div class="n">6</div><div class="b">Android Studio 打开 <code>android/</code>，Gradle 构建 <b>release AAB / APK</b>（上架用 AAB）。</div></div>
+    <div class="step"><div class="n">7</div><div class="b">真机测试：WebGL 性能、触控手感、不同分辨率适配、离线可玩性。</div></div>
+  </div>
+
+  <div class="card">
+    <h2>⑦ 风险与对策</h2>
+    <ul>
+      <li><b>WebGL 兼容性：</b>个别低配机软件渲染慢 → 开启硬件加速 + PixiJS Canvas 回退 + 降低画质档位。</li>
+      <li><b>输入方式：</b>原版面向鼠标/键盘 → 必须做触摸映射（见步骤 4），否则无法操作挡板。</li>
+      <li><b>包体体积：</b>WebView 依赖系统内核，尽量用系统 WebView 而非内置内核；游戏资源本身很小。</li>
+      <li><b>Haxe 环境：</b>需安装 Haxe 4.3.x + haxelib（前端已配置 <code>haxelib.json</code>），构建链要落地。</li>
+      <li><b>后端依赖：</b>若要做全球榜，需单独部署并解决跨域/鉴权；默认先不做，保证离线可玩。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>⑧ 待确认的决策点</h2>
+    <div class="note">
+      以下两点会影响最终落地形态，确认后我可以进一步给出可执行的工程脚手架：
+      <ul>
+        <li><b>是否需要在线账号 / 全球排行榜？</b>（决定要不要带 Node+Redis 后端；默认建议先纯前端离线版）</li>
+        <li><b>分发方式：</b>上架 Google Play（需 AAB + 合规）还是侧载/内部分发（APK 即可）？</li>
+        <li><b>最低安卓版本目标？</b>（默认 API 21 / Android 5.0，建议 24+ 覆盖面更好）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    一句话总结：原版 Flash 路线已死，直接走 Eternal-Twin 的 Web 形态；用 <b>WebView 封装（Capacitor 优先 / 原生 WebView 备选）+ PixiJS + 本地存储替代 Redis</b> 即可在安卓上以最小成本跑起这个游戏，后端按需上云。
+  </div>
+</div>
+</body>
+</html>

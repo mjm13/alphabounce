@@ -38,15 +38,17 @@ $GODOT --headless --path android --quit
 # 开发预览（PC 窗口运行主场景）
 $GODOT --path android
 
-# 安卓导出 debug APK（SDK/JDK 路径已写死在 android/export_presets.cfg）
-$GODOT --headless --export-debug "Android" android/build/Alphabounce-debug.apk
+# 安卓导出 debug APK（需 --path android；SDK/JDK 与预构建模板路径见 android/export_presets.cfg）
+$GODOT --headless --path android --export-debug "Android" android/build/Alphabounce-debug.apk
 
 # 安卓导出 release APK
-$GODOT --headless --export-release "Android" android/build/Alphabounce-release.apk
+$GODOT --headless --path android --export-release "Android" android/build/Alphabounce-release.apk
 
 # 安装到设备/模拟器（adb 来自 Android SDK platform-tools）
 adb install -r android/build/Alphabounce-debug.apk
-adb shell am start -n org.godotengine.alphabounce/org.godotengine.godot.GodotApp
+# 注意：当前采用预构建模板导出（gradle_build=false），APK 包名为模板默认 com.example.alphabounce
+# 若切到 Gradle 构建并改写包名为 org.godotengine.alphabounce，下行包名需同步修改
+adb shell am start -n com.example.alphabounce/org.godotengine.godot.GodotApp
 ```
 
 **CI**：`.github/workflows/ci.yml`（init 占位）；命令须与上文一致。未用 GitHub Actions 时在 `docs/process/release-checklist.md` 声明「仅本地 CI」。

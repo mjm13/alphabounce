@@ -1,19 +1,6 @@
 [gd_scene format=3 uid="uid://b8alphabouncemain"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://levels/LevelBase.gd" id="1_levelbase"]
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_main")
-
-[node name="Background" type="ColorRect" parent="."]
-offset_right = 1920.0
-offset_bottom = 1080.0
-color = Color(0.05, 0.08, 0.15, 1)
-
-[node name="Title" type="Label" parent="."]
-offset_left = 660.0
-offset_top = 460.0
-offset_right = 1260.0
-offset_bottom = 560.0
-text = "Alphabounce"
-horizontal_alignment = 1
+script = ExtResource("1_levelbase")
