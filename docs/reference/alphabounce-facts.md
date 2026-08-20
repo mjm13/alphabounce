@@ -38,7 +38,7 @@
 
 > 出处：攻略 §2.1 Your Fleet [FLEET]、§3 Envelope Reference 目录 #01–#28。
 
-## 3. 装备与 Defense（**当前无需求认领**）
+## 3. 装备与 Defense（P8b）
 
 - 每艘 envelope 有 **2–6 个装备槽**（源码 `Cs.MAX_OPTION = 6` 一致）。
 - 装备类别与限制：
@@ -56,7 +56,7 @@
 - **Defense 为隐藏属性**，每 1 点使所有伤害来源 **-1**：Metal Scraps 1 / Steel Plates 2 / Shield 5 / Advanced Shield 7。BEGNE-TWO 是唯一自带 Defense 的船。
 - **全游戏每件装备只有一份**，需在舰队内分配。
 
-> **缺口提示**：装备槽位/Defense 是原作策略核心（攻略原话 "Equipment is a huge part of strategy"），但 `document/复刻计划.md` 与 13 篇需求均未覆盖，P8 只写到「购买挡板/球升级」。
+> **需求认领（2026-08-20）**：`docs/requirements/inbox/20260820131200-AB-P8b装备与舰队配置.md`（全量 Shop catalog + Defense + 全局唯一分配；不做 MVP 子集）。
 
 > 出处：攻略 §2.4 About Equipment [EQUIP]；槽位上限与源码 `Cs.MAX_OPTION` 交叉验证。
 

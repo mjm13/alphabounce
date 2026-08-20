@@ -6,9 +6,6 @@ extends Node2D
 const START_LIVES := 3
 const COLS := 9
 const ROWS := 5
-const BLOCK_W := 120.0
-const BLOCK_H := 50.0
-const GAP := 16.0
 const SCORE_PER_BLOCK := 100
 const BUILD_TAG := "diag"
 
@@ -16,6 +13,14 @@ const PadScript := preload("res://objects/Pad.gd")
 const BallScript := preload("res://objects/Ball.gd")
 const BlockScript := preload("res://objects/Block.gd")
 const BSScript := preload("res://scripts/brick_system.gd")
+const MetricsScript := preload("res://scripts/game_metrics.gd")
+
+var BLOCK_W := 96.0
+var BLOCK_H := 48.0
+var GAP := 12.0
+var BALL_D := 26.0
+var PAD_W := 320.0
+var PAD_H := 36.0
 
 var score := 0
 var lives := START_LIVES
@@ -49,6 +54,7 @@ func _ready() -> void:
 	call_deferred("_build")
 
 func _build() -> void:
+	_apply_layout_metrics()
 	_build_background()
 	_build_walls()
 	_build_hud()
@@ -59,6 +65,30 @@ func _build() -> void:
 
 func _vp() -> Vector2:
 	return get_viewport_rect().size
+
+func _apply_layout_metrics() -> void:
+	var m: Dictionary = MetricsScript.layout_for_viewport(_vp(), COLS)
+	BLOCK_W = m["block_w"]
+	BLOCK_H = m["block_h"]
+	GAP = m["gap"]
+	BALL_D = m["ball_d"]
+	PAD_W = m["pad_w"]
+	PAD_H = m["pad_h"]
+
+func block_w() -> float:
+	return BLOCK_W
+
+func block_h() -> float:
+	return BLOCK_H
+
+func ball_size() -> float:
+	return BALL_D
+
+func pad_width() -> float:
+	return PAD_W
+
+func pad_height() -> float:
+	return PAD_H
 
 func _build_background() -> void:
 	var bg := ColorRect.new()
@@ -241,6 +271,7 @@ func _update_diag_label() -> void:
 
 func _build_paddle() -> void:
 	paddle = PadScript.new()
+	paddle.configure(PAD_W, PAD_H)
 	paddle.position = Vector2(_vp().x / 2.0, _vp().y * 0.82)
 	add_child(paddle)
 
@@ -254,7 +285,7 @@ func _build_blocks() -> void:
 	var vps := _vp()
 	var total_w := COLS * BLOCK_W + (COLS - 1) * GAP
 	var start_x := (vps.x - total_w) / 2.0 + BLOCK_W / 2.0
-	var start_y := 200.0
+	var start_y := _vp().y * 0.14
 	var idx := 0
 	for r in ROWS:
 		for c in COLS:
@@ -271,7 +302,8 @@ func _reset_ball() -> void:
 	if ball != null:
 		ball.queue_free()
 	ball = BallScript.new()
-	ball.position = Vector2(paddle.position.x, paddle.position.y - 60.0)
+	ball.configure(BALL_D)
+	ball.position = Vector2(paddle.position.x, paddle.position.y - BALL_D * 1.4)
 	ball.launch(Vector2(randf_range(-0.35, 0.35), -1.0))
 	add_child(ball)
 

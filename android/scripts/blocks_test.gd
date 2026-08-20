@@ -94,6 +94,19 @@ func _ready() -> void:
 	if not special_ok:
 		failures.append("AC-4: 特殊砖销毁未触发 special_triggered（对照原版 onDamage）")
 
+	# ---- AC-5：每型配置 mcBlock 贴图，数据表驱动、文件存在、≥40 种不同 sprite ----
+	var sprites_seen := {}
+	for d in reg.get_all():
+		if d.sprite.strip_edges().is_empty():
+			failures.append("AC-5: 类型 '%s' 缺少 sprite 字段" % d.id)
+			continue
+		var path := BS.BlockDef.mc_block_path(d.sprite)
+		if not ResourceLoader.exists(path):
+			failures.append("AC-5: 类型 '%s' 贴图不存在 -> %s" % [d.id, path])
+		sprites_seen[d.sprite] = true
+	if sprites_seen.size() < 40:
+		failures.append("AC-5: 仅 %d 种不同 sprite，需要 >=40" % sprites_seen.size())
+
 	# ---- 报告 ----
 	if failures.is_empty():
 		prints("ALL BRICK TESTS PASSED")

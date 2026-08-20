@@ -8,7 +8,9 @@
       "score": 10,
       "color": "#7CFC00",
       "drop_letter": true,
-      "drop_letter_char": "A"
+      "drop_letter_char": "A",
+      "sprite": "01",
+      "use_tint": true
     },
     {
       "id": "normal_02",
@@ -18,7 +20,9 @@
       "score": 10,
       "color": "#32CD32",
       "drop_letter": true,
-      "drop_letter_char": "B"
+      "drop_letter_char": "B",
+      "sprite": "02",
+      "use_tint": true
     },
     {
       "id": "normal_03",
@@ -28,7 +32,9 @@
       "score": 10,
       "color": "#00CED1",
       "drop_letter": true,
-      "drop_letter_char": "C"
+      "drop_letter_char": "C",
+      "sprite": "03",
+      "use_tint": true
     },
     {
       "id": "normal_04",
@@ -38,7 +44,9 @@
       "score": 10,
       "color": "#1E90FF",
       "drop_letter": true,
-      "drop_letter_char": "D"
+      "drop_letter_char": "D",
+      "sprite": "04",
+      "use_tint": true
     },
     {
       "id": "normal_05",
@@ -48,7 +56,9 @@
       "score": 10,
       "color": "#FF8C00",
       "drop_letter": true,
-      "drop_letter_char": "E"
+      "drop_letter_char": "E",
+      "sprite": "05",
+      "use_tint": true
     },
     {
       "id": "normal_06",
@@ -58,7 +68,9 @@
       "score": 10,
       "color": "#FFD700",
       "drop_letter": true,
-      "drop_letter_char": "F"
+      "drop_letter_char": "F",
+      "sprite": "06",
+      "use_tint": true
     },
     {
       "id": "normal_07",
@@ -68,7 +80,9 @@
       "score": 10,
       "color": "#FF69B4",
       "drop_letter": true,
-      "drop_letter_char": "G"
+      "drop_letter_char": "G",
+      "sprite": "07",
+      "use_tint": true
     },
     {
       "id": "normal_08",
@@ -78,7 +92,9 @@
       "score": 10,
       "color": "#BA55D3",
       "drop_letter": true,
-      "drop_letter_char": "H"
+      "drop_letter_char": "H",
+      "sprite": "08",
+      "use_tint": true
     },
     {
       "id": "normal_09",
@@ -88,7 +104,9 @@
       "score": 10,
       "color": "#20B2AA",
       "drop_letter": true,
-      "drop_letter_char": "I"
+      "drop_letter_char": "I",
+      "sprite": "09",
+      "use_tint": true
     },
     {
       "id": "normal_10",
@@ -98,7 +116,9 @@
       "score": 10,
       "color": "#9ACD32",
       "drop_letter": true,
-      "drop_letter_char": "J"
+      "drop_letter_char": "J",
+      "sprite": "10",
+      "use_tint": true
     },
     {
       "id": "normal_11",
@@ -108,7 +128,9 @@
       "score": 10,
       "color": "#00FA9A",
       "drop_letter": true,
-      "drop_letter_char": "K"
+      "drop_letter_char": "K",
+      "sprite": "11",
+      "use_tint": true
     },
     {
       "id": "normal_12",
@@ -118,7 +140,9 @@
       "score": 10,
       "color": "#48D1CC",
       "drop_letter": true,
-      "drop_letter_char": "L"
+      "drop_letter_char": "L",
+      "sprite": "12",
+      "use_tint": true
     },
     {
       "id": "durable_01",
@@ -128,7 +152,10 @@
       "score": 20,
       "color": "#B22222",
       "drop_letter": true,
-      "drop_letter_char": "M"
+      "drop_letter_char": "M",
+      "sprite": "13",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_02",
@@ -138,7 +165,10 @@
       "score": 25,
       "color": "#CD5C5C",
       "drop_letter": true,
-      "drop_letter_char": "N"
+      "drop_letter_char": "N",
+      "sprite": "14",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_03",
@@ -148,7 +178,10 @@
       "score": 30,
       "color": "#8B0000",
       "drop_letter": true,
-      "drop_letter_char": "O"
+      "drop_letter_char": "O",
+      "sprite": "15",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_04",
@@ -158,7 +191,10 @@
       "score": 35,
       "color": "#A52A2A",
       "drop_letter": true,
-      "drop_letter_char": "P"
+      "drop_letter_char": "P",
+      "sprite": "16",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_05",
@@ -168,7 +204,10 @@
       "score": 20,
       "color": "#DC143C",
       "drop_letter": true,
-      "drop_letter_char": "Q"
+      "drop_letter_char": "Q",
+      "sprite": "17",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_06",
@@ -178,7 +217,10 @@
       "score": 25,
       "color": "#FF4500",
       "drop_letter": true,
-      "drop_letter_char": "R"
+      "drop_letter_char": "R",
+      "sprite": "18",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_07",
@@ -188,7 +230,10 @@
       "score": 30,
       "color": "#C71585",
       "drop_letter": true,
-      "drop_letter_char": "S"
+      "drop_letter_char": "S",
+      "sprite": "19",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_08",
@@ -198,7 +243,10 @@
       "score": 35,
       "color": "#DB7093",
       "drop_letter": true,
-      "drop_letter_char": "T"
+      "drop_letter_char": "T",
+      "sprite": "20",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_09",
@@ -208,7 +256,10 @@
       "score": 20,
       "color": "#8B008B",
       "drop_letter": true,
-      "drop_letter_char": "U"
+      "drop_letter_char": "U",
+      "sprite": "21",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_10",
@@ -218,7 +269,10 @@
       "score": 25,
       "color": "#9932CC",
       "drop_letter": true,
-      "drop_letter_char": "V"
+      "drop_letter_char": "V",
+      "sprite": "22",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_11",
@@ -228,7 +282,10 @@
       "score": 30,
       "color": "#6A5ACD",
       "drop_letter": true,
-      "drop_letter_char": "W"
+      "drop_letter_char": "W",
+      "sprite": "23",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "durable_12",
@@ -238,7 +295,10 @@
       "score": 35,
       "color": "#483D8B",
       "drop_letter": true,
-      "drop_letter_char": "X"
+      "drop_letter_char": "X",
+      "sprite": "24",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "unbreak_01",
@@ -247,7 +307,9 @@
       "hp": 0,
       "score": 0,
       "color": "#759BA4",
-      "drop_letter": false
+      "drop_letter": false,
+      "sprite": "25",
+      "use_tint": false
     },
     {
       "id": "unbreak_02",
@@ -256,7 +318,9 @@
       "hp": 0,
       "score": 0,
       "color": "#708090",
-      "drop_letter": false
+      "drop_letter": false,
+      "sprite": "26",
+      "use_tint": false
     },
     {
       "id": "unbreak_03",
@@ -265,7 +329,9 @@
       "hp": 0,
       "score": 0,
       "color": "#2F4F4F",
-      "drop_letter": false
+      "drop_letter": false,
+      "sprite": "27",
+      "use_tint": false
     },
     {
       "id": "unbreak_04",
@@ -274,7 +340,9 @@
       "hp": 0,
       "score": 0,
       "color": "#556B2F",
-      "drop_letter": false
+      "drop_letter": false,
+      "sprite": "28",
+      "use_tint": false
     },
     {
       "id": "unbreak_05",
@@ -283,7 +351,9 @@
       "hp": 0,
       "score": 0,
       "color": "#696969",
-      "drop_letter": false
+      "drop_letter": false,
+      "sprite": "29",
+      "use_tint": false
     },
     {
       "id": "unbreak_06",
@@ -292,7 +362,9 @@
       "hp": 0,
       "score": 0,
       "color": "#808080",
-      "drop_letter": false
+      "drop_letter": false,
+      "sprite": "30",
+      "use_tint": false
     },
     {
       "id": "multi_01",
@@ -306,7 +378,10 @@
       "stages": [
         3,
         2
-      ]
+      ],
+      "sprite": "31",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "multi_02",
@@ -320,7 +395,10 @@
       "stages": [
         4,
         2
-      ]
+      ],
+      "sprite": "32",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "multi_03",
@@ -334,7 +412,10 @@
       "stages": [
         2,
         3
-      ]
+      ],
+      "sprite": "33",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "multi_04",
@@ -348,7 +429,10 @@
       "stages": [
         5,
         1
-      ]
+      ],
+      "sprite": "34",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "multi_05",
@@ -362,7 +446,10 @@
       "stages": [
         3,
         3
-      ]
+      ],
+      "sprite": "35",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "multi_06",
@@ -376,7 +463,10 @@
       "stages": [
         4,
         3
-      ]
+      ],
+      "sprite": "36",
+      "use_tint": false,
+      "sprite_smc": "mcBlockSMC0001"
     },
     {
       "id": "special_01",
@@ -387,7 +477,9 @@
       "color": "#FFFF00",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 0
+      "special_id": 0,
+      "sprite": "37",
+      "use_tint": false
     },
     {
       "id": "special_02",
@@ -398,7 +490,9 @@
       "color": "#FF00FF",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 1
+      "special_id": 1,
+      "sprite": "38",
+      "use_tint": false
     },
     {
       "id": "special_03",
@@ -409,7 +503,9 @@
       "color": "#00FFFF",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 2
+      "special_id": 2,
+      "sprite": "39",
+      "use_tint": false
     },
     {
       "id": "special_04",
@@ -420,7 +516,9 @@
       "color": "#FF1493",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 3
+      "special_id": 3,
+      "sprite": "40",
+      "use_tint": false
     },
     {
       "id": "special_05",
@@ -431,7 +529,9 @@
       "color": "#00FF00",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 4
+      "special_id": 4,
+      "sprite": "41",
+      "use_tint": false
     },
     {
       "id": "special_06",
@@ -442,7 +542,9 @@
       "color": "#FF0000",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 5
+      "special_id": 5,
+      "sprite": "42",
+      "use_tint": false
     },
     {
       "id": "special_07",
@@ -453,7 +555,9 @@
       "color": "#9400D3",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 6
+      "special_id": 6,
+      "sprite": "43",
+      "use_tint": false
     },
     {
       "id": "special_08",
@@ -464,7 +568,9 @@
       "color": "#00BFFF",
       "drop_letter": true,
       "drop_letter_char": "Z",
-      "special_id": 7
+      "special_id": 7,
+      "sprite": "44",
+      "use_tint": false
     }
   ]
 }

@@ -19,10 +19,33 @@ class BlockDef extends Resource:
 	var hp: int = 1
 	var score: int = 10
 	var color: Color = Color(1, 1, 1)
+	var sprite: String = "01"
+	var sprite_smc: String = ""
+	var use_tint: bool = false
 	var drop_letter: bool = false
 	var drop_letter_char: String = "A"
 	var special_id: int = 0
 	var stages: Array = []
+
+	static func mc_block_path(frame: String) -> String:
+		var id := frame.strip_edges()
+		if id.is_empty():
+			id = "01"
+		if id.ends_with(".png"):
+			return "res://assets/sprites/mcBlock/%s" % id
+		if id.is_valid_int():
+			return "res://assets/sprites/mcBlock/%02d.png" % int(id)
+		return "res://assets/sprites/mcBlock/%s.png" % id
+
+	static func mc_block_smc_path(frame: String) -> String:
+		var id := frame.strip_edges()
+		if id.is_empty():
+			return ""
+		if id.begins_with("mcBlockSMC"):
+			return "res://assets/sprites/mcBlockSmc/%s.png" % id
+		if id.is_valid_int():
+			return "res://assets/sprites/mcBlockSmc/mcBlockSMC%04d.png" % int(id)
+		return "res://assets/sprites/mcBlockSmc/%s" % id
 
 class Block extends Node2D:
 	signal destroyed(b)
@@ -106,8 +129,13 @@ class Block extends Node2D:
 			return
 		alive = false
 		var fx := FX.new()
-		fx.setup(def)
-		add_child(fx)
+		fx.setup(def, 28.0, 14.0)
+		var parent := get_parent()
+		if parent != null:
+			fx.global_position = global_position
+			parent.add_child(fx)
+		else:
+			add_child(fx)
 		emit_signal("fx_spawned", fx)
 		if def.drop_letter:
 			var pu := Pickup.new()
@@ -120,14 +148,65 @@ class Block extends Node2D:
 		queue_free()
 
 class FX extends Node2D:
-	func setup(_p_def: BlockDef) -> void:
-		# 破坏特效占位：游戏中替换为粒子；测试只需节点被创建（AC-3）
-		var t := Timer.new()
-		t.wait_time = 0.4
-		t.one_shot = true
-		add_child(t)
-		t.timeout.connect(queue_free)
-		t.start()
+	const FRAME_COUNT := 24
+	const FRAME_TIME := 0.028
+
+	var _sprite: Sprite2D
+	var _frame := 1
+	var _elapsed := 0.0
+	var _block_w := 28.0
+	var _block_h := 14.0
+
+	func setup(p_def: BlockDef, block_w: float = 28.0, block_h: float = 14.0) -> void:
+		_block_w = block_w
+		_block_h = block_h
+		_sprite = Sprite2D.new()
+		_sprite.centered = true
+		_sprite.modulate = p_def.color if p_def != null else Color.WHITE
+		add_child(_sprite)
+		_set_frame(1)
+		_spawn_sparks(p_def)
+
+	func _set_frame(n: int) -> void:
+		var path := "res://assets/sprites/partExplode/%02d.png" % n
+		if not ResourceLoader.exists(path):
+			return
+		_sprite.texture = load(path)
+		if _sprite.texture == null:
+			return
+		var tex := _sprite.texture.get_size()
+		if tex.x <= 0.0 or tex.y <= 0.0:
+			return
+		var sx := (_block_w / 30.0) * (tex.x / 64.0)
+		var sy := (_block_h / 14.0) * (tex.y / 44.0)
+		_sprite.scale = Vector2(maxf(sx, sy), maxf(sx, sy))
+
+	func _spawn_sparks(p_def: BlockDef) -> void:
+		for i in range(4):
+			var sp := Sprite2D.new()
+			sp.centered = true
+			sp.texture = load("res://assets/sprites/partSpark/0%d.png" % (1 + (i % 3)))
+			if sp.texture == null:
+				continue
+			sp.modulate = p_def.color if p_def != null else Color(1, 0.9, 0.5)
+			sp.position = Vector2(randf_range(-_block_w * 0.3, _block_w * 0.3), randf_range(-_block_h * 0.2, _block_h * 0.2))
+			var sc := randf_range(0.25, 0.5) * (_block_w / 28.0)
+			sp.scale = Vector2(sc, sc)
+			add_child(sp)
+			var tw := create_tween()
+			tw.set_parallel(true)
+			tw.tween_property(sp, "position", sp.position + Vector2(randf_range(-20, 20), randf_range(-30, 10)), 0.35)
+			tw.tween_property(sp, "modulate:a", 0.0, 0.35)
+
+	func _process(delta: float) -> void:
+		_elapsed += delta
+		while _elapsed >= FRAME_TIME:
+			_elapsed -= FRAME_TIME
+			_frame += 1
+			if _frame > FRAME_COUNT:
+				queue_free()
+				return
+			_set_frame(_frame)
 
 class Pickup extends Node2D:
 	var letter: String = ""
@@ -163,6 +242,9 @@ class BlocksRegistry extends RefCounted:
 			d.score = int(b.get("score", 10))
 			var cstr: String = b.get("color", "#ffffff")
 			d.color = Color.from_string(cstr, Color.WHITE)
+			d.sprite = str(b.get("sprite", "01"))
+			d.sprite_smc = str(b.get("sprite_smc", ""))
+			d.use_tint = bool(b.get("use_tint", false))
 			d.drop_letter = bool(b.get("drop_letter", false))
 			d.drop_letter_char = str(b.get("drop_letter_char", "A"))
 			d.special_id = int(b.get("special_id", 0))
