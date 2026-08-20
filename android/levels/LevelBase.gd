@@ -15,6 +15,7 @@ const BUILD_TAG := "diag"
 const PadScript := preload("res://objects/Pad.gd")
 const BallScript := preload("res://objects/Ball.gd")
 const BlockScript := preload("res://objects/Block.gd")
+const BSScript := preload("res://scripts/brick_system.gd")
 
 var score := 0
 var lives := START_LIVES
@@ -211,9 +212,9 @@ func _update_diag_label() -> void:
 
 	# --- 第 2 行：球状态 ---
 	if ball != null and is_instance_valid(ball):
-		var bv := ball.velocity if ball.velocity != null else Vector2.ZERO
-		var bp := ball.global_position
-		var speed := bv.length()
+		var bv: Vector2 = ball.velocity if ball.velocity != null else Vector2.ZERO
+		var bp: Vector2 = ball.global_position
+		var speed: float = bv.length()
 		var angle := rad_to_deg(atan2(bv.y, bv.x))
 		_diag_lines.append("BALL pos(%.0f,%.0f) vel(%.0f,%.0f) spd=%.0f ang=%.1f°" % [bp.x, bp.y, bv.x, bv.y, speed, angle])
 	else:
@@ -244,19 +245,27 @@ func _build_paddle() -> void:
 	add_child(paddle)
 
 func _build_blocks() -> void:
+	var reg := BSScript.BlocksRegistry.new()
+	var n := reg.load_from_file()
+	if n == 0:
+		push_error("LevelBase: blocks.json 加载失败，无法生成砖块")
+		return
+	var defs: Array = reg.get_all()
 	var vps := _vp()
 	var total_w := COLS * BLOCK_W + (COLS - 1) * GAP
 	var start_x := (vps.x - total_w) / 2.0 + BLOCK_W / 2.0
 	var start_y := 200.0
+	var idx := 0
 	for r in ROWS:
 		for c in COLS:
 			var b := BlockScript.new()
-			b.durability = 1
-			b.max_durability = 1
 			b.game = self
+			b.setup_from_def(defs[idx % defs.size()])
+			idx += 1
 			b.position = Vector2(start_x + c * (BLOCK_W + GAP), start_y + r * (BLOCK_H + GAP))
 			add_child(b)
-			blocks_remaining += 1
+			if b.counts_toward_win:
+				blocks_remaining += 1
 
 func _reset_ball() -> void:
 	if ball != null:
@@ -292,7 +301,7 @@ func _physics_process(_delta: float) -> void:
 	if state != "playing" or ball == null:
 		return
 	# 碰撞检测：球速度突变 = 发生了反弹/碰撞
-	var prev_vel := ball.velocity if ball.velocity != null else Vector2.ZERO
+	var prev_vel: Vector2 = ball.velocity if ball.velocity != null else Vector2.ZERO
 	if ball.global_position.y > _vp().y - 10.0:
 		_on_ball_lost()
 	# 下一帧再检测速度变化（move_and_collide 在 _physics_process 内执行）
@@ -313,8 +322,8 @@ func _on_ball_lost() -> void:
 	else:
 		_reset_ball()
 
-func on_block_destroyed() -> void:
-	score += SCORE_PER_BLOCK
+func on_block_destroyed(block_score: int = SCORE_PER_BLOCK) -> void:
+	score += block_score
 	blocks_remaining -= 1
 	_update_hud()
 	if blocks_remaining <= 0:
