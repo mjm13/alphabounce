@@ -19,9 +19,11 @@
 - `android/`：Godot 工程根（project.godot、scenes、scripts、objects、resources、data、levels、build）
 - `tools/`：本地工具链（godot/JDK/SDK），不入库
 - `docs/`：需求 / 计划 / 活文档（含本文件）
-- `E:\Project\Self\WebGamesArchives\Alphabounce`、`E:\Project\Self\EternalTwin-Alphabounce`：原版与重写源码参考（工程外）
+- `docs/reference/`：上游参考源的入库快照（设计文档 + 79 个 `.hx`），来源与再获取见其 README
+- `scripts/`：入库的构建与资产同步脚本（`build_android.ps1`、`sync_assets.ps1`）
+- `android/assets/`：由 `sync_assets.ps1` 从上游镜像，仅同步已交付阶段所需精灵目录
 
 ## 依赖与约束
 
 - 不引入后端/数据库/网络依赖（首里程碑纯单机 MVP）
-- 砖块行为以原版 `Block.hx` 为保真对照（耐久/不可破/计分/掉字母）
+- 砖块行为以 `docs/reference/haxe/Block.hx` 为保真对照（耐久/不可破/计分/掉字母）
