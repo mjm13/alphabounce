@@ -119,5 +119,5 @@ python tools/sync_assets.py
 # 重新转换字体（源有更新时）
 python tools/convert_fonts.py
 # 构建 APK（含自动导入被引用资源）
-bash tools/build_android.sh
+powershell -ExecutionPolicy Bypass -File scripts/build_android.ps1
 ```

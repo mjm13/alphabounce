@@ -38,9 +38,10 @@ $GODOT --headless --path android --quit
 # 开发预览（PC 窗口运行主场景）
 $GODOT --path android
 
-# 一键可复现构建（推荐）：解压导出模板 → headless 导出 → zipalign → apksigner 签名 → 验签
+# 一键可复现构建（推荐）：校正工具链路径 → headless 导出 → zipalign → apksigner 签名 → 验签
 # 产物：android/build/alphabounce-debug.apk（已签名、可安装；apksigner verify 通过）
-bash tools/build_android.sh
+# 脚本会按当前仓库根重写 export_presets.cfg 内的绝对路径，故换盘/换目录后仍可复现
+powershell -ExecutionPolicy Bypass -File scripts/build_android.ps1
 
 # 安卓导出 debug APK（需 --path android；SDK/JDK 与预构建模板路径见 android/export_presets.cfg）
 # 注：本命令产出的是「未签名」APK，需自行 zipalign + apksigner 签名；一键构建见上行
