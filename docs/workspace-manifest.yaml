@@ -1,0 +1,9 @@
+# 多模块 SSOT（adopt 用）；init 项目最小声明
+project: Alphabounce
+modules:
+  - id: android
+    root: android/
+    kind: godot-game
+    description: Godot 4 GDScript 游戏工程（纯单机）
+backend_root: null
+frontend_root: android/
