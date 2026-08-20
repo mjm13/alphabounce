@@ -1,0 +1,102 @@
+# Skill routing eval — description keyword contract
+version: 1
+
+# Each case verifies expect_skill description contains require_in_description tokens.
+# forbidden_skills must NOT contain all tokens (misroute guard).
+
+cases:
+  - id: ops-load-positive
+    user: "推进需求 003，不要漏步骤"
+    expect_skill: xijia-ops-pipeline
+    require_in_description: ["/xijia:start", "推进需求", "完整流程"]
+    forbidden_skills: [xijia-project-init, xijia-release]
+
+  - id: ops-load-xijia-start
+    user: "/xijia:start 003"
+    expect_skill: xijia-ops-pipeline
+    require_in_description: ["/xijia:start"]
+    forbidden_skills: [xijia-sync-knowledge]
+
+  - id: init-negative-on-ops-query
+    user: "推进需求 003"
+    expect_skill: xijia-ops-pipeline
+    require_in_description: ["推进需求"]
+    forbidden_match_all_in: [xijia-project-init]
+
+  - id: init-positive
+    user: "/xijia:init 空仓库冷启动"
+    expect_skill: xijia-project-init
+    require_in_description: ["/xijia:init", "冷启动"]
+    forbidden_skills: [xijia-ops-pipeline]
+
+  - id: prd-positive
+    user: "把 PRD 拆成需求文档"
+    expect_skill: xijia-prd-to-requirement
+    require_in_description: ["prd转需求", "prd"]
+    forbidden_skills: [xijia-ops-pipeline]
+
+  - id: prd-forbidden-on-start
+    user: "/xijia:start 推进实现"
+    expect_skill: xijia-ops-pipeline
+    require_in_description: ["/xijia:start"]
+    forbidden_match_all_in: [xijia-prd-to-requirement]
+
+  - id: sync-after-gate2
+    user: "Gate-2 已签字，做知识回灌"
+    expect_skill: xijia-sync-knowledge
+    require_in_description: ["gate-2", "知识回灌"]
+    forbidden_skills: [xijia-ops-pipeline]
+
+  - id: release-positive
+    user: "master 切 release 分支发版"
+    expect_skill: xijia-release
+    require_in_description: ["发版", "release"]
+    forbidden_skills: [xijia-ops-pipeline]
+
+  - id: defect-positive
+    user: "登记 bug 缺陷转 inbox"
+    expect_skill: xijia-defect-to-requirement
+    require_in_description: ["缺陷", "/xijia:defect"]
+    forbidden_skills: [xijia-prd-to-requirement]
+
+  - id: commit-positive
+    user: "帮我 commit 提交代码"
+    expect_skill: xijia-git-commit
+    require_in_description: ["commit", "提交"]
+    forbidden_skills: [xijia-ops-pipeline]
+
+  - id: policy-drift-after-rule-edit
+    user: "改了 rules 宣告流程已同步"
+    expect_skill: xijia-policy-drift-check
+    require_in_description: ["流程已同步", "policy"]
+    forbidden_skills: [xijia-sync-knowledge]
+
+  - id: xijia-feature-pipeline-alias
+    user: "xijia-feature-pipeline alias"
+    expect_skill: xijia-feature-pipeline
+    require_in_description: ["xijia-feature-pipeline", "xijia-ops-pipeline"]
+    forbidden_skills: [xijia-project-init]
+
+  - id: ops-natural-not-feature-alias
+    user: "帮我实现这个功能，跑完整流程"
+    expect_skill: xijia-ops-pipeline
+    require_in_description: ["帮我实现", "完整流程"]
+    forbidden_match_all_in: [xijia-feature-pipeline]
+
+  - id: safe-file-write-encoding
+    user: "Windows 上改 requirement 出现 BOM 和 PowerShell Set-Content 损坏"
+    expect_skill: xijia-safe-file-write
+    require_in_description: ["BOM", "Set-Content", "requirement"]
+    forbidden_skills: [xijia-ops-pipeline]
+
+  - id: safe-file-write-gate3
+    user: "Gate-3 改 shipped 文档前要注意编码和换行符"
+    expect_skill: xijia-safe-file-write
+    require_in_description: ["closeout", "requirement", "编码", "Gate-3 shipped"]
+    forbidden_skills: [xijia-project-init]
+
+  - id: table-first-panel-positive
+    user: "新建 UserPanel Table-First 列表页，约束引用含 table-first-list-page"
+    expect_skill: xijia-table-first-panel
+    require_in_description: ["*Panel.vue", "Table-First", "table-first-list-page"]
+    forbidden_skills: [xijia-project-init, frontend-design]

@@ -1,0 +1,49 @@
+---
+description: Git 分支策略（master 集成、release/<版本> 封版切出、checkout、commit、push、hotfix 回合）
+alwaysApply: false
+defends: "Agent 自行 commit/push 或直接在发布分支上实现需求。L3 不可逆动作的授权边界，不到期。"
+---
+
+# Git 分支策略
+
+本仓库**唯一长期分支是 `master`**；发布分支按版本从 `master` 切出：
+
+| 分支 | 职责 |
+| --- | --- |
+| `master` | 唯一长期集成分支；需求实现、缺陷修复、文档/配置变更均在此集成 |
+| `release/<版本>` | 封版时从 `master` 切出；承载封版提交与 Release Gate 签字，**禁止**在其上实现新需求 |
+
+**不使用 `main`**：发布不是「把开发分支合入长期基线」，而是「从 `master` 切出版本快照」。因此发布后 `master` 会正常领先各 `release/*`，这不是漂移。
+
+# 开发流转
+
+1. 开始工作前：`git checkout master`，并与远端同步（`git pull`）。
+2. 实现、测试、Gate 收尾、文档 sync 均在 `master` 上完成并 push。
+3. **发布**：`master` 验证通过（Gate-2、测试/构建等可执行证据齐全）后，运行 `/xijia:release` 与 `--check-release-readiness`，Release Gate 人审通过后从 `master` 切出 `release/<版本>`，并在该分支上签封版提交（详见 `47-release-lifecycle.mdc`）。
+4. **紧急线上修复**：基于**已发布的** `release/<版本>` 修复 → 合入该发布分支 → **必须回合** `master`，避免修复只存在于发布分支。
+
+# 分支命名（不再使用）
+
+- 不创建长期存在的 `dev`、`main`、`feature/*`、`fix/*`、`hotfix/*`、`spike/*` 远端分支。
+- 探针（spike）可在本地时间盒验证，交付代码统一进入 `master`。
+- 已合并的历史 feature 分支应删除；`release/<版本>` 作为版本基线可长期保留。
+
+# 工作区隔离（可选）
+
+并行需求或 `tier=red` 长周期任务若需隔离，可用 `git worktree` 基于 **`master`** 开独立目录（`.worktrees/<name>/`），而非另建长期分支：
+
+1. 目录统一为 `.worktrees/<name>`，且 `.worktrees/` 必须被 `.gitignore` 忽略。
+2. worktree 内 commit 最终仍合回 `master` 交付。
+3. `green-trivial` 小改动可直接在 `master` 工作区完成，不强制 worktree。
+
+# 安全门禁
+
+1. 切换分支 / 拉代码前先 `git status`；存在用户未提交改动时 stop-and-report，不得覆盖。
+2. `commit` / `push` / 切 `release/<版本>` 需用户显式触发。
+3. 切 `release/<版本>` 前确认 `master` 上 verify 证据齐全。
+
+# 与现有流程关系
+
+- 需求分级/门禁继续遵循 `00-workflow.mdc` 与 `xijia-ops-pipeline`。
+- 发布级门禁见 `47-release-lifecycle.mdc`；本规则仅定义 Git 分支策略，不替代 Gate-0/1/2 与 Release Gate。
+- `xijia-project-init` 模板只描述「单一长期集成分支 + 封版切 `release/<版本>`」这一**模型**，不写死分支名；新项目 init 后按本规则填自己的集成分支名（本仓库为 `master`）。

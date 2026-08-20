@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "codegraph-android": {
+      "type": "stdio",
+      "command": "codegraph",
+      "args": [
+        "serve",
+        "--mcp",
+        "--path",
+        "${workspaceFolder}/android"
+      ]
+    }
+  }
+}
