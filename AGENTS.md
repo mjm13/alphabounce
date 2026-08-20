@@ -64,6 +64,8 @@ adb shell am start -n com.example.alphabounce/org.godotengine.godot.GodotApp
 - 改代码后运行上文 **Build and test commands** 中对应 test/lint/build，直至通过再提请验收
 - 测试栈：Godot 内置校验（`godot --headless --path android --quit` 解析工程）+ 手动 PC 预览；GDScript 轻量，无独立单测框架，以工程校验与手动验证为主
 - 约定：Gate-1 切片实现期间按需求切片 `Test:`/`Done:` 测；**全量测试**仅最后一切片或 regression
+- **Gate-2 前构建（硬约束）**：触达 `android/` 代码的需求，在切片自测与 `--quit` 全工程校验通过后，**须**执行一键 debug APK 构建，再提请 Gate-2；Gate-2 验收包须记录构建命令与 `BUILD OK` 摘要（产物路径 + 时间戳）。仅改文档/流程且未触达 `android/` 时可跳过，须在验收包注明原因
+- **需求文档真机验收（硬约束）**：触达 `android/` 玩法/表现的需求，Gate-1 **须**写 `## 真机验收（diag）`（手势/按键、期望现象、adb 安装命令）；若 headless 可测但主关无正式 UI，**须**在 `LevelBase`（`BUILD_TAG=diag`）提供调试入口并在文档说明，不得仅依赖自测场景
 - Mock 边界：允许 mock 外部接口；本项目无后端/DB，暂无 DB mock 约束
 
 ## Agent coding behavior（实现阶段）
@@ -79,8 +81,8 @@ adb shell am start -n com.example.alphabounce/org.godotengine.godot.GodotApp
 ### Gate-1 切片 verify 顺序（实现阶段）
 
 1. **禁止**在首个切片未完成前运行全量测试（见 **Build and test commands** 中全量命令）
-2. **顺序**：单文件/单模块测 → 前端单 Spec 测 → 最后全量 + guard（如 `pipeline_guard --check-ui-pattern`）
-3. 测试命令须**前台**执行（Shell `block_until_ms` ≥ 90000）；禁止 PowerShell `| Select-Object -Last N` 作为唯一输出源
+2. **顺序**：单文件/单模块测 → 场景/Spec 自测 → `--quit` 全工程校验 → **`build_android.ps1` 产出 signed debug APK**（触达 `android/` 时）→ guard（如 `pipeline_guard --check-release --req`）
+3. 测试命令须**前台**执行（Shell `block_until_ms` ≥ 90000；APK 构建 ≥ 300000）；禁止 PowerShell `| Select-Object -Last N` 作为唯一输出源
 4. 组件测试档位禁止后台 dev server；Playwright/集成档位才按需启停 server
 
 DB bootstrap（如 `init_db`）改动后，先跑一个最小 smoke，再扩全量。

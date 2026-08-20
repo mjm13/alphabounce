@@ -1,0 +1,45 @@
+{
+  "pads": [
+    {
+      "id": "pad_standard",
+      "name": "标准挡板",
+      "kind": 0
+    },
+    {
+      "id": "pad_glue",
+      "name": "粘性挡板",
+      "kind": 1,
+      "glue": true
+    },
+    {
+      "id": "pad_time",
+      "name": "时缓挡板",
+      "kind": 2,
+      "slow_time": true
+    },
+    {
+      "id": "pad_laser",
+      "name": "激光挡板",
+      "kind": 3,
+      "laser": true
+    },
+    {
+      "id": "pad_generator",
+      "name": "生成挡板",
+      "kind": 4,
+      "generator": true
+    },
+    {
+      "id": "pad_aimant",
+      "name": "磁力挡板",
+      "kind": 5,
+      "aimant": true
+    },
+    {
+      "id": "pad_shake",
+      "name": "震动挡板",
+      "kind": 6,
+      "shake": true
+    }
+  ]
+}

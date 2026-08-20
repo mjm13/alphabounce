@@ -16,6 +16,8 @@
 | BL-20260820-02 | backlog | 20260818214301-AB-P1 | 关卡程序生成 | 超出 P1 MVP 范围 | P1 | open | → P7 |
 | BL-20260820-03 | backlog | 20260818214301-AB-P1 | 本地存档与进度 | 超出 P1 MVP 范围 | P2 | open | → P11 |
 | BL-20260820-05 | v1.0 | 20260820131200-P8b | 装备 loadout / Defense / 全局唯一分配 | 原 P0–P12 规划缺口 | P1 | in-progress | inbox 全量需求已建 |
+| BL-20260820-06 | v1.0 | 20260818214303-P3 | 球体飞行粒子（partSpark/mcBolt 等） | P3 仅行为；表现归 P10 | P1 | open | → `20260818214310-AB-P10音频与表现力.md` AC-4 |
+| BL-20260820-07 | v1.0 | 20260818214303-P3 | SAUVETAGE 首球保护（flSafe/levelTimer） | P3 未含关卡保护 | P1 | open | → `20260820150300-AB-P3c关卡SAUVETAGE首球保护.md` |
 
 ## 维护规则
 

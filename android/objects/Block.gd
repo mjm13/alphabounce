@@ -2,6 +2,7 @@ extends StaticBody2D
 
 # 可破坏砖块：StaticBody2D 物理 + P2 数据驱动行为与 mcBlock 贴图（BlockDef / blocks.json）。
 const BS = preload("res://scripts/brick_system.gd")
+const BallSys = preload("res://scripts/ball_system.gd")
 const DEFAULT_W := 96.0
 const DEFAULT_H := 48.0
 
@@ -15,6 +16,7 @@ var counts_toward_win := true
 var game = null
 var _vis_base: CanvasItem = null
 var _vis_smc: Sprite2D = null
+var _frozen_ice := false
 
 func _block_w() -> float:
 	if game != null and game.has_method("block_w"):
@@ -144,6 +146,45 @@ func _smc_frame_for_hp() -> int:
 	if hp <= 0:
 		return 1
 	return clampi(hp, 1, 6)
+
+func is_soft() -> bool:
+	return alive and def != null and def.behavior != BS.Behavior.UNBREAKABLE
+
+func get_life_value() -> float:
+	if not alive or def == null:
+		return 0.0
+	if def.behavior == BS.Behavior.UNBREAKABLE:
+		return -1.0
+	return float(hp)
+
+func apply_ice_ball() -> void:
+	if not alive or def == null or def.behavior == BS.Behavior.UNBREAKABLE or _frozen_ice:
+		return
+	_frozen_ice = true
+	_flash_hit()
+	_set_vis_modulate(_vis_base, Color(0.65, 0.85, 1.0))
+	if _vis_smc != null:
+		_set_vis_modulate(_vis_smc, Color(0.8, 0.95, 1.0))
+
+func damage_from_ball(ball) -> void:
+	if not alive or def == null:
+		return
+	if ball != null and ball.has_method("is_ghost") and ball.is_ghost():
+		return
+	if ball != null and ball.has_method("get_kind"):
+		if ball.get_kind() == BallSys.BallKind.ICE:
+			apply_ice_ball()
+			return
+		if ball.get_kind() == BallSys.BallKind.VOLT:
+			_flash_hit()
+			return
+	var dmg := 1.0
+	if ball != null and ball.has_method("get_damage"):
+		dmg = float(ball.get_damage())
+	if dmg <= 0.05:
+		_flash_hit()
+		return
+	take_hit(maxi(int(ceil(dmg)), 1))
 
 func take_hit(damage: int = 1) -> void:
 	if not alive or def == null:

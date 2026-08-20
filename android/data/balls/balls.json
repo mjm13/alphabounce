@@ -1,0 +1,93 @@
+{
+  "balls": [
+    {
+      "id": "standard",
+      "name": "标准球",
+      "kind": 0,
+      "damage": 1,
+      "color": "#FFE066",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain"
+    },
+    {
+      "id": "fire",
+      "name": "火球",
+      "kind": 1,
+      "damage": 2,
+      "color": "#FF5500",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "fire": true
+    },
+    {
+      "id": "ice",
+      "name": "冰球",
+      "kind": 2,
+      "damage": 1,
+      "color": "#88DDFF",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "ice": true
+    },
+    {
+      "id": "drunk",
+      "name": "醉球",
+      "kind": 3,
+      "damage": 1,
+      "color": "#CC88FF",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "drunk": true
+    },
+    {
+      "id": "kamikaze",
+      "name": "神风球",
+      "kind": 4,
+      "damage": 1,
+      "color": "#FF2222",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "kamikaze": true
+    },
+    {
+      "id": "yoyo",
+      "name": "YoYo球",
+      "kind": 5,
+      "damage": 1,
+      "color": "#AAFF66",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "yoyo": true
+    },
+    {
+      "id": "halo",
+      "name": "光环球",
+      "kind": 6,
+      "damage": 1,
+      "color": "#FFFFAA",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "halo": true
+    },
+    {
+      "id": "shade",
+      "name": "影球",
+      "kind": 7,
+      "damage": 1,
+      "color": "#444466",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "shade": true
+    },
+    {
+      "id": "volt",
+      "name": "电球",
+      "kind": 8,
+      "damage": 2,
+      "color": "#FFFF00",
+      "sprite": "ball_main0001.png",
+      "sprite_dir": "ballMain",
+      "volt": true
+    }
+  ]
+}

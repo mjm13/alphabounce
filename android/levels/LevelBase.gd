@@ -13,6 +13,7 @@ const PadScript := preload("res://objects/Pad.gd")
 const BallScript := preload("res://objects/Ball.gd")
 const BlockScript := preload("res://objects/Block.gd")
 const BSScript := preload("res://scripts/brick_system.gd")
+const BallSys := preload("res://scripts/ball_system.gd")
 const MetricsScript := preload("res://scripts/game_metrics.gd")
 
 var BLOCK_W := 96.0
@@ -28,7 +29,10 @@ var blocks_remaining := 0
 var state := "playing"  # playing | won | lost
 
 var paddle  # Pad 实例
-var ball    # Ball 实例
+var ball    # 主球引用（诊断用，= ball_manager 首球）
+var ball_manager: BallSys.BallManager
+var _ball_reg: BallSys.BallsRegistry
+var _pad_reg: BallSys.PadsRegistry
 var score_label: Label
 var lives_label: Label
 var message_label: Label
@@ -49,12 +53,15 @@ var _touch_active := false
 var _input_log: Array[String] = []  # 最近 N 条输入事件
 const INPUT_LOG_MAX := 6
 var _diag_lines: Array[String] = []
+var _diag_ball_kind := BallSys.BallKind.STANDARD
+var _diag_pad_kind := BallSys.PadKind.STANDARD
 
 func _ready() -> void:
 	call_deferred("_build")
 
 func _build() -> void:
 	_apply_layout_metrics()
+	_load_ball_pad_data()
 	_build_background()
 	_build_walls()
 	_build_hud()
@@ -90,6 +97,120 @@ func pad_width() -> float:
 func pad_height() -> float:
 	return PAD_H
 
+func _load_ball_pad_data() -> void:
+	_ball_reg = BallSys.BallsRegistry.new()
+	_pad_reg = BallSys.PadsRegistry.new()
+	_ball_reg.load_from_file()
+	_pad_reg.load_from_file()
+	ball_manager = BallSys.BallManager.new()
+	ball_manager.setup(self, BALL_D, BallScript)
+	ball_manager.all_balls_lost.connect(_on_all_balls_lost)
+
+func spawn_multiball(p_count: int = 3) -> int:
+	if state != "playing" or _ball_reg == null:
+		return 0
+	var kind := _diag_ball_kind if _diag_is_active() else BallSys.BallKind.STANDARD
+	var def := _ball_reg.find_by_kind(kind)
+	if def == null:
+		def = _ball_reg.find_by_kind(BallSys.BallKind.STANDARD)
+	if def == null:
+		return 0
+	var dir := Vector2(randf_range(-0.35, 0.35), -1.0)
+	return ball_manager.spawn_multiball(p_count, paddle.global_position, dir, def)
+
+func _diag_is_active() -> bool:
+	return BUILD_TAG == "diag"
+
+func _diag_ball_name() -> String:
+	if _ball_reg == null:
+		return "?"
+	var d := _ball_reg.find_by_kind(_diag_ball_kind)
+	return d.name if d != null else str(_diag_ball_kind)
+
+func _diag_pad_name() -> String:
+	if _pad_reg == null:
+		return "?"
+	var d := _pad_reg.find_by_kind(_diag_pad_kind)
+	return d.name if d != null else str(_diag_pad_kind)
+
+func _diag_hit_label(p_pos: Vector2, p_label: Control) -> bool:
+	if p_label == null or not p_label.visible:
+		return false
+	return Rect2(p_label.position, p_label.size).has_point(p_pos)
+
+func _diag_cycle_ball() -> void:
+	_diag_ball_kind = (_diag_ball_kind + 1) % 9
+	_reset_ball_kind(_diag_ball_kind)
+	_input_log.append("DIAG ball -> %s" % _diag_ball_name())
+
+func _diag_cycle_pad() -> void:
+	_diag_pad_kind = (_diag_pad_kind + 1) % 7
+	_apply_pad_kind(_diag_pad_kind)
+	_input_log.append("DIAG pad -> %s" % _diag_pad_name())
+
+func _diag_trigger_multiball() -> void:
+	var n := spawn_multiball(3)
+	_input_log.append("DIAG multiball +%d (total %d)" % [n, ball_manager.count() if ball_manager != null else 0])
+
+func _apply_pad_kind(p_kind: int) -> void:
+	if paddle == null or _pad_reg == null:
+		return
+	var pd := _pad_reg.find_by_kind(p_kind)
+	if pd != null:
+		paddle.setup_from_def(pd)
+
+func _reset_ball_kind(p_kind: int) -> void:
+	if ball_manager != null:
+		ball_manager.clear_all()
+	var def := _ball_reg.find_by_kind(p_kind) if _ball_reg != null else null
+	if def == null:
+		return
+	ball = ball_manager.spawn(
+		def,
+		Vector2(paddle.position.x, paddle.position.y - BALL_D * 1.4),
+		Vector2(randf_range(-0.35, 0.35), -1.0)
+	)
+	if ball != null:
+		ball.game = self
+
+func _handle_diag_input(event: InputEvent) -> bool:
+	if not _diag_is_active() or state != "playing":
+		return false
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_B:
+				_diag_cycle_ball()
+				return true
+			KEY_P:
+				_diag_cycle_pad()
+				return true
+			KEY_M:
+				_diag_trigger_multiball()
+				return true
+	if event is InputEventScreenTouch and event.pressed:
+		var pos: Vector2 = event.position
+		if _diag_hit_label(pos, score_label):
+			_diag_cycle_ball()
+			return true
+		if _diag_hit_label(pos, lives_label):
+			_diag_cycle_pad()
+			return true
+		if _diag_hit_label(pos, version_label):
+			_diag_trigger_multiball()
+			return true
+	if event is InputEventMouseButton and event.pressed:
+		var pos: Vector2 = event.position
+		if _diag_hit_label(pos, score_label):
+			_diag_cycle_ball()
+			return true
+		if _diag_hit_label(pos, lives_label):
+			_diag_cycle_pad()
+			return true
+		if _diag_hit_label(pos, version_label):
+			_diag_trigger_multiball()
+			return true
+	return false
+
 func _build_background() -> void:
 	var bg := ColorRect.new()
 	bg.name = "Background"
@@ -112,8 +233,8 @@ func _position_diag_label() -> void:
 	if diag_label == null:
 		return
 	var vps := _vp()
-	diag_label.size = Vector2(vps.x * 0.52, 320)
-	diag_label.position = Vector2(16, vps.y - 340)
+	diag_label.size = Vector2(vps.x * 0.52, 380)
+	diag_label.position = Vector2(16, vps.y - 400)
 
 func _build_walls() -> void:
 	# 左、右、上三堵不可见静态墙；底部留空（球落底=判负）。
@@ -241,12 +362,15 @@ func _update_diag_label() -> void:
 	_diag_lines.append("[DIAG] FPS %.1f | frame %d | phys_tick %d | state=%s" % [_fps_displayed, _frame_count, _physics_tick, state])
 
 	# --- 第 2 行：球状态 ---
+	if ball_manager != null and ball_manager.count() > 0:
+		ball = ball_manager.balls[0] if ball_manager.balls.size() > 0 else null
 	if ball != null and is_instance_valid(ball):
 		var bv: Vector2 = ball.velocity if ball.velocity != null else Vector2.ZERO
 		var bp: Vector2 = ball.global_position
 		var speed: float = bv.length()
 		var angle := rad_to_deg(atan2(bv.y, bv.x))
-		_diag_lines.append("BALL pos(%.0f,%.0f) vel(%.0f,%.0f) spd=%.0f ang=%.1f°" % [bp.x, bp.y, bv.x, bv.y, speed, angle])
+		var bc := ball_manager.count() if ball_manager != null else 1
+		_diag_lines.append("BALL n=%d pos(%.0f,%.0f) vel(%.0f,%.0f) spd=%.0f ang=%.1f°" % [bc, bp.x, bp.y, bv.x, bv.y, speed, angle])
 	else:
 		_diag_lines.append("BALL (null)")
 
@@ -258,6 +382,10 @@ func _update_diag_label() -> void:
 
 	# --- 第 4 行：碰撞与游戏数据 ---
 	_diag_lines.append("DATA collisions=%d | blocks_left=%d | score=%d | lives=%d" % [_collision_count, blocks_remaining, score, lives])
+
+	if _diag_is_active():
+		_diag_lines.append("--- P3 DIAG: tap SCORE/LIVES/ver | PC B/P/M ---")
+		_diag_lines.append("ball=%s kind=%d | pad=%s kind=%d" % [_diag_ball_name(), _diag_ball_kind, _diag_pad_name(), _diag_pad_kind])
 
 	# --- 第 5+ 行：输入事件流 ---
 	if _input_log.size() > 0:
@@ -272,6 +400,11 @@ func _update_diag_label() -> void:
 func _build_paddle() -> void:
 	paddle = PadScript.new()
 	paddle.configure(PAD_W, PAD_H)
+	if _pad_reg != null:
+		var pk := _diag_pad_kind if _diag_is_active() else BallSys.PadKind.STANDARD
+		var pd := _pad_reg.find_by_kind(pk)
+		if pd != null:
+			paddle.setup_from_def(pd)
 	paddle.position = Vector2(_vp().x / 2.0, _vp().y * 0.82)
 	add_child(paddle)
 
@@ -299,13 +432,13 @@ func _build_blocks() -> void:
 				blocks_remaining += 1
 
 func _reset_ball() -> void:
-	if ball != null:
-		ball.queue_free()
-	ball = BallScript.new()
-	ball.configure(BALL_D)
-	ball.position = Vector2(paddle.position.x, paddle.position.y - BALL_D * 1.4)
-	ball.launch(Vector2(randf_range(-0.35, 0.35), -1.0))
-	add_child(ball)
+	var kind := _diag_ball_kind if _diag_is_active() else BallSys.BallKind.STANDARD
+	_reset_ball_kind(kind)
+
+func _on_all_balls_lost() -> void:
+	if state != "playing":
+		return
+	_on_ball_lost()
 
 func _process(_delta: float) -> void:
 	_frame_count += 1
@@ -330,19 +463,18 @@ func _process(_delta: float) -> void:
 
 func _physics_process(_delta: float) -> void:
 	_physics_tick += 1
-	if state != "playing" or ball == null:
+	if state != "playing" or ball_manager == null:
 		return
-	# 碰撞检测：球速度突变 = 发生了反弹/碰撞
-	var prev_vel: Vector2 = ball.velocity if ball.velocity != null else Vector2.ZERO
-	if ball.global_position.y > _vp().y - 10.0:
-		_on_ball_lost()
-	# 下一帧再检测速度变化（move_and_collide 在 _physics_process 内执行）
-	call_deferred("_check_collision", prev_vel)
+	for b in ball_manager.balls:
+		if not is_instance_valid(b):
+			continue
+		var prev_vel: Vector2 = b.velocity if b.velocity != null else Vector2.ZERO
+		call_deferred("_check_collision", b, prev_vel)
 
-func _check_collision(prev_vel: Vector2) -> void:
-	if ball == null or not is_instance_valid(ball):
+func _check_collision(p_ball, prev_vel: Vector2) -> void:
+	if p_ball == null or not is_instance_valid(p_ball):
 		return
-	if ball.velocity != prev_vel and prev_vel.length_squared() > 0:
+	if p_ball.velocity != prev_vel and prev_vel.length_squared() > 0:
 		_collision_count += 1
 
 func _on_ball_lost() -> void:
@@ -353,6 +485,20 @@ func _on_ball_lost() -> void:
 		_show_message("GAME OVER\nTap to Restart")
 	else:
 		_reset_ball()
+
+func _touch_releases_glue(event: InputEvent) -> bool:
+	if not (event is InputEventScreenTouch or event is InputEventMouseButton):
+		return false
+	if not event.pressed:
+		return false
+	if ball_manager == null:
+		return false
+	var released := false
+	for b in ball_manager.balls:
+		if is_instance_valid(b) and b.has_method("is_glued") and b.is_glued():
+			b.unglue()
+			released = true
+	return released
 
 func on_block_destroyed(block_score: int = SCORE_PER_BLOCK) -> void:
 	score += block_score
@@ -374,6 +520,14 @@ func _show_message(msg: String) -> void:
 		message_label.visible = true
 
 func _input(event: InputEvent) -> void:
+	if _handle_diag_input(event):
+		if _input_log.size() > INPUT_LOG_MAX:
+			_input_log.pop_front()
+		return
+
+	if state == "playing" and _touch_releases_glue(event):
+		return
+
 	# 记录输入事件到日志（用于诊断触控/按键是否正常到达）
 	var entry := ""
 	if event is InputEventScreenTouch:
