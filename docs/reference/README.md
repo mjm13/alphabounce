@@ -18,9 +18,19 @@
 
 | 本地路径 | 上游路径 | 说明 |
 |---|---|---|
-| `alphabounce_ds_guide.txt` | `doc/alphabounce_ds_guide.txt` | 设计文档，玩法/策略/数值的**唯一真相源** |
+| `alphabounce-facts.md` | —（本仓自写） | 从攻略与源码提取的事实，各阶段 OQ 的拍板依据 |
 | `haxe/` | `frontend/src/haxe/` | 79 个 `.hx`，行为对照基准（`Block.hx` `Level.hx` `Random.hx` `Codec.hx` `Sound.hx` `ev/*` `el/*` `lander/*` `navi/*`） |
 | `UPSTREAM-LICENSE.md` | `LICENSE.md` | 上游许可证正文 |
+
+### 攻略全文不入库（转载限制）
+
+`doc/alphabounce_ds_guide.txt` 并非官方设计文档，而是 Michael Lamparski 2010 年的玩家攻略
+（GameFAQs），其条款明确禁止未经许可的在线转载，授权站点白名单仅 GameFAQs / neoseeker /
+supercheats。因此**本仓不保存其全文**，改为按其 Fair Use 条款提取所需事实并标注出处，见
+`alphabounce-facts.md`。本地全文位于 `../EternalTwin-Alphabounce/doc/`（工程外）。
+
+另注：该攻略描述 **DSi 版**且为玩家视角，不含数值公式；凡生成算法与数值常量一律以
+`haxe/` 源码为准。
 
 **上游快照**：`https://gitlab.com/eternaltwin/alphabounce/alphabounce.git`
 commit `3a0d5239fd67b6c42acd8cdb5512598b7423b79c`（2026-08-16 "Remove debug"）

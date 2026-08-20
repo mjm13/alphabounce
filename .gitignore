@@ -20,6 +20,10 @@ observability/
 __pycache__/
 *.pyc
 
+# Third-party guide: author forbids online redistribution (see docs/reference/README.md).
+# Facts extracted under fair use live in docs/reference/alphabounce-facts.md instead.
+alphabounce_ds_guide.txt
+
 # OS / editor temp
 *.tmp
 .DS_Store
