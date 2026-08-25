@@ -8,31 +8,30 @@
 
 config_version=5
 
+[addons]
+
+godot_mcp/enabled=true
+godot_mcp/path="res://addons/godot_mcp/plugin.cfg"
+
 [application]
 
+config/name="AlphaBounce"
+run/main_scene="res://scenes/main/Main.tscn"
 config/features=PackedStringArray("4.7")
 
-[gd_resource type="ProjectSettings" format=4]
+[autoload]
 
-config/name="AlphaBounce"
-config/version="0.1.0"
-config/description="Godot 4.7.1 port of AlphaBounce - Space arcade game with ball physics, missions, and enemies"
-run/main_scene="res://scenes/main/Main.tscn"
-application/config/icon="res://resouces/icons/icon.svg"
-application/run/run_multithreaded=false
-display/window/size/mode=2
-display/window/size/viewport_width=800
-display/window/size/viewport_height=600
-display/window/stretch/mode="viewport"
-display/window/stretch/aspect="keep"
-display/window/resizable/max_width=1920
-display/window/resizable/max_height=1080
-display/window/resizable/min_width=480
-display/window/resizable/min_height=320
-input/touch_input/mode="touch"
-script:null}rendering/renderer/renderer_name="mobile"
-rendering/anti_aliasing/quality/msaa_2d=1
-rendering/anchors_and_margins/use_screen_constants=true
-"#Androidå¯¼åºéç½®application/config/abstract_name"="AlphaBounce"
-application/config/package_name="com.eternaltwin.alphabounce"
-application/config/package_version="1.0.0"
+MCPGameBridge="res://addons/godot_mcp/game_bridge/mcp_game_bridge.gd"
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=600
+window/size/mode=2
+window/stretch/mode="viewport"
+input_devices/pointing/show_mouse=true
+
+[rendering]
+
+renderer/rendering_method="mobile"
+anchors_and_margins/use_screen_constants=true

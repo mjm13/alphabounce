@@ -1,7 +1,6 @@
-extends Node2D
+﻿extends Node2D
 
 const BALL_SCENE = preload("res://scenes/entities/Ball.tscn")
-const PAD_SCENE = preload("res://scenes/entities/Pad.tscn")
 
 var score: int = 0
 var lives: int = 3
