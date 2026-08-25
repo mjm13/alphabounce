@@ -1,0 +1,34 @@
+# CI 占位 — init 后按 AGENTS.md 填写真实命令
+# 规则：栈无关；具体 test/build 命令在项目 AGENTS.md 与 Gate-3 维护
+#
+# 启用步骤：
+# 1. 取消下方 on/pull_request 注释并按需调整分支
+# 2. 将 run 段替换为 AGENTS.md 中的可执行命令
+# 3. 在 release-checklist 中勾选 CI 已配置
+
+name: ci
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [dev]
+  # pull_request:
+  #   branches: [dev, main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder — replace with project setup
+        run: echo "Configure CI per AGENTS.md (install / test / build)"
+      # 可选：启用 xijia guard 校验（纯 Python，跨平台；本地 Windows/PowerShell 亦以相同命令运行）
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.12'
+      # - name: Xijia guards
+      #   run: |
+      #     python .cursor/hooks/policy_flow_drift_check.py
+      #     python .cursor/hooks/pipeline_guard.py --check-req-ids
+      #     python .cursor/hooks/pipeline_guard.py --check-doc-anchors
+      #     python -m pytest .cursor/hooks/tests/ -q

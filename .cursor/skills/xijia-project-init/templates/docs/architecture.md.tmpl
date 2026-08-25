@@ -1,0 +1,26 @@
+# 架构总览（Architecture Overview）
+
+## 系统目标
+
+- 项目：{{project_name}}
+- 目标：{{project_goal}}
+
+## 系统总览
+
+```mermaid
+flowchart LR
+    userClient["UserClient"] --> appClient["Application"]
+    appClient --> backendApi["BackendApi"]
+    backendApi --> dataStore["DataStore"]
+```
+
+## 模块边界
+
+- 初始模块：{{primary_modules}}
+- 技术栈（已确认）：{{chosen_stack_summary}}
+
+## 分层裁剪原则
+
+- 默认：简单三层（Router -> Service -> Repository）
+- 触发复杂规则时：升级领域建模分层
+- 每个 change 在 design 中说明分层选择与理由

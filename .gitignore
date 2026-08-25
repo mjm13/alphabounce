@@ -1,0 +1,36 @@
+# Build outputs
+/bin
+/game/bin
+**/*.apk
+**/*.aab
+**/*.exe
+**/*.zip
+**/*.7z
+**/*.dmg
+**/*.tar.gz
+shader_cache
+.godot/export_debug
+
+# Tools (download separately)
+tools/
+!tools/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp

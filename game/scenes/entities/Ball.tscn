@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://scripts/entities/ball.gd" type="Script" id=1]
+
+[node name="Ball" type="CharacterBody2D"]
+script = ExtResource("1")
+
+[resource name="CollisionShape" type="CircleShape2D" id=2]
+radius = 10.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.5, 1.5)

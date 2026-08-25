@@ -1,0 +1,44 @@
+# Domain Model（Established）
+
+## Aggregate: <aggregate-name>
+
+### Purpose
+
+- <aggregate business purpose>
+
+### Entities / Value Objects
+
+- Entities: <entity-a>, <entity-b>
+- Value Objects: <vo-a>, <vo-b>
+
+### Enforced Invariants
+
+- INV-001: <invariant statement>
+- INV-002: <invariant statement>
+- INV-003: <invariant statement>（可标注 supersedes: INV-00x）
+
+### Commands
+
+- <command-a>
+- <command-b>
+
+### Domain Events
+
+- <event-a>（trigger: <condition>）
+- <event-b>（trigger: <condition>）
+
+### State Machine
+
+- States: <state-a> -> <state-b> -> <state-c>
+- Illegal transitions: <list>
+
+## 说明
+
+- 每个聚合必须至少有一条 `INV-xxx` 不变量。
+- 技术壳层能力不写入领域模型。
+
+## 修订记录（动态更新）
+
+| 日期 | change-id | 操作（ADD/UPDATE/SUPERSEDE/DEPRECATE） | 对象（Aggregate/INV） | 说明 |
+| --- | --- | --- | --- | --- |
+| <yyyy-mm-dd> | <change-name> | SUPERSEDE | INV-002 | superseded by INV-003 |
