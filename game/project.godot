@@ -35,110 +35,26 @@ input_devices/pointing/show_mouse=true
 
 renderer/rendering_method="mobile"
 anchors_and_margins/use_screen_constants=true
+textures/vram_compression/import_etc2_astc=true
 
 [input]
 tap_left={
 "deadzone": 0.5,
-"events": [
-InputEventKey({
- "pressure": 0.0,
- "unicode": 97,
- "motion": false,
- "label": "A",
- "keycode": 0,
- "physical_key_modifier": -1,
- "alt": false,
- "meta": false,
- "shift": false,
- "pressed": false,
- "cmd": false,
- "ctrl": false,
- "location": 0,
- "scancode": 41
-})
-]
+"events": [Object(InputEventKey,"keycode":65,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
 }
 tap_right={
 "deadzone": 0.5,
-"events": [
-InputEventKey({
- "pressure": 0.0,
- "unicode": 100,
- "motion": false,
- "label": "D",
- "keycode": 0,
- "physical_key_modifier": -1,
- "alt": false,
- "meta": false,
- "shift": false,
- "pressed": false,
- "cmd": false,
- "ctrl": false,
- "location": 0,
- "scancode": 43
-})
-]
+"events": [Object(InputEventKey,"keycode":68,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
 }
 tap_shoot={
 "deadzone": 0.5,
-"events": [
-InputEventKey({
- "pressure": 0.0,
- "unicode": 115,
- "motion": false,
- "label": "S",
- "keycode": 0,
- "physical_key_modifier": -1,
- "alt": false,
- "meta": false,
- "shift": false,
- "pressed": false,
- "cmd": false,
- "ctrl": false,
- "location": 0,
- "scancode": 31
-})
-]
+"events": [Object(InputEventKey,"keycode":83,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
 }
 tap_pause={
 "deadzone": 0.5,
-"events": [
-InputEventKey({
- "pressure": 0.0,
- "unicode": 112,
- "motion": false,
- "label": "P",
- "keycode": 0,
- "physical_key_modifier": -1,
- "alt": false,
- "meta": false,
- "shift": false,
- "pressed": false,
- "cmd": false,
- "ctrl": false,
- "location": 0,
- "scancode": 44
-})
-]
+"events": [Object(InputEventKey,"keycode":80,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
 }
 tap_escape={
 "deadzone": 0.5,
-"events": [
-InputEventKey({
- "pressure": 0.0,
- "unicode": 0,
- "motion": false,
- "label": "",
- "keycode": 0,
- "physical_key_modifier": -1,
- "alt": false,
- "meta": false,
- "shift": false,
- "pressed": false,
- "cmd": false,
- "ctrl": false,
- "location": 0,
- "scancode": 1
-})
-]
+"events": [Object(InputEventKey,"keycode":4194305,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
 }

@@ -1,6 +1,6 @@
 # AGENTS.md — Alphabounce_M
 
-> [agents.md](https://agents.md/) 格式。本文每轮进上下文，因此只放**每轮都用得到**的运行时事实与可执行命令；领域细节走渐进披露（`docs/llms.txt` 文档路由、`.cursor/rules/*`、skills）。xijia 门禁见 `.cursor/rules/00-workflow.mdc`。Gate-3 **有限度**增量维护（先就地替换，再考虑新增）；未命中写 `Living Docs: no-op`。
+> [agents.md](https://agents.md/) 格式。本文每轮进上下文，因此只放**每轮都用得到**的运行时事实与可执行命令；领域细节走渐进披露（`docs/llms.txt` 文档路由、`.codebuddy/rules/*`、skills）。xijia 门禁见 `.codebuddy/rules/00-workflow.mdc`。Gate-3 **有限度**增量维护（先就地替换，再考虑新增）；未命中写 `Living Docs: no-op`。
 
 <!-- 追加限度（勿删；细则见 docs/process/knowledge-maintenance.md）：1) 同一事实已在文中 → 改写原句，不新增段落；2) 仅单一领域/阶段需要 → 写入对应 doc 或 rule，此处只留一行指针；3) 新增 ≥3 行时同轮评估能否下沉等量旧内容；4) 禁止镜像目录树、代码文件清单、文档树路由。 -->
 
@@ -15,6 +15,12 @@ Godot 4.x 版 AlphaBounce 游戏项目，将 Haxe/Pixi.js 源码完整重构为 
 - **Frontend root**：game/
 - **UI reference**：<待补充：无外部原型；参考 EternalTwin-Alphabounce 视觉风格>
 - **能力 → 代码坐标**：<待补充，或链接 `docs/capability-map.md`>（目录与入口读代码即得，本文不镜像）
+
+## Execution plan（完全对标原版）
+
+- 完整执行计划与状态追踪表：`docs/requirements/execution-plan.md`（每完成一需求回填 状态/完成日期/验收证据）
+- 头条状态（2026-08-28）：R00 已完成；BASE-1/BASE-2 进行中；R01–R18 待开始
+- 真机验收门禁：游戏/物理/交互/敌人/UI 需求须 android-debug 闭环（构建→安装→启动→截图→logcat 零 ERROR）
 
 ## Dev environment tips
 
@@ -53,7 +59,7 @@ adb install -r game/bin/android_debug.apk
 
 ## Agent coding behavior（实现阶段）
 
-本节只写**本项目特有**的实现期约定，范围为已获 Gate-1 批准后的写代码 diff；Gate-0~3、破坏性 DB、发布门禁优先。通用编码素养与变更边界见 `.cursor/rules/41-change-boundary.mdc`。
+本节只写**本项目特有**的实现期约定，范围为已获 Gate-1 批准后的写代码 diff；Gate-0~3、破坏性 DB、发布门禁优先。通用编码素养与变更边界见 `.codebuddy/rules/41-change-boundary.mdc`。
 
 **取舍顺序**（停在第一个可行项）：Gate-1/AC 范围内？→ 代码库已有可复用？→ Godot 内置功能？→ 最小 diff。**不新增**未在 Gate-1 批准的依赖。
 
@@ -80,8 +86,8 @@ adb install -r game/bin/android_debug.apk
 ## Security
 
 - **Secrets**：无（离线游戏）
-- **High-risk operations**：存档文件读写见 `.cursor/rules/22-db-destructive-safety.mdc`
-- **Do not modify without approval**：见 `.cursor/rules/00-workflow.mdc`「Approval Gates」
+- **High-risk operations**：存档文件读写见 `.codebuddy/rules/22-db-destructive-safety.mdc`
+- **Do not modify without approval**：见 `.codebuddy/rules/00-workflow.mdc`「Approval Gates」
 
 ## Commit and PR instructions
 
@@ -89,8 +95,8 @@ adb install -r game/bin/android_debug.apk
   - `feat: add ball physics system`
   - `fix: resolve collision detection bug`
   - `chore: update project settings`
-- Gate-2 收尾：`python .cursor/hooks/pipeline_guard.py --check-release --req <requirement-file>`
-- Gate-3 归档：`python .cursor/hooks/pipeline_guard.py --check-closeout --req <shipped-requirement>`
+- Gate-2 收尾：`python .codebuddy/hooks/pipeline_guard.py --check-release --req <requirement-file>`
+- Gate-3 归档：`python .codebuddy/hooks/pipeline_guard.py --check-closeout --req <shipped-requirement>`
 - 合并前检查：上文 **Build and test commands** 的 test 全绿
 
 ## Xijia workflow

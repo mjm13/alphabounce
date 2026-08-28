@@ -29,6 +29,7 @@ defends: "Gate 审批人被写成泛称「用户」而非 git 身份（docs/pitf
 8. **Gate-1 切片 verify 顺序**：实现阶段按 `AGENTS.md`「Gate-1 切片 verify 顺序」执行（单文件/Spec 优先，全量测仅最后一项；后端单测前台执行；组件测试档位禁止后台 dev server）。
 9. **Windows UTF-8 / BOM（硬约束）**：禁止经破坏编码的文本管道改写源码/文档；协议见技能 `xijia-safe-file-write` 与 `docs/pitfalls/windows-powershell-utf8-bom.md`。新建/改写 inbox requirement 同样须加载该技能。
 10. **Gate-2 签字后同轮 Gate-3（硬约束）**：Gate-2 留痕后 **同轮**输出 Gate-3 执行摘要（trigger/preflight/sync/Move/closeout），禁止仅回复「下一步请确认 Gate-3」。`--check-release` blocking 在 Gate-3 链内修复，不得作为停轮理由。
+11. **真机验收门禁（硬约束，移动端/游戏需求）**：本项目为 Godot Android 真机游戏，任何触达运行表现/UI/物理/交互的需求，**真机未通过验收不得标记为完成**——不得置 `Gate-2=已验收`、不得移入 `shipped`。真机验收须走 `godot-android-debug` 闭环实测：构建 APK → `adb install` → `am start` 启动 → 截图确认画面 → `logcat` 无 `ERROR` → 必要时 `input tap/swipe` 触发预期反馈。仅「代码就绪，待引擎执行」「代码 review 通过」「本机未装引擎故未跑」**不构成完成证据**；Gate-2 结论须附已执行的真机命令与产物（截图/日志）。
 
 # 输出要点
 
