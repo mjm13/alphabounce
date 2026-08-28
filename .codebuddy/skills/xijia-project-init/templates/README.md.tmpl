@@ -1,0 +1,22 @@
+# {{project_name}}
+
+## 项目简介
+
+- 目标：{{project_goal}}
+- 首批模块：{{primary_modules}}
+- 技术栈（已确认）：{{chosen_stack_summary}}（Gate-3：栈变化时须与 `docs/architecture.md` 同步；运行 `python .codebuddy/hooks/pipeline_guard.py --check-stack-drift`）
+
+## 仓库导航
+
+- `AGENTS.md`：Agent 操作面板（栈、目录、可执行命令、安全）
+- `docs/README.md`：文档目录与读写边界
+- `docs/process/project-lifecycle.md`：全生命周期与 xijia 命令对照
+- `.codebuddy/rules/00-workflow.mdc`：研发流程门禁与收尾规范
+
+## 快速开始
+
+1. 空仓库：运行 `/xijia:init`（文档 + 技能 + 空目录 + 工程基线种子需求）
+2. 阅读 `AGENTS.md` 与 `docs/README.md` 了解运行时命令与文档结构
+3. 运行 `/xijia:start docs/requirements/inbox/<首个种子需求>.md`（Init Report 会给出路径；通常后端→前端→运行基线）；业务 PRD 在工程基线 Gate-3 后再拆
+
+> **活文档**：本文件为 Gate-3 维护对象；技术栈摘要须与 `docs/architecture.md` 保持一致。

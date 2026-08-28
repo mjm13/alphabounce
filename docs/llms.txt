@@ -1,0 +1,16 @@
+# docs/llms.txt — 文档路由（给 Agent / LLM 的渐进披露索引）
+
+本目录是 Alphabounce 项目的文档中心。Agent 每轮默认只加载 AGENTS.md；
+深入细节时按本路由援引对应文档，避免一次注入全部文档。
+
+## 索引
+- 架构与约定：architecture.md、conventions.md、constitution.md、glossary.md
+- 工作流（xijia）：flow.md、roadmap.md、process/knowledge-maintenance.md、process/acceptance-criteria.md、process/incident-response.md、process/project-lifecycle.md
+- 需求与决策：requirements/（inbox/active/shipped/archive）、decisions/、openspec/
+- 经验库：patterns/、pitfalls/、domain/
+- 环境：mcp-setup.md、mcp-usage.md、usb-debugging-guide.md
+- 规则与技能：.codebuddy/rules/、.codebuddy/skills/、.codebuddy/commands/
+
+## 使用约定
+- 能力 → 代码坐标：查 game/ 源码即得，不在此镜像目录树。
+- 渐进披露：先读 AGENTS.md，再按需展开本路由中的文档。

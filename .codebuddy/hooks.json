@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeReadFile": [
+      {
+        "command": "python .codebuddy/hooks/log_doc_usage.py",
+        "failClosed": false
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "python .codebuddy/hooks/drift_guard_scan.py",
+        "failClosed": false
+      },
+      {
+        "command": "python .codebuddy/hooks/pipeline_guard.py",
+        "failClosed": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+﻿{
+  "mcpServers": {
+    "android-debug": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "adb-mcp"
+      ],
+      "env": {
+        "ANDROID_HOME": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk",
+        "ADB_PATH": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk\\platform-tools\\adb.exe",
+        "ANDROID_SERIAL": ""
+      }
+    },
+    "local-file": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "D:\\Project\\npm_Repository\\npm_global\\node_modules\\@modelcontextprotocol\\server-filesystem\\dist\\index.js",
+        "D:\\Project\\Self\\alphabounce"
+      ]
+    }
+  }
+}

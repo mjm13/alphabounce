@@ -1,0 +1,45 @@
+# Gate 审批人须用 Git 身份，禁止泛称「用户」
+
+## 现象
+
+需求文档 YAML properties 中写成：
+
+```text
+Gate-1 | 状态:已批准；审批人:用户；2026-07-20
+Gate-2 | 状态:已验收；审批人:用户；2026-07-20
+```
+
+`--check-release` 报 `Gate-1/2 审批人/日期不合规`，或事后无法追溯是谁批准/验收。
+
+## 根因
+
+Agent 把对话里的泛称「用户已批准」直接写入审批人字段，未读取 git 身份。
+
+## 正确做法
+
+1. 用户文字批准/验收后，Agent 执行：
+
+```bash
+git config user.name
+git config user.email
+```
+
+2. 留痕格式（二选一）：
+
+```text
+审批人:张三
+审批人:张三 <zhang@example.com>
+```
+
+3. Gate-0 若由 Agent 代填，同样优先用 git user.name，不用「用户」。
+
+## 禁止
+
+- `用户`、`人工`、`验收人`、`审核人` 等泛称作为审批人
+- 未获文字批准却预填「已批准/已验收」
+
+## 关联
+
+- `.codebuddy/rules/42-verification-output.mdc`（verify 硬约束）
+- `.codebuddy/rules/00-workflow.mdc`（Gate-1/2 人审门禁）
+- `pipeline_guard.py --check-release`

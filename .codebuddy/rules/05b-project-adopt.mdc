@@ -1,0 +1,67 @@
+---
+description: 历史多模块项目接入规则（/xijia:adopt 意图时启用）
+alwaysApply: false
+defends: "对已有代码的历史项目误走 /xijia:init 冷启动路径，覆盖既有文档与结构。"
+---
+
+# 历史项目接入路由
+
+当用户意图为以下任一项时，进入 **adopt** 路径，**不要**走 `/xijia:init` 冷启动：
+
+- 历史项目接入 xijia
+- 多模块 / 多子项目 adopt
+- 已有代码工作区文档对齐
+- `/xijia:adopt`
+
+对应入口：
+
+- 手动：`/xijia:adopt`
+- 自动：`xijia-project-adopt` skill
+
+# 与 init 的分流
+
+| 场景 | 入口 |
+| --- | --- |
+| 空仓库、无业务代码 | `/xijia:init` → `05-project-init.mdc` |
+| 已有代码、聚合工作区 | `/xijia:adopt` → 本规则 + `xijia-project-adopt` |
+| 已有 docs、仅补缺失骨架 | `/xijia:adopt scaffold` supplement-scaffold |
+| adopt 已完成 | `/xijia:start` / `/xijia:prd` |
+
+# 硬边界
+
+1. **不**创建 code-shell、**不**种子化从零工程初始化需求
+2. **不**覆盖已有活文档（supplement 仅新增缺失文件）
+3. 扫描产出仅为 **draft**；`discovery.status=confirmed` 后方可 verify
+4. codegraph：preflight 逐子目录 init；失败须用户豁免或修复
+5. DDD：propose-not-mint；`_draft/` 须 content 确认后提升到 `docs/domain/`
+6. **content 分批置信确认**：每批 ≤10 核心术语 + ≤1 主流程；`[待确认]` **不得**由 Agent 自行提升，仅用户确认后提升；允许 **partial-BC**（一次只确认 BC 的一部分）
+7. verify 通过 ≠ 可发布；发布仍走 `/xijia:release`（partial-BC 在 readiness 报告以 W9 警告呈现，不硬停）
+
+# 阶段 SOP（摘要）
+
+```text
+/xijia:adopt scaffold
+  → preflight（codegraph）
+  → discover（scan_workspace.py）
+  → content（人工确认）
+  → verify（--check-adopt-readiness + Adoption Gate）
+  → /xijia:start
+```
+
+# Guard
+
+- 缺少 `.codebuddy/rules/` → hard block（Step 2 未完成）
+- `adopt.stage=done` → 拒绝重复 verify
+- 已有 `docs/` 且无 manifest → supplement-scaffold
+
+# 中断恢复
+
+读 `docs/workspace-manifest.yaml` 的 `adopt.stage`：
+
+| stage | 续跑 |
+| --- | --- |
+| scaffold | preflight |
+| preflight | discover |
+| discover | content |
+| content | verify |
+| done | `/xijia:start` |
