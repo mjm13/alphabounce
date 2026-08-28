@@ -1,4 +1,4 @@
-; Engine configuration file.
+﻿; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
 ; since the parameters that go here are not all obvious.
 ;
@@ -35,3 +35,43 @@ input_devices/pointing/show_mouse=true
 
 renderer/rendering_method="mobile"
 anchors_and_margins/use_screen_constants=true
+[input]
+tap_left={
+"deadzone": 0.5,
+"events": [InputEventKey({
+ "pressure": 0.0,
+ "unicode": 97,
+ "motion": false,
+ "label": "A",
+ "keycode": 0,
+ "physical_key_modifier": -1,
+ "alt": false,
+ "meta": false,
+ "shift": false,
+ "pressed": false,
+ "cmd": false,
+ "ctrl": false,
+ "location": 0,
+ "scancode": 41
+})]
+}]
+tap_right={
+"deadzone": 0.5,
+"events": [InputEventKey({
+ "pressure": 0.0,
+ "unicode": 100,
+ "motion": false,
+ "label": "D",
+ "keycode": 0,
+ "physical_key_modifier": -1,
+ "alt": false,
+ "meta": false,
+ "shift": false,
+ "pressed": false,
+ "cmd": false,
+ "ctrl": false,
+ "location": 0,
+ "scancode": 43
+})]
+}
+
