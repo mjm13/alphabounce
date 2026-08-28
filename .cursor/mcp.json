@@ -1,35 +1,19 @@
 {
   "mcpServers": {
-    "mysql": {
+    "mobile-mcp": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@benborla29/mcp-server-mysql"
-      ],
+      "args": ["-y", "@mobilenext/mobile-mcp"],
       "env": {
-        "MYSQL_HOST": "localhost",
-        "MYSQL_PORT": "3306",
-        "MYSQL_USER": "root",
-        "MYSQL_PASS": "root",
-        "MYSQL_DB": "mcp_data_core"
+        "ANDROID_HOME": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk",
+        "ADB_PATH": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk\\platform-tools\\adb.exe",
+        "DEFAULT_DEVICE": "emulator-5554"
       }
     },
-    "codegraph-backend": {
-      "command": "codegraph",
+    "local-file": {
+      "command": "node",
       "args": [
-        "serve",
-        "--mcp",
-        "--path",
-        "${workspaceFolder}/backend"
-      ]
-    },
-    "codegraph-frontend": {
-      "command": "codegraph",
-      "args": [
-        "serve",
-        "--mcp",
-        "--path",
-        "${workspaceFolder}/frontend"
+        "D:\\Project\\npm_Repository\\npm_global\\node_modules\\@modelcontextprotocol\\server-filesystem\\dist\\index.js",
+        "D:\\Project\\Self\\alphabounce"
       ]
     }
   }
