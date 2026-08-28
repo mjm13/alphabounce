@@ -10,20 +10,90 @@
 
 逐条推进需求，使「全部实现即等于原版」：画面/操作/任务与原版一致，安卓可一键导出 Debug APK / Release AAB。
 
-## 真机验收门禁（强制）
+## 真机独立验收标准（USB 调试模式 · 强制）
 
-游戏 / 物理 / 交互 / 敌人 / UI 类需求，Gate-2 必须走 **android-debug 闭环**：
+> **核心原则（本计划的验收基线）**：每一个需求（R01–R18 + BASE-1/2）都必须能**在不依赖任何尚未完成的上游需求**的前提下，
+> 独立构建 debug 包 → USB 安装到真机 → 进入本需求专属验收入口 → 完成交互与 AC 断言 → 产出截图与 logcat 证据。
+> **不再接受**「仅 headless 单测」或「进入 Game 场景手动观察」作为 Gate-2 证据。
+
+### 1. 独立性判定（四要素，缺一不可）
+
+1. **可独立构建**：`--export-debug` 产出的 APK 不因其他需求未完成而失败。
+2. **可独立进入**：真机启动后经统一 DebugLauncher 菜单点选本需求条目即直达其验收入口，无需先通关或先完成其他需求。
+3. **可独立断言**：debug 场景内嵌 AC 自检，输出 `print("<REQ_ID>_AC-n PASS/FAIL")`，logcat 可直接 grep。
+4. **可独立取证**：截图 + logcat 零 ERROR，落盘 `docs/evidence/<REQ_ID>.png`。
+
+### 2. Debug 验收载具（工程约定）
+
+| 构件 | 路径 | 职责 |
+|---|---|---|
+| DebugLauncher 场景 | `game/debug/debug_launcher.tscn` | 真机启动入口，列出全部 20 个需求条目按钮 |
+| DebugLauncher 脚本 | `game/debug/debug_launcher.gd` | 点击条目 → `get_tree().change_scene_to_file(该需求 debug 场景)` |
+| 需求 debug 场景 | `game/debug/<REQ_ID>_debug.tscn` | 每需求一个，自包含该需求能力 + AC 自检打印 |
+| Mock fixture 目录 | `game/debug/fixtures/` | 上游数据未就绪时的替代数据（levels/missions/shop/save/enemies/audio/fx） |
+
+> DebugLauncher 仅在 **debug 导出**中生效；release 导出不打包 `game/debug/`，不影响正式包。
+
+### 3. Mock 解耦规则（关键 · 解决依赖扇入）
+
+- 凡某需求依赖的上游需求**尚未验收完成**，该需求 debug 场景**必须**改加载 `game/debug/fixtures/` 下 mock 数据，使本需求可独立启动与验收。
+- Mock 数据的**字段结构必须与 R16 最终产出的正式 schema 一致**（ADR-002 数据格式 / ADR-003 存档），R16 完成后仅替换数据源，不改逻辑。
+- **禁止**为验收某需求而要求先完成其全部依赖需求（尤其 R16 扇入的 R02/R05/R06/R07/R08/R11）。
+- R16 验收完成后，逐个需求将 fixture 切换为正式数据并重跑一次真机验收，作为回归。
+
+### 4. 标准验收流程（每个需求逐条执行，全部可复跑）
 
 ```bash
-godot --path game --export-debug "Android"
-adb install -r game/bin/android_debug.apk
-# 启动 → 进入 Game → 交互 → 截图 → logcat 零 Godot ERROR
+# 1 构建本需求独立 debug 包
+godot --path game --headless --export-debug "Android" game/bin/AlphaBounce_debug.apk
+# 2 USB 安装 + 启动
+adb -s <DEVICE_SERIAL> install -r game/bin/AlphaBounce_debug.apk
+adb shell am start -n com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher
+# 3 在 DebugLauncher 中点选 <REQ_ID>，进入本需求独立验收入口
+# 4 AC 断言日志（须全部 PASS）
+adb logcat -d | grep "<REQ_ID>_AC"
+# 5 截图取证
+adb shell screencap -p /sdcard/<REQ_ID>.png
+adb pull /sdcard/<REQ_ID>.png docs/evidence/<REQ_ID>.png
+# 6 日志门禁（必须零 ERROR）
+adb logcat -d -v brief | grep -iE "godot|script error"
 ```
+
+### 5. 门禁判定
+
+- **通过**：步骤 4 全部 AC 打印 PASS；步骤 6 零 Godot ERROR / SCRIPT ERROR；步骤 5 截图符合视觉预期。
+- **不通过**：任一条不满足 → Gate-2 退回，状态回置 `已实现待验收` 并登记缺陷，**禁止签字**（`42-verification-output`）。
+
+### 6. 真机独立验收矩阵
+
+| 需求 | 验收入口（debug 场景） | Mock 基线（依赖未就绪时） | 验收类型 |
+|---|---|---|---|
+| R01 Pad | `debug/R01_pad_debug.tscn` | 无（自含 Pad+Ball，不依赖 R02/R16） | 真机交互 |
+| R02 关卡网格 | `debug/R02_grid_debug.tscn` | `fixtures/level_demo.json`（替 R16 `levels.json`） | 真机视觉+断言 |
+| R03 物理完整化 | `debug/R03_physics_debug.tscn` | 无（自含 Ball+4 边界，不依赖 R01/R02） | 真机交互+断言 |
+| R04 碰撞集成 | `debug/R04_collision_debug.tscn` | `fixtures/level_demo.json` 方块布局（替 R16） | 真机交互 |
+| R05 任务系统 | `debug/R05_mission_debug.tscn` | `fixtures/mission_demo.json`（替 R16 `missions.json`） | 真机 UI+断言 |
+| R06 商店系统 | `debug/R06_shop_debug.tscn` | `fixtures/shop_demo.json` + `fixtures/save_demo.json` | 真机 UI+断言 |
+| R07 存档系统 | `debug/R07_save_debug.tscn` | 无（自含 `user://` 读写，不依赖 R16 schema） | 真机持久化 |
+| R08 敌人系统 | `debug/R08_enemy_debug.tscn` | `fixtures/enemy_demo.json` + `fixtures/level_demo.json` | 真机交互+视觉 |
+| R09 触摸映射 | `debug/R09_input_debug.tscn` | 无（自含 InputMap 探针） | 真机交互 |
+| R10 游戏循环 | `debug/R10_loop_debug.tscn` | `fixtures/level_demo.json` + 最小子集 stub（Pad/Ball/Block/1 敌人） | 真机端到端 |
+| R11 导弹系统 | `debug/R11_missile_debug.tscn` | `fixtures/level_demo.json`（含 GUARDIAN）+ `fixtures/save_demo.json` | 真机交互 |
+| R12 音频系统 | `debug/R12_audio_debug.tscn` | `fixtures/audio/` 占位 ogg（替 R15 迁移音频） | 真机听感+断言 |
+| R13 粒子特效 | `debug/R13_fx_debug.tscn` | `fixtures/level_demo.json` + 程序生成纹理（替 R15） | 真机视觉 |
+| R14 UI+导出 | `debug/R14_full_debug.tscn` | 全部 fixture（R16 完成后切正式数据） | 真机端到端 |
+| R15 资产迁移 | `debug/R15_asset_debug.tscn` | 无（直接展示 `game/resources/` 已迁移精灵/音频） | 真机视觉比对 |
+| R16 数据搬运 | `debug/R16_data_debug.tscn` | 无（本需求产出正式数据；校验 JSON 可解析并加载） | 真机断言+加载 |
+| R17 物理对等 | `debug/R17_parity_debug.tscn` | `fixtures/physics_demo.json`（原版常量对照） | 真机手感+断言 |
+| R18 画面规格 | `debug/R18_visual_debug.tscn` | `fixtures/level_demo.json`（替 R16） | 真机截图比对 |
+| BASE-1 物理基础 | `debug/BASE1_debug.tscn` | 无（已 Gate-2；Game 接入待 R03/R17） | 真机已闭环 |
+| BASE-2 方块基础 | `debug/BASE2_block_debug.tscn` | `fixtures/block_demo.json`（替 R16 全量类型） | 真机视觉 |
 
 ## 更新约定
 
 - 状态取值：`待开始` / `进行中` / `已实现待验收` / `已完成(归档)`
-- 每完成一条需求：改状态 → 填完成日期 → 贴验收证据（真机截图路径 / logcat 结论 / 测试输出）
+- 每完成一条需求：改状态 → 填完成日期 → 贴**真机验收证据**（`docs/evidence/<REQ_ID>.png` 截图 + `<REQ_ID>_AC-n PASS` logcat 片段 + 零 ERROR 结论）
+- **缺真机证据不得签字**：Gate-2 验收证据列为空或仅 headless 输出时，视为未验收（`42-verification-output`）
 - 同步 `AGENTS.md`「Execution plan」头条状态
 
 ---

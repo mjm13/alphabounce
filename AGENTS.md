@@ -8,8 +8,8 @@
 
 Godot 4.x 版 AlphaBounce 游戏项目，将 Haxe/Pixi.js 源码完整重构为 GDScript，支持 Android 平台。
 
-- **Initial modules**：物理系统、方块系统、任务系统、敌人系统、UI系统
-- **Stack**：Godot 4.2+ / GDScript / Android Export
+- **Initial modules**：物理系统、方块系统、任务系统、敌人系统、UI 系统
+- **Stack**：Godot 4.7 / GDScript / Android Export
 - **Maintainer**：EternalTwin Team
 - **Backend root**：无（离线单机游戏）
 - **Frontend root**：game/
@@ -35,8 +35,11 @@ Godot 4.x 版 AlphaBounce 游戏项目，将 Haxe/Pixi.js 源码完整重构为 
 # 打开 Godot Editor
 godot --path game --editor
 
-# 运行测试
-godot --path game --headless --build-sceens tests/test_suite.tscn
+# 运行测试套件
+godot --path game --headless --quit tests/test_suite.tscn
+
+# 运行单个需求测试（USB 调试模式真机验收）
+godot --path game --headless --quit --test R03
 
 # 导出 Android Debug APK
 godot --path game --export-debug "Android"
@@ -53,9 +56,10 @@ adb install -r game/bin/android_debug.apk
 ## Testing instructions
 
 - 改代码后运行上文 **Build and test commands** 中对应 test 命令，直至通过再提请验收
-- 测试栈：Godot 内置 Test Framework
+- 测试栈：自定义 TestBase 框架（`game/scripts/tests/test_base.gd`）
 - 约定：Gate-1 切片实现期间按需求切片 `Test:`/`Done:` 测；**全量测试**仅最后一切片或 regression
 - Mock 边界：禁止 mock 物理引擎；允许 mock 数据配置
+- 每个需求必须有对应的 `test_Rxx_*.gd` 测试文件，Gate-1 验收前 AC 测试全部通过
 
 ## Agent coding behavior（实现阶段）
 
