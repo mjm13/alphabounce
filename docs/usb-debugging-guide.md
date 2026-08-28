@@ -1,104 +1,112 @@
-# USB 设备连接指南
+﻿# USB 设备连接指南
 
 ## 当前状态
 
 | 设备 | 类型 | 状态 | 说明 |
 |------|------|------|------|
 | emulator-5554 | 模拟器 | ✅ 正常 | Android 15, API 35 |
-| REDMI K80 Ultra | USB 真机 | ⚠️ 驱动异常 | USB 状态 Unknown |
+| REDMI K80 Ultra | USB 真机 | ⚠️ 待检测 | 序列号：49PZY5AQR4ZPPBV4 |
 
-## 问题诊断
+## MCP 配置
 
-**现象**：
-- 设备被系统识别（`REDMI K80 Ultra`）
-- USB 设备类：`USBDevice`, `WPD`
-- ADB 无法识别设备
+已配置 `adb-mcp` 服务器，支持自动检测设备：
 
-**原因**：
-- 缺少 Xiaomi/Redmi 专用 USB 驱动
-- 设备处于"Unknown"状态
-- ADB 驱动未正确安装
+```json
+{
+  "mcpServers": {
+    "android-debug": {
+      "command": "npx",
+      "args": ["-y", "adb-mcp"],
+      "env": {
+        "ANDROID_HOME": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk",
+        "ADB_PATH": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk\\platform-tools\\adb.exe",
+        "ANDROID_SERIAL": ""
+      }
+    },
+    "local-file": {
+      "command": "node",
+      "args": [
+        "D:\\Project\\npm_Repository\\npm_global\\node_modules\\@modelcontextprotocol\\server-filesystem\\dist\\index.js",
+        "D:\\Project\\Self\\alphabounce"
+      ]
+    }
+  }
+}
+```
+
+## USB 设备诊断
+
+### 设备识别状态
+
+```
+设备 ID: USB\VID_2717&PID_FF48\49PZY5AQR4ZPPBV4
+状态: Unknown
+类: USBDevice, WPD
+```
+
+### 可能原因
+
+1. **缺少 ADB 驱动** - 设备处于 WPD（Windows Portable Devices）模式
+2. **USB 配置错误** - 手机设置为"充电"模式而非"传输文件"
+3. **未授权 USB 调试** - 手机屏幕未点击"允许"
 
 ## 解决方案
 
-### 方案 1：授权 USB 调试（推荐优先尝试）
+### 方案 1：切换 USB 模式（推荐）
 
-1. 检查手机屏幕是否有弹出框请求"允许 USB 调试"
+1. 在手机上：设置 → 开发者选项
+2. 找到"USB 配置"或"选择 USB 模式"
+3. 选择"传输文件 (MTP)"或"传输照片 (PTP)"
+4. 重新插拔 USB 线缆
+
+### 方案 2：授权 USB 调试
+
+1. 查看手机屏幕是否有"允许 USB 调试"弹窗
 2. 如果有，点击"允许"
 3. 如果没有，尝试：
    - 断开 USB 连接
    - 重新连接
    - 查看是否弹出授权请求
 
-### 方案 2：更换 USB 配置
-
-1. 在手机上：设置 → 开发者选项
-2. 找到"USB 配置"
-3. 选择"传输文件 (MTP)"或"传输照片 (PTP)"
-4. 重新连接 USB
-
 ### 方案 3：更换 USB 端口/线缆
 
 1. 使用原装 USB 线缆
-2. 尝试 USB 2.0 端口（黑色接口，非蓝色）
+2. 尝试 USB 2.0 端口（黑色接口）
 3. 避免使用 USB Hub
 
-### 方案 4：安装 Xiaomi USB 驱动
+### 方案 4：重启设备
 
 ```powershell
-# 方法 1: 使用小米官方工具
-# 下载：https://www.mi.com/download/
-# 安装 Mi Assistant 或 Mi PC Suite
+# 重启 ADB 服务
+adb kill-server
+adb start-server
 
-# 方法 2: 手动安装 ADB 驱动
-# 1. 打开设备管理器
-# 2. 找到"未知设备"或"ADB Interface"
-# 3. 右键 → 更新驱动 → 浏览我的电脑
-# 4. 选择：D:\Project\Self\alphabounce\tools\android-sdk\extras\google\usb_driver
+# 重新插拔 USB
 ```
 
-### 方案 5：网络调试模式（备用）
+## 使用 adb-mcp
 
-如果 USB 无法解决，可使用网络调试：
+adb-mcp 支持自动检测设备，无需手动指定设备 ID：
 
-```powershell
-# 1. 在手机上开启无线调试（Android 11+）
-#    设置 → 开发者选项 → 无线调试
-
-# 2. 获取设备 IP 地址
-#    设置 → 关于手机 → 状态信息 → IP 地址
-
-# 3. 连接设备
-adb connect <设备 IP>:5555
-```
-
-## 验证命令
-
-```powershell
-# 检查设备连接
-adb devices
-
-# 检查设备详情
-adb -s <设备 ID> shell getprop ro.product.model
-
-# 截图测试
-adb -s <设备 ID> shell screencap -p /sdcard/test.png
-adb -s <设备 ID> pull /sdcard/test.png ./tests/screenshots/
-
-# 查看日志
-adb -s <设备 ID> logcat -s Godot
-```
-
-## 临时方案
-
-在 USB 驱动问题解决前，可继续使用模拟器进行测试：
-
-```powershell
-# 使用模拟器
-adb -s emulator-5554 devices
-
-# 运行测试
+```python
+# 测试脚本会自动选择第一个可用设备
 python tests/mcp_integration_test.py
+
+# 或指定设备
+python tests/mcp_integration_test.py emulator-5554
+python tests/mcp_integration_test.py 49PZY5AQR4ZPPBV4
+```
+
+## DSH 使用方式
+
+在对话中直接使用自然语言：
+
+```
+"在设备上截图并保存"
+"点击屏幕中心位置"
+"读取 game/scripts/core/game.gd 的内容"
+"运行集成测试"
+"模拟触摸输入测试球体物理"
 ```
 
 ## 故障排除
@@ -106,12 +114,14 @@ python tests/mcp_integration_test.py
 | 问题 | 可能原因 | 解决方法 |
 |------|----------|----------|
 | 设备显示 "unauthorized" | USB 调试未授权 | 在手机上点击"允许" |
-| 设备显示 "no permissions" | 权限不足 | 检查 udev 规则（Linux）或驱动（Windows） |
+| 设备显示 "no permissions" | 权限不足 | 检查驱动安装 |
 | 设备不出现 | USB 连接问题 | 更换线缆/端口 |
-| 驱动状态 Unknown | 缺少驱动 | 安装 Xiaomi USB 驱动 |
+| 驱动状态 Unknown | 缺少驱动 | 切换 USB 模式为 MTP |
 
-## 参考链接
+## 参考项目对比
 
-- [Android USB 驱动安装指南](https://developer.android.com/tools/devices)
-- [小米 USB 驱动下载](https://www.mi.com/download/)
-- [ADB 调试指南](https://developer.android.com/tools/adb)
+参考项目 `D:\Project\Self\alphabounce_agents` 使用相同配置：
+- ADB 版本：1.0.41 (37.0.1-15733141)
+- MCP 包：adb-mcp@0.1.1
+- 配置路径：`.mcp.json`
+

@@ -1,12 +1,15 @@
 ﻿{
   "mcpServers": {
-    "mobile-mcp": {
+    "android-debug": {
       "command": "npx",
-      "args": ["-y", "@mobilenext/mobile-mcp"],
+      "args": [
+        "-y",
+        "adb-mcp"
+      ],
       "env": {
         "ANDROID_HOME": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk",
         "ADB_PATH": "D:\\Project\\Self\\alphabounce\\tools\\android-sdk\\platform-tools\\adb.exe",
-        "DEFAULT_DEVICE": "emulator-5554"
+        "ANDROID_SERIAL": ""
       }
     },
     "local-file": {
