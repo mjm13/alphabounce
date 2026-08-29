@@ -15,6 +15,9 @@ var is_launched: bool = false
 var acceleration: Vector2 = Vector2.ZERO  # 外部设置的加速度（如重力）
 var friction: float = BOUNCE_DAMPING     # 每帧速度衰减系数（摩擦）
 
+# [R04] 球-块碰撞：识别到方块并调用其 hit() 时发出，供验收入口断言 AC-1
+signal block_hit(block)
+
 func _ready() -> void:
 	velocity = Vector2.ZERO
 	is_launched = false
@@ -31,17 +34,18 @@ func _physics_process(delta: float) -> void:
 	if collision != null:
 		var normal := collision.get_normal()
 		velocity = pre.bounce(normal) * RESTITUTION
+		# [R04] 物理滑动碰撞识别方块并造成伤害（本 Godot 版本无 body_entered 信号，改用 get_slide_collision）
+		var collider = collision.get_collider()
+		if collider != null and collider.is_in_group("blocks"):
+			if collider.has_method("hit"):
+				collider.hit(1)
+			emit_signal("block_hit", collider)
 
 func collide_with_block(block_position: Vector2) -> void:
 	# [业务逻辑] 与方块碰撞：按入射方向反射速度（restitution），独立于 Godot 物理信号，便于单测。
 	var normal := (global_position - block_position).normalized()
 	if normal != Vector2.ZERO:
 		velocity = velocity.bounce(normal) * RESTITUTION
-
-func _on_body_entered(body: Node) -> void:
-	# [业务逻辑] 场景内物理碰撞回调：方块组触发反弹。
-	if body.is_in_group("blocks"):
-		collide_with_block(body.global_position)
 
 func launch(direction: Vector2) -> void:
 	# [业务逻辑] 以单位方向 * 初速发射球体；签名与 R01 Pad 契约保持不变。

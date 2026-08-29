@@ -1,4 +1,5 @@
 extends StaticBody2D
+class_name Block
 
 # 方块类型
 enum BlockType {
@@ -16,6 +17,8 @@ var is_destroyed: bool = false
 
 func _ready():
 	_setup_collision()
+	# [R04] 加入 blocks 分组，供 ball 的 body_entered 识别与碰撞积分
+	add_to_group("blocks")
 
 func _setup_collision():
 	# 碰撞层设置
