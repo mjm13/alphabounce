@@ -226,7 +226,7 @@ def _step_instruction(ctx: CtaContext) -> str:
     if sub == "OpenSpec 不匹配":
         return "确认 OpenSpec change 名与需求 scope 一致，或 propose 新 change"
     if sub == "Gate-0":
-        return "你：逐条确认歧义/OQ/闭环表 → Agent 回写 Gate-0 并 `--check-intake --req`"
+        return "Agent：依据文档已结构化填写的歧义/OQ/闭环表自动判定 Gate-0 → 回写 → `--check-intake --req`"
     if sub == "Gate-1 方案缺口":
         return "Agent：A.0.5 + writing-plans 补 Gate-1 → `--check-plan --req`"
     if sub == "Gate-1 待批准":
@@ -239,8 +239,8 @@ def _step_instruction(ctx: CtaContext) -> str:
         return f"Agent：完成当前切片 + verify → `--check-release --req {rel}` → 提请 Gate-2"
     if sub == "Gate-2 待验收":
         if ctx.release_blockers:
-            return f"Agent：先消除 release 阻塞 → `--check-release --req {rel}`，再请你 Gate-2 签字"
-        return "你：回复「Gate-2 验收通过，审批人 <git config user.name>，YYYY-MM-DD」"
+            return f"Agent：先消除 release 阻塞 → `--check-release --req {rel}`，再自动签字 Gate-2"
+        return "Agent：verify 证据齐全即自动签字 `已验收`（审批人 agent-auto）"
     if sub == "Gate-3":
         return f"Agent：`--gate3-trigger-report --req {rel}` → xijia-sync-knowledge → Move inbox→shipped → `--check-closeout`"
     if sub == "已收尾":
@@ -261,7 +261,7 @@ def _please_and_then(ctx: CtaContext) -> tuple[str, str]:
         )
     if sub == "Gate-0":
         return (
-            "确认歧义/OQ/闭环表断点（逐条文字回复）",
+            "无（Agent 自动推进：依据文档已填歧义/OQ/闭环表判定并回写 Gate-0）",
             f"Agent 回写 Gate-0 → `python .codebuddy/hooks/pipeline_guard.py --check-intake --req {rel}` → 再输出 CTA",
         )
     if sub == "Gate-1 方案缺口":
@@ -272,13 +272,12 @@ def _please_and_then(ctx: CtaContext) -> tuple[str, str]:
     if sub == "Gate-1 待批准":
         if requirement_touches_ui(ctx.text):
             return (
-                "审阅 Gate-1（页面布局预览 → 验收标准 → UI 验收证据约定 → 实现方案）后回复 → "
-                "`批准 Gate-1` 或 `批准 Gate-1；UI验收证据: 组件测试|Playwright|集成测试`",
+                "无（Agent 自动批准：inbox Gate-1 已写满，直接 `已批准` 并同轮实现）",
                 "Agent 同轮按 frontmatter `UI验收证据` 档位切片 TDD → comment-sync → verify"
                 "（未声明则按组件测试）→ 填验收记录 → 提请 Gate-2（不再问是否开工）",
             )
         return (
-            "审阅 Gate-1（页面布局预览 → 验收标准 → 实现方案）后回复 → `批准 Gate-1`",
+            "无（Agent 自动批准：inbox Gate-1 已写满，直接 `已批准` 并同轮实现）",
             "Agent 同轮切片 TDD → comment-sync → verify → 填验收记录 → 提请 Gate-2（不再问是否开工）",
         )
     if sub == "实现中":
@@ -301,10 +300,10 @@ def _please_and_then(ctx: CtaContext) -> tuple[str, str]:
         if ctx.release_blockers:
             return (
                 "无（Agent 继续）",
-                f"Agent 消除 release 阻塞 → {release_cmd} 通过后，再请你 Gate-2 签字",
+                f"Agent 消除 release 阻塞 → {release_cmd} 通过后，自动签字 Gate-2",
             )
         return (
-            "回复「Gate-2 验收通过，审批人 <git config user.name>，YYYY-MM-DD」",
+            "无（Agent 自动签字：verify 证据齐全即 `已验收`，审批人 agent-auto）",
             f"Agent 同轮更新 frontmatter Gate-2 → `--check-gate3-preflight --req {rel}` → archive-requirement → `--check-closeout`",
         )
     if sub == "Gate-3":

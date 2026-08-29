@@ -2495,7 +2495,7 @@ Table + Drawer
         self.assertIn("\n\n**UI 验收证据：**", md)
         self.assertNotIn("**本步指令：**", md)
         self.assertIn("\n\n**请你：**", md)
-        self.assertIn("组件测试|Playwright|集成测试", md)
+        self.assertIn("无（Agent 自动批准", md)
         self.assertIn("默认组件测试", md)
 
     def test_format_cta_gate1_no_ui_omits_evidence_reminder(self) -> None:
@@ -2533,7 +2533,7 @@ Table + Drawer
         self.assertNotIn("**UI 验收证据：**", md)
         self.assertNotIn("Playwright|集成测试", md)
         self.assertNotIn("**本步指令：**", md)
-        self.assertIn("`批准 Gate-1`", md)
+        self.assertIn("无（Agent 自动批准", md)
 
     def test_format_cta_without_req_is_reminder_only(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

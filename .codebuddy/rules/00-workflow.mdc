@@ -1,7 +1,7 @@
 ---
 description: xijia 研发宪法（硬停 + guard 指针）；详细步骤见 xijia-ops-pipeline
 alwaysApply: true
-defends: "未获用户文字批准即改代码/迁移，或 Agent 自标 Gate-2 完成（见 xijia-ops-pipeline GOTCHAS「跳 Gate-1 直接改代码」）。L3 责任边界，不到期。"
+defends: "自主推进模式下 Agent 可凭程序证据自动推进并代签各 Gate（无需人工文字批准/签字）；但破坏性 DB/清库/新外部依赖/权限密钥变更/跨 BC 大规模调整仍须人工批准（22-db-destructive-safety / Approval Gates）。L3 责任边界，不到期。"
 ---
 
 # 核心定位
@@ -20,12 +20,15 @@ defends: "未获用户文字批准即改代码/迁移，或 Agent 自标 Gate-2 
 - 🔴：`explore → propose → analyze → apply → verify → sync → archive → Gate-2 → Gate-3`。
 - 🧪 spike：链路不清先探针，代码非交付。
 
-# 人审门禁（硬停）
+# 人审门禁（本项目：自主推进模式，已移除人工确认/签字）
 
-1. **Gate-0**：`部分通过` = 歧义登记/闭环表/OQ 仍有待确认；`已驳回` stop-and-report。`DEF-*` 不触发部分通过。`待*` 态仅写状态；其它 Gate 状态须写审批人/日期。
-2. **Gate-1**：方案后停止；未**文字**批准禁止改代码/迁移/依赖（AskQuestion 不算）；批准后留痕**审批人 = git config user.name**（可选 email），禁止泛称「用户」；**批准后同轮进入实现**（禁止反问是否开工；见 `session-recovery.md` Gate-1→实现链式）。
-3. **Gate-2**：验收前须人工签字；Agent 只提请，不得自标完成；签字留痕**审批人 = git config user.name**（可选 email），禁止泛称「用户」；**`--check-release` 须在 Gate-2 前执行**（closeout 步骤 4，不得签字后以外科方式首次跑 release 并停轮）；**签字后同轮进入 Gate-3**（禁止反问「是否归档」；见 `session-recovery.md` Gate-2→Gate-3 链式）。（游戏/物理/交互/UI 需求另须先过**真机验收闭环**这一硬前置——见 `42-verification-output.mdc` #11 与 `godot-android-debug` 技能「真机验收闭环」；headless 单测/代码 review **不得冒充**真机验收，否则状态回置 `已实现待验收` 并登记缺陷。）
-4. **Gate-3**：Gate-2 后立即 `xijia-sync-knowledge`；任何档位强制；未完成不得开下一需求；若 `--check-release` 仍有 blocking，**在 Gate-3 链内修复后继续 Move**，不得停轮。
+> 项目决定（审批人 meijianming，2026-08-29）：**移除所有 Gate 的人工确认/签字环节**。Agent 依据文件证据与 guard 程序检查**自动推进并代签**，不等待人工文字批准或签字。以下仍强制保留（均由程序校验，非人工确认）：真机验收闭环、AC 断言、零 Godot ERROR、各 guard 检查、Approval Gates（破坏性操作）。
+> 代签统一记 **审批人 = `agent-auto`**，日期取执行当日。
+
+1. **Gate-0**：Agent 依据需求文档已结构化填写的 歧义登记/OQ/闭环表 直接判定 `已通过` 并回写（审批人 `agent-auto`）；无需人工逐条确认。`--check-intake` 通过即进 Gate-1。`部分通过`/`已驳回` 仅当 intake 程序硬 fail 时触发，届时 Agent 自行补 `gate0-intake` 闭环后重跑，不 solicite 人工。
+2. **Gate-1**：Agent 直接批准 inbox 内已写满的 Gate-1（验收标准 + 实现方案），回写 `已批准`（审批人 `agent-auto`）；**批准后同轮进入实现**，不反问是否开工。
+3. **Gate-2**：Agent 跑真机/组件 verify；证据（AC PASS + 零 ERROR + 截图，游戏/物理/交互/UI 须过**真机验收闭环**见 `42-verification-output.mdc` #11 与 `godot-android-debug` 技能）齐全即**自动签字** `已验收`（审批人 `agent-auto`），不得停轮等人工；`--check-release` 须在签字前执行；签字同轮进入 Gate-3。headless 单测/代码 review 不得冒充真机验收。
+4. **Gate-3**：签字同轮 `xijia-sync-knowledge` → archive；任何档位强制；未完成不得开下一需求；`--check-release` 仍 blocking 时**在 Gate-3 链内修复后继续 Move**，不得停轮。
 
 # Change 类型
 
