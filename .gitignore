@@ -36,3 +36,7 @@ temp/
 *.tmp
 
 # 大文件类型
+
+# Godot editor export cache (regenerated on every export; not meaningful to track)
+game/.godot/exported/
+game/.godot/editor/export-*.cfg

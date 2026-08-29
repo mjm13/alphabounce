@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "android-devices": {
+      "command": "npx",
+      "args": ["android-adb-mcp"],
+      "env": {
+        "ADB_PATH": "D:\\Project\\SELF\\alphabounce\\tools\\android-sdk\\platform-tools\\adb.exe",
+        "ADB_HOST": "localhost",
+        "ADB_PORT": "5037",
+        "PATH": "D:\\Project\\SELF\\alphabounce\\tools\\android-sdk\\platform-tools;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\"
+      }
+    }
+  }
+}

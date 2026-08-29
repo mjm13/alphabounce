@@ -18,11 +18,7 @@ godot_mcp/path="res://addons/godot_mcp/plugin.cfg"
 config/name="AlphaBounce"
 run/main_scene="res://scenes/main/Main.tscn"
 config/features=PackedStringArray("4.7")
-
-[autoload]
-
-; MCPGameBridge autoload removed: godot_mcp plugin is disabled; keep it out of debug/release builds
-;MCPGameBridge="res://addons/godot_mcp/game_bridge/mcp_game_bridge.gd"
+config/icon="res://icon.svg"
 
 [display]
 
@@ -32,30 +28,36 @@ window/size/mode=2
 window/stretch/mode="viewport"
 input_devices/pointing/show_mouse=true
 
-[rendering]
-
-renderer/rendering_method="mobile"
-anchors_and_margins/use_screen_constants=true
-textures/vram_compression/import_etc2_astc=true
-
 [input]
+
 tap_left={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"keycode":65,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":65,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 tap_right={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"keycode":68,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":68,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 tap_shoot={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"keycode":83,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":83,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 tap_pause={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"keycode":80,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":80,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 tap_escape={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"keycode":4194305,"physical_keycode":0,"key_label":"","unicode":0,"location":0,"echo":false,"pressed":false,"pressure":0.0,"device":-1,"window_id":0,"script":null)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":4194305,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
+
+[rendering]
+
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
+anchors_and_margins/use_screen_constants=true
