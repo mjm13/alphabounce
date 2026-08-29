@@ -36,6 +36,7 @@
 | BL-20250101-20 | v0.2.0 | 存档系统 | 存档版本号 | 首期无版本迁移 | P2 | open | 版本升级时 |
 | BL-20250101-21 | v0.2.0 | UI导出 | 应用图标设计 | 占位图标 | P2 | open | 美术资源到位后 |
 | BL-20250101-22 | v0.2.0 | UI导出 | Android Release AAB | 首期Debug即可 | P1 | open | 发布阶段 |
+| BL-20260829-01 | v0.1.0 | R02/R03 | android-debug 真机闭环（构建→安装→启动→logcat→截图，零 ERROR） | 本环境无 Android SDK/导出模板/adb/已连接设备，R02/R03 仅完成 Godot headless 模拟验收 | P1 | open | 真机环境就绪（或本机接入设备+安装 SDK）后由实现方跑通并补齐 docs/evidence 证据 |
 
 ## 维护规则
 
