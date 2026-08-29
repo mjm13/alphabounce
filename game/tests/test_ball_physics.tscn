@@ -1,9 +1,53 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=10 format=3]
 
-[ext_resource path="res://scripts/entities/ball.gd" type="Script" id=1]
+[ext_resource path="res://scripts/entities/ball.gd" type="Script" id="1"]
+[ext_resource path="res://tests/test_ball_physics.gd" type="Script" id="2"]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 10.0
+
+[sub_resource type="RectangleShape2D" id=2]
+size = Vector2(10, 620)
+
+[sub_resource type="RectangleShape2D" id=3]
+size = Vector2(10, 620)
+
+[sub_resource type="RectangleShape2D" id=4]
+size = Vector2(820, 10)
+
+[sub_resource type="RectangleShape2D" id=5]
+size = Vector2(820, 10)
 
 [node name="TestBallPhysics" type="Node"]
+script = ExtResource("2")
 
 [node name="Ball" type="CharacterBody2D" parent="."]
-script = ExtResource(1)
+script = ExtResource("1")
 position = Vector2(400, 300)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("1")
+
+[node name="WallLeft" type="StaticBody2D" parent="."]
+position = Vector2(-5, 300)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallLeft"]
+shape = SubResource("2")
+
+[node name="WallRight" type="StaticBody2D" parent="."]
+position = Vector2(805, 300)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallRight"]
+shape = SubResource("3")
+
+[node name="WallTop" type="StaticBody2D" parent="."]
+position = Vector2(400, -5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallTop"]
+shape = SubResource("4")
+
+[node name="WallBottom" type="StaticBody2D" parent="."]
+position = Vector2(400, 605)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WallBottom"]
+shape = SubResource("5")
