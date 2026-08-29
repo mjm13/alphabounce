@@ -10,7 +10,7 @@ config_version=5
 
 [addons]
 
-godot_mcp/enabled=true
+godot_mcp/enabled=false
 godot_mcp/path="res://addons/godot_mcp/plugin.cfg"
 
 [application]
@@ -21,7 +21,8 @@ config/features=PackedStringArray("4.7")
 
 [autoload]
 
-MCPGameBridge="res://addons/godot_mcp/game_bridge/mcp_game_bridge.gd"
+; MCPGameBridge autoload removed: godot_mcp plugin is disabled; keep it out of debug/release builds
+;MCPGameBridge="res://addons/godot_mcp/game_bridge/mcp_game_bridge.gd"
 
 [display]
 

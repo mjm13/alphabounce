@@ -1,0 +1,63 @@
+﻿
+I/ActivityTaskManager( 1952): START u0 {flg=0x10000000 cmp=com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher}
+ from uid 2000
+D/Boost   ( 1952): hostingType=activity, hostingName={com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher}, cal
+lerPackage=null, isSystem=true, isBoostNeeded=false.
+I/ActivityManager( 1952): Start proc 9518:com.eternaltwin.alphabounce/u0a235 for activity {com.eternaltwin.alphabounce/
+com.godot.game.GodotAppLauncher} caller=null
+D/ForceDarkHelper( 9518): updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@
+8e01463
+D/ForceDarkHelper( 9518): updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@
+8e01463
+D/GodotActivity( 9518): Project command line parameters: [--xr_mode_regular, --xr-mode, off, --fullscreen, --background
+_color, #000000]
+D/GodotActivity( 9518): Launch intent Intent { flg=0x10000000 cmp=com.eternaltwin.alphabounce/com.godot.game.GodotAppLa
+uncher } with parameters []
+D/ForceDarkHelper( 9518): updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@
+8e01463
+V/GodotActivity( 9518): Creating new Godot fragment instance.
+V/Godot   ( 9518): Initializing Godot plugin registry
+I/GodotPluginRegistry( 9518): Registering runtime plugin AndroidRuntime
+V/Godot   ( 9518): InitEngine with params: [--xr_mode_regular, --xr-mode, off, --fullscreen, --background_color, #00000
+0]
+V/Godot   ( 9518): Godot native layer initialization completed: true
+V/Godot   ( 9518): Setting up native layer with params: [--xr-mode, off, --fullscreen]
+V/Godot   ( 9518): Godot native layer setup completed
+V/Godot   ( 9518): OnInitRenderView: GodotFragment{4246289} (fe76025a-3806-4019-b3f1-fd6c83707e04 id=0x7f07002c)
+D/Godot   ( 9518): Render view should be transparent: false
+D/Godot   ( 9518): renderingDevice: vulkan (ProjectSettings)
+D/Godot   ( 9518): 			renderer: mobile (ProjectSettings)
+V/Godot   ( 9518): OnStart: GodotFragment{4246289} (fe76025a-3806-4019-b3f1-fd6c83707e04 id=0x7f07002c)
+V/Godot   ( 9518): OnResume: GodotFragment{4246289} (fe76025a-3806-4019-b3f1-fd6c83707e04 id=0x7f07002c)
+D/AppUpdateXmsfLauncher( 4698): activityResumed intent : Intent { cmp=com.eternaltwin.alphabounce/com.godot.game.GodotA
+pp (has extras) }
+W/Looper  ( 9518): Slow Looper main: Activity com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher is 689ms late
+ (wall=0ms running=0ms ClientTransaction{ callbacks=[android.app.servertransaction.TopResumedActivityChangeItem] }) bec
+ause of 2 msg, msg 1 took 293ms (seq=2 running=271ms runnable=4ms late=1ms h=android.app.ActivityThread$H w=110), msg 2
+ took 397ms (seq=3 running=313ms runnable=14ms io=9ms late=292ms h=android.app.ActivityThread$H w=159)
+I/XMSF-actMonitor_MonitorManager( 3711): onActivityResumed: ActivityInfo{name='com.godot.game.GodotApp', pkg='com.etern
+altwin.alphabounce', callerPkg='null', windowMode=-1, displayId=-1, appBounds=Rect(81, 0 - 2340, 1032), duration=-1},ac
+tivityInfoQueue:30,curMonitorStrategy=
+D/RecentsImpl( 2370): mActivityStateObserver com.godot.game.GodotApp
+W/RecentsImpl( 2370): onResumed className=com.godot.game.GodotApp   mIsInAnotherPro=false
+I/godot   ( 9518): Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+I/Timeline( 1952): Timeline: Activity_windows_visible id: ActivityRecord{b510f07 u0 com.eternaltwin.alphabounce/com.god
+ot.game.GodotAppLauncher t796} time:11430495
+I/ActivityTaskManager( 1952): Displayed com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher: +1s61ms
+I/godot   ( 9518): Vulkan 1.1.117 - Forward Mobile - Using Device #0: Qualcomm - Adreno (TM) 616
+I/godot   ( 9518): 
+V/Godot   ( 9518): OnGodotSetupCompleted
+V/Godot   ( 9518): OnGodotMainLoopStarted
+I/godot   ( 9518): R19_AC-1 PASS
+I/godot   ( 9518): R19_AC-2 PASS
+D/VA_ActivityUtils(10195): getTopActivity packageName:ComponentInfo{com.eternaltwin.alphabounce/com.godot.game.GodotApp
+}
+I/godot   ( 9518): DBG_KEY: keycode=49 physical=49
+I/godot   ( 9518): DBG_ENTER: idx=0 -> R19
+I/godot   ( 9518): R19_AC-1 PASS
+I/godot   ( 9518): R19_AC-2 PASS
+I/godot   ( 9518): R19_AC-3 PASS
+I/godot   ( 9518): R19_AC-4 PASS
+I/godot   ( 9518): R19_AC-5 PASS
+
+
