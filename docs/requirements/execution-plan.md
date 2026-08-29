@@ -170,7 +170,7 @@ adb logcat -d -v brief | grep -iE "godot|script error"
 | R00 | 20250101120000-… | 黄 | 0 | 已完成 | 2026-08-28 | project.godot + .export_presets.cfg |
 | **R19** | **20260101130018-Debug验收载具与测试框架.md** | **红** | **0** | **已完成(归档)** | **2026-08-29** | 真机 R19_AC-1..5 全 PASS + 截图 docs/evidence/R19.png/R19_menu.png/R19_launcher.png/R19_scene.png；headless 测试套件退出码 0 无 SCRIPT ERROR（docs/evidence/headless_run.log）；APK game/bin/AlphaBounce_debug.apk |
 | R01 | 20250101130000-Pad发射台系统.md | 黄 | 1 | 已完成(归档) | 2026-08-29 | headless 组件测试 R01_AC-1..5 全 PASS（tools/godot_std 二进制）；Game.tscn 集成 Pad 加载零 SCRIPT ERROR；真机入口 game/debug/R01_debug.tscn 自包含就绪（待 USB 设备执行） |
-| R02 | 20250101130001-关卡网格与关卡数据系统.md | 黄 | 1 | 待开始 | — | — |
+| R02 | 20250101130001-关卡网格与关卡数据系统.md | 黄 | 1 | 已完成(归档) | 2026-08-29 | headless 组件测试 R02_AC-1..5 全 PASS（test_level_suite.tscn）；Game.tscn 集成 LevelLoader 加载零 SCRIPT ERROR；R02_debug.tscn 真机入口逐 AC PASS |
 | R03 | 20250101130002-球体物理系统完整化.md | 红 | 1 | 待开始 | — | — |
 | R04 | 20250101130003-球-块碰撞集成.md | 黄 | 1 | 待开始 | — | — |
 | R05 | 20250101130004-任务系统.md | 黄 | 2 | 待开始 | — | — |
