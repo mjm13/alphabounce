@@ -24,7 +24,7 @@ defends: "未获用户文字批准即改代码/迁移，或 Agent 自标 Gate-2 
 
 1. **Gate-0**：`部分通过` = 歧义登记/闭环表/OQ 仍有待确认；`已驳回` stop-and-report。`DEF-*` 不触发部分通过。`待*` 态仅写状态；其它 Gate 状态须写审批人/日期。
 2. **Gate-1**：方案后停止；未**文字**批准禁止改代码/迁移/依赖（AskQuestion 不算）；批准后留痕**审批人 = git config user.name**（可选 email），禁止泛称「用户」；**批准后同轮进入实现**（禁止反问是否开工；见 `session-recovery.md` Gate-1→实现链式）。
-3. **Gate-2**：验收前须人工签字；Agent 只提请，不得自标完成；签字留痕**审批人 = git config user.name**（可选 email），禁止泛称「用户」；**`--check-release` 须在 Gate-2 前执行**（closeout 步骤 4，不得签字后以外科方式首次跑 release 并停轮）；**签字后同轮进入 Gate-3**（禁止反问「是否归档」；见 `session-recovery.md` Gate-2→Gate-3 链式）。
+3. **Gate-2**：验收前须人工签字；Agent 只提请，不得自标完成；签字留痕**审批人 = git config user.name**（可选 email），禁止泛称「用户」；**`--check-release` 须在 Gate-2 前执行**（closeout 步骤 4，不得签字后以外科方式首次跑 release 并停轮）；**签字后同轮进入 Gate-3**（禁止反问「是否归档」；见 `session-recovery.md` Gate-2→Gate-3 链式）。（游戏/物理/交互/UI 需求另须先过**真机验收闭环**这一硬前置——见 `42-verification-output.mdc` #11 与 `godot-android-debug` 技能「真机验收闭环」；headless 单测/代码 review **不得冒充**真机验收，否则状态回置 `已实现待验收` 并登记缺陷。）
 4. **Gate-3**：Gate-2 后立即 `xijia-sync-knowledge`；任何档位强制；未完成不得开下一需求；若 `--check-release` 仍有 blocking，**在 Gate-3 链内修复后继续 Move**，不得停轮。
 
 # Change 类型

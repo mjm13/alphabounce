@@ -19,8 +19,8 @@ Godot 4.x 版 AlphaBounce 游戏项目，将 Haxe/Pixi.js 源码完整重构为 
 ## Execution plan（完全对标原版）
 
 - 完整执行计划与状态追踪表：`docs/requirements/execution-plan.md`（每完成一需求回填 状态/完成日期/验收证据）
-- 头条状态（2026-08-29）：R00 已完成；BASE-1/BASE-2 进行中；R01 已完成（2026-08-29，Pad发射台）；R02 已完成（2026-08-29，关卡网格与关卡数据系统）；R03 已完成（2026-08-29，球体物理系统完整化）；R04–R18 待开始。注：R02/R03 仅完成 Godot headless 模拟验收，**android-debug 真机闭环待补**（本环境无 Android SDK/adb/设备，见 `backlog.md` BL-20260829-01）
-- 真机验收门禁：游戏/物理/交互/敌人/UI 需求须 android-debug 闭环（构建→安装→启动→截图→logcat 零 ERROR）
+- 头条状态（2026-08-29）：R00 已完成；BASE-1/BASE-2 进行中；R01 已完成（2026-08-29，Pad发射台）；R02 已完成（2026-08-29，关卡网格与关卡数据系统）；R03 已完成（2026-08-29，球体物理系统完整化，**真机闭环已补跑**）；R04–R18 待开始。
+- 真机验收门禁（**不可绕过**，硬门禁）：游戏/物理/交互/敌人/UI 需求须 android-debug 真机闭环（构建→安装→启动→进 DebugLauncher 验收入口→logcat 抓 `R0x_AC` 全 PASS→截图→零 ERROR）；headless 单测/代码 review **不构成** Gate-2 完成证据。可复跑步骤与证据落盘见 `godot-android-debug` 技能「真机验收闭环」一节 + `42-verification-output.mdc` #11。
 
 ## Dev environment tips
 

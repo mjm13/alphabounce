@@ -36,7 +36,7 @@
 | BL-20250101-20 | v0.2.0 | 存档系统 | 存档版本号 | 首期无版本迁移 | P2 | open | 版本升级时 |
 | BL-20250101-21 | v0.2.0 | UI导出 | 应用图标设计 | 占位图标 | P2 | open | 美术资源到位后 |
 | BL-20250101-22 | v0.2.0 | UI导出 | Android Release AAB | 首期Debug即可 | P1 | open | 发布阶段 |
-| BL-20260829-01 | v0.1.0 | R02/R03 | android-debug 真机闭环（构建→安装→启动→logcat→截图，零 ERROR） | 本环境无 Android SDK/导出模板/adb/已连接设备，R02/R03 仅完成 Godot headless 模拟验收 | P1 | open | 真机环境就绪（或本机接入设备+安装 SDK）后由实现方跑通并补齐 docs/evidence 证据 |
+| BL-20260829-01 | v0.1.0 | R02/R03 | android-debug 真机闭环（构建→安装→启动→进 DebugLauncher 验收入口→logcat 抓 R0x_AC 全 PASS→截图→零 ERROR） | 已于 2026-08-29 在设备 582ddb67（MI_9_SE）跑通：R02_AC-1..5 / R03_AC-1..5 全 PASS + 零 Godot ERROR/SCRIPT ERROR + 截图 docs/evidence/R02.png、R03.png | P1 | done | 对应 shipped 文档真机小节已补证据，Gate-2 已验收 |
 
 ## 维护规则
 

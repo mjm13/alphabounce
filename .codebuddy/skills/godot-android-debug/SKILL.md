@@ -83,23 +83,26 @@ version: "1.1.0"
 - Godot 只识别 `export_presets.cfg`（项目里是 `.export_presets.cfg` 点文件，需复制为 `export_presets.cfg`）。
 - 导出模板需挂到 `C:\Users\mjm13\AppData\Roaming\Godot\export-templates\4.7.1-stable`（注意是**连字符**目录名）。
 
-已封装脚本 `game/build_android.bat`（自动建 junction + 设 ANDROID_HOME/JAVA_HOME/PATH + 导出）：
+> 项目当前**没有** `game/build_android.bat`（早期版本引用过，已不存在）。用下方手动命令导出（路径均已实测可用）。
+> ⚠ **Godot 二进制**：本环境**只有** `tools/godot_std/Godot_v4.7.1-stable_win64.exe` 可运行（`tools/godot`、`tools/godot_official` 副本启动即 Access Violation，见 `AGENTS.md`「Dev environment tips」）。导出用这个二进制加 `--headless`。
 
 ```powershell
-cmd /c "D:\Project\Self\alphabounce\game\build_android.bat"
-# 产物：D:\Project\Self\alphabounce\game\bin\AlphaBounce_debug.apk
-```
-
-等效手动命令（供排错参考）：
-
-```powershell
-cmd /c 'mklink /J "C:\Users\mjm13\AppData\Roaming\Godot\export-templates\4.7.1-stable" "D:\Project\Self\alphabounce\tools\godot\templates\4.7.1.stable"'
+# 1) 建导出模板 junction（仅需一次；当前用户是 admin，不是 mjm13）
+cmd /c 'mklink /J "C:\Users\admin\AppData\Roaming\Godot\export-templates\4.7.1-stable" "D:\Project\Self\alphabounce\tools\godot\templates\4.7.1.stable"'
+# 2) Godot 只认 export_presets.cfg（不认 .export_presets.cfg）
+if (-not (Test-Path "D:\Project\Self\alphabounce\game\export_presets.cfg")) {
+  Copy-Item "D:\Project\Self\alphabounce\game\.export_presets.cfg" "D:\Project\Self\alphabounce\game\export_presets.cfg"
+}
+# 3) 导出
 $env:ANDROID_HOME="D:\Project\Self\alphabounce\tools\android-sdk"
 $env:ANDROID_SDK_ROOT="D:\Project\Self\alphabounce\tools\android-sdk"
 $env:JAVA_HOME="D:\Project\Self\alphabounce\tools\jdk"
 $env:PATH="$env:PATH;D:\Project\Self\alphabounce\tools\android-sdk\platform-tools;D:\Project\Self\alphabounce\tools\jdk\bin"
-& "D:\Project\Self\alphabounce\tools\godot\Godot_v4.7.1-stable_win64_console.exe" --headless --path "D:\Project\Self\alphabounce\game" --export-debug "Android" "bin/AlphaBounce_debug.apk"
+& "D:\Project\Self\alphabounce\tools\godot_std\Godot_v4.7.1-stable_win64.exe" --headless --path "D:\Project\Self\alphabounce\game" --export-debug "Android" "bin/AlphaBounce_debug.apk"
+# 产物：D:\Project\Self\alphabounce\game\bin\AlphaBounce_debug.apk
 ```
+
+> 导出时若报 `Could not find version of build tools that matches Target SDK, using 34.0.0` 属正常（自动选 build-tools 34）。`EXIT_CODE=0` 即成功。
 
 > 导出时若报 `Could not find version of build tools that matches Target SDK, using 34.0.0` 属正常（自动选 build-tools 34）。`EXIT_CODE=0` 即成功。
 
@@ -156,6 +159,38 @@ ws://127.0.0.1:6550
 ### 7. 迭代
 根据画面与日志回到第 1 步改码 → 重新导出 → 重装 → 验证，形成闭环。
 
+## 真机验收闭环（per-requirement acceptance closure · 强制）
+
+游戏/物理/交互/UI 类需求（R01–R18、BASE、R19 等）的 **Gate-2 必须走本闭环**，不得用 headless 单测冒充（硬门禁见 `42-verification-output.mdc` #11 与 `docs/requirements/execution-plan.md` §真机独立验收标准）。R19（DebugLauncher）已就绪：每个需求有 `debug/R0x_debug.tscn` 独立验收入口，进入后逐 AC 打印 `R0x_AC-n PASS/FAIL`，**不依赖任何未完成的上下游需求**。
+
+**标准 6 步（可复跑）**
+
+```bash
+# 0 构建（见上节）+ 安装 + 启动
+adb -s <SERIAL> install -r game/bin/AlphaBounce_debug.apk
+adb shell am force-stop com.eternaltwin.alphabounce
+adb logcat -c
+adb shell am start -n com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher
+# 1 等 DebugLauncher 出现（约 3–5s，Debug 构建自动进入）；用键盘码快速进需求，无需点屏幕
+#    REQ_ITEMS 顺序：0=R19,1=R01,2=R02,3=R03,4=R04... 数字键 1-9,0 对应前 10 个
+#    R02(idx=2) -> KEYCODE_3(10)；R03(idx=3) -> KEYCODE_4(11)
+adb shell input keyevent 10   # -> R02
+# adb shell input keyevent 11  # -> R03
+# 2 抓取 AC 断言（须全部 PASS）。print() 走小写 `godot` 标签，勿用 -s Godot 漏掉
+adb logcat -d | findstr /i "R0x_AC"
+# 3 截图取证（先写设备再 pull，避免 exec-out 重定向被拒）
+adb shell screencap -p /sdcard/R0x.png
+adb pull /sdcard/R0x.png docs/evidence/R0x.png
+# 4 日志门禁：零 Godot ERROR / SCRIPT ERROR（仅看含 godot 的 ERROR，过滤系统服务误报）
+adb logcat -d | findstr /i "godot.*ERROR"
+adb logcat -d | findstr /i "SCRIPT ERROR"
+```
+
+- **通过判定**：步骤 2 全部 AC PASS **且** 步骤 4 零 ERROR **且** 步骤 3 截图符合视觉预期。
+- **证据落盘**：把 `docs/evidence/R0x.png` + logcat 片段 + 零 ERROR 结论写进该需求 shipped 文档「真机独立验收」小节，方可置 `Gate-2=已验收`、方可移入 `shipped`；否则状态回置 `已实现待验收` 并登记缺陷（禁止签字）。
+- **`<SERIAL>`**：取 `adb devices -l` 首列（当前示例 `582ddb67`）。
+- **常见串号**：若 DebugLauncher 未自动弹出，先 `am start` 后手动点 Debug 入口；`R03_debug.tscn` 内部实例化 `tests/test_ball_physics.tscn`，AC 由该测试场景打印。
+
 ## 已知坑（本项目实测）
 
 | 问题 | 现象 | 解决 |
@@ -168,6 +203,9 @@ ws://127.0.0.1:6550
 | adb 看不到设备 | `adb devices` 为空 | 仅用 `tools/android-sdk/platform-tools/adb.exe`；手机开 USB 调试并授权弹窗 |
 | 联网登录阻塞 | 真机停在登录界面 | `http_enabled=true` 时原作需 EternalTwin 账号；离线调试需区分登录阻塞与游戏 bug |
 | godot_mcp 桥接不生效 | 真机 `adb install` 的 APK 连不上 6550 / 收不到桥接 | `MCPGameBridge` 仅在 `EngineDebugger.is_active()` 激活，`godot_mcp` WS 服务跑在**编辑器**侧；独立 APK 用 `android-debug` MCP 即可，深度桥接需从编辑器带调试器部署到设备 |
+
+| logcat 抓不到 AC 断言 | `adb logcat -s Godot:V *:S` 只匹配大写 `Godot` 引擎标签，漏掉 `print()` 输出的小写 `godot` 标签 | 用 `adb logcat -d \| findstr /i "R0x_AC"`（全量 dump + grep）；错误门禁用 `findstr /i "godot.*ERROR"` |
+| 导出告警 Ball.tscn Parse Error / No project icon | 非致命；Ball.tscn 运行时可加载（R02/R03 真机 AC 均过），但缺 icon 与首行可疑应修 | Project Settings 设 Application→Config→Icon；核查 `scenes/entities/Ball.tscn` 首行是否被误改 |
 
 ## 验证清单
 
