@@ -19,7 +19,7 @@ Godot 4.x 版 AlphaBounce 游戏项目，将 Haxe/Pixi.js 源码完整重构为 
 ## Execution plan（完全对标原版）
 
 - 完整执行计划与状态追踪表：`docs/requirements/execution-plan.md`（每完成一需求回填 状态/完成日期/验收证据）
-- 头条状态（2026-08-28）：R00 已完成；BASE-1/BASE-2 进行中；R01–R18 待开始
+- 头条状态（2026-08-29）：R00 已完成；BASE-1/BASE-2 进行中；R01 已完成（2026-08-29，Pad发射台）；R02–R18 待开始
 - 真机验收门禁：游戏/物理/交互/敌人/UI 需求须 android-debug 闭环（构建→安装→启动→截图→logcat 零 ERROR）
 
 ## Dev environment tips
@@ -28,6 +28,8 @@ Godot 4.x 版 AlphaBounce 游戏项目，将 Haxe/Pixi.js 源码完整重构为 
 - Godot Editor 打开 `game/` 目录即可开始开发
 - 触摸控制优先于虚拟按钮
 - 日常需求入口：`/xijia:start`
+- Godot 二进制：本环境仅 `tools/godot_std/Godot_v4.7.1-stable_win64.exe` 可运行；`tools/godot`、`tools/godot_official` 副本启动即 Access Violation，勿用。
+- R01 组件测试：`cd game; <godot_std 二进制> --headless --quit tests/test_pad/test_pad_suite.tscn`（逐 AC 打印 `R01_AC-n PASS`）。
 
 ## Build and test commands
 

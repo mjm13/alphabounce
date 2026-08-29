@@ -8,6 +8,7 @@ var missiles: int = 0
 
 @onready var camera = $Camera2D
 @onready var world = $World
+@onready var pad = $World/Pad
 @onready var hud_score = $HUD/Score
 @onready var hud_lives = $HUD/Lives
 @onready var hud_missile = $HUD/Missile
