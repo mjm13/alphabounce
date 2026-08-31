@@ -1,4 +1,4 @@
-﻿extends CharacterBody2D
+extends CharacterBody2D
 
 # [核心目的] 球体物理实体：承载位置/速度/类型，使用 Godot Physics2D（move_and_slide）驱动定步长物理更新，
 # 通过碰撞法向反射实现边界/方块反弹（替代原自定义 position += velocity*delta 手动积分）。
@@ -6,14 +6,19 @@
 # collide_with_block 接口，供 Pad（R01）与关卡/方块碰撞（R04）调用。
 
 const SPEED = 300.0
-const BOUNCE_DAMPING = 0.9
-const RESTITUTION = 0.95
+const BOUNCE_DAMPING = 0.9  # 预留：可选逐帧阻尼（默认不启用，保持原版匀速弹球）
+const RESTITUTION = 1.0     # [R17] 原版匀速弹球：反弹不衰减速度，保持恒定速率
 
 @export var ball_type: int = 0  # 0: normal, 1: fire, 2: ice
 
 var is_launched: bool = false
 var acceleration: Vector2 = Vector2.ZERO  # 外部设置的加速度（如重力）
-var friction: float = BOUNCE_DAMPING     # 每帧速度衰减系数（摩擦）
+var friction: float = 1.0                 # 默认无逐帧衰减，保持原版匀速弹球手感
+
+# [R15/R18] 球体视觉帧循环：10 张单帧图（mcBall/01..10.png）逐帧切换，还原原版彩色旋转球。
+var _frames: Array = []
+var _frame_idx: int = 0
+var _frame_timer: float = 0.0
 
 # [R04] 球-块碰撞：识别到方块并调用其 hit() 时发出，供验收入口断言 AC-1
 signal block_hit(block)
@@ -21,6 +26,32 @@ signal block_hit(block)
 func _ready() -> void:
 	velocity = Vector2.ZERO
 	is_launched = false
+	_setup_sprite()
+
+# [R15/R18] 球体视觉：用 10 张单帧图（mcBall/01..10.png）构建帧序列并循环切换贴图，
+# 还原原版彩色旋转球效果（避免直接贴整张精灵表导致所有帧叠显成竖条假象）。
+func _setup_sprite() -> void:
+	var sp := get_node_or_null("Sprite2D")
+	if sp == null:
+		return
+	for i in range(1, 11):
+		var tex := load("res://resources/images/mcBall/%02d.png" % i)
+		if tex != null:
+			_frames.append(tex)
+	if _frames.size() > 0:
+		sp.texture = _frames[0]
+
+func _process(delta: float) -> void:
+	# [R15/R18] 逐帧切换球体贴图，形成彩色旋转/变色效果（不依赖 Godot 动画节点，确保跨版本稳定）。
+	if _frames.is_empty():
+		return
+	_frame_timer += delta
+	if _frame_timer >= 0.1:
+		_frame_timer = 0.0
+		_frame_idx = (_frame_idx + 1) % _frames.size()
+		var sp := get_node_or_null("Sprite2D")
+		if sp != null:
+			sp.texture = _frames[_frame_idx]
 
 func _physics_process(delta: float) -> void:
 	# [业务逻辑] 仅在发射后推进；先积分速度，再用 move_and_slide 物理步进，碰撞后按法向反射（restitution）。

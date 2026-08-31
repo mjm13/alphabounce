@@ -31,6 +31,8 @@ defends: "Gate 审批人被写成泛称「用户」而非 git 身份（docs/pitf
 10. **Gate-2 签字后同轮 Gate-3（硬约束）**：Gate-2 留痕后 **同轮**输出 Gate-3 执行摘要（trigger/preflight/sync/Move/closeout），禁止仅回复「下一步请确认 Gate-3」。`--check-release` blocking 在 Gate-3 链内修复，不得作为停轮理由。
 11. **真机验收门禁（硬约束，移动端/游戏需求 · 不可绕过）**：本项目为 Godot Android 真机游戏，任何触达运行表现/UI/物理/交互的需求，**真机未通过验收不得标记为完成**——不得置 `Gate-2=已验收`、不得移入 `shipped`。真机验收须走 `godot-android-debug` 技能「真机验收闭环」一节：构建 APK → `adb install` → `am start` 启动 → 进 DebugLauncher 对应 `debug/R0x_debug.tscn` 验收入口 → `logcat | grep R0x_AC` 全 PASS → 截图 `docs/evidence/R0x.png` → 零 Godot ERROR/SCRIPT ERROR。仅「代码就绪，待引擎执行」「代码 review 通过」「本机未装引擎故未跑」「headless 单测通过」**均不构成完成证据**；Gate-2 结论须附已执行的真机命令与产物（截图/日志）。**不可绕过**：本门禁是 Gate-2 的硬性前置，不得以「环境无设备/SDK」为由降级——环境工具链（`tools/android-sdk`、`tools/jdk`、`tools/godot/templates`、`tools/godot_std`）+ 真机均已齐备，闭环步骤见 `godot-android-debug` 技能；每个需求在 `debug/R0x_debug.tscn` 有独立验收入口（DebugLauncher 进入），逐 AC 打印 `R0x_AC-n PASS/FAIL`。
 
+12. **行为一致性（真机验收的实质判据，硬约束）**：验收必须以「运行时行为与原版 `D:\Project\Self\EternalTwin-Alphabounce` 一致」为最终判据，不能仅靠代码断言/计数器/「完成」文字通过。具体要求：(a) 真机截图不得为纯文字/计数/占位灰屏（如 R08 的「敌人:13 分子:7」+「敌人系统验收完成」），必须渲染真实玩法表现（精灵、关卡、HUD、敌人、交互），能直接看出行为；(b) 验收须与原版逐项比对（画面/操作/任务/物理手感），而非仅 `Rxx_AC-n PASS` 与零 ERROR；(c) 仅 headless 单测或「真机入口就绪（待 USB 执行）」不构成完成证据（违反 #11 且违反本判据）。本判据优先于单纯 AC PASS 与零 ERROR。
+
 # 输出要点
 
 - 必出极简状态块 + `### 下一步命令`（完整样例见 session-recovery）。

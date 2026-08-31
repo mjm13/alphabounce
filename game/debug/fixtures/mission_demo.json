@@ -1,0 +1,5 @@
+[
+  {"id": "mission_001", "title": "通关第一关", "cond_type": "COMPLETE_LEVEL", "cond_value": 1, "reward": "star"},
+  {"id": "mission_002", "title": "消除5个方块", "cond_type": "COLLECT_BLOCKS", "cond_value": 5, "reward": "missile"},
+  {"id": "mission_003", "title": "得分达到50", "cond_type": "REACH_SCORE", "cond_value": 50, "reward": "ball_special"}
+]

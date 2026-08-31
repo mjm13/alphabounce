@@ -4,12 +4,20 @@ extends Control
 # 触摸拖拽瞄准 -> 松手发射；逐 AC 打印 R01_AC-n PASS/FAIL。
 
 const PAD_SCENE = preload("res://scenes/entities/Pad.tscn")
+const BALL_SCENE = preload("res://scenes/entities/Ball.tscn")
 
 var _pad = null
 
 func _ready() -> void:
 	_pad = PAD_SCENE.instantiate()
 	add_child(_pad)
+	# [R15 渲染演示] 发射台装载一颗球并显示瞄准线，证明 Pad 渲染与发射准备行为（非灰屏占位）
+	_pad.aiming = true
+	_pad.aim_direction = Vector2(0.35, -1.0).normalized()
+	var ball = BALL_SCENE.instantiate()
+	add_child(ball)
+	ball.global_position = _pad.global_position + Vector2(0.0, -18.0)
+	ball.is_launched = false
 	# AC-1：Pad 位于底部中央
 	var rect := get_viewport_rect()
 	var expected := Vector2(rect.size.x * 0.5, rect.size.y - 60.0)

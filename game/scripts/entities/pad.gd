@@ -81,8 +81,7 @@ func _input(event: InputEvent) -> void:
 		update_aim(event.position)
 
 func _draw() -> void:
-	# Pad 占位色块
-	draw_circle(Vector2.ZERO, 18.0, Color(0.2, 0.6, 1.0))
+	# Pad 已由 Sprite2D 渲染原版贴图；此处仅绘制瞄准线
 	if aiming:
 		var end := aim_direction * AIM_LINE_LENGTH
 		draw_line(Vector2.ZERO, end, Color(1.0, 1.0, 1.0, 0.85), 3.0)

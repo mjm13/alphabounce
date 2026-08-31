@@ -1,0 +1,7 @@
+[
+  {"id": "ball_fire", "name": "火球", "price": 10, "type": "BALL"},
+  {"id": "ball_volty", "name": "电能球", "price": 15, "type": "BALL"},
+  {"id": "missile_std", "name": "标准导弹", "price": 5, "type": "MISSILE"},
+  {"id": "radar", "name": "雷达", "price": 8, "type": "RADAR"},
+  {"id": "drone_mine", "name": "采矿无人机", "price": 40, "type": "DRONE"}
+]

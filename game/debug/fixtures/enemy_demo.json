@@ -1,0 +1,25 @@
+{
+  "ev": {
+    "Dragon":      { "speed": 60,  "behavior": "dragon" },
+    "Drone":       { "speed": 40,  "behavior": "drone" },
+    "Generator":   { "cycle": 140, "behavior": "generator" },
+    "Indigestion": { "behavior": "indigestion" },
+    "Javelot":     { "speed": 300, "behavior": "javelot" },
+    "Ouverture":   { "range": 3,   "behavior": "ouverture" },
+    "Quasar":      { "ray": 100,   "behavior": "quasar" },
+    "Storm":       { "timer": 40,  "behavior": "storm" },
+    "UltraViolet": { "cycle": 4, "ammo": 30, "behavior": "ultraviolet" },
+    "Unification": { "behavior": "unification" },
+    "Wave":        { "behavior": "wave" }
+  },
+  "molecule": {
+    "M1": { "hp": 1, "speed": 50, "damage": 1 },
+    "M2": { "hp": 2, "speed": 70, "damage": 1 },
+    "M3": { "hp": 1, "speed": 40, "damage": 2 },
+    "M4": { "hp": 3, "speed": 60, "damage": 1 },
+    "M5": { "hp": 1, "speed": 90, "damage": 1 },
+    "M6": { "hp": 2, "speed": 55, "damage": 2 },
+    "M7": { "hp": 4, "speed": 35, "damage": 3 }
+  },
+  "guardian": { "health": 10 }
+}

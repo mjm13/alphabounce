@@ -173,23 +173,23 @@ adb logcat -d -v brief | grep -iE "godot|script error"
 | R02 | 20250101130001-关卡网格与关卡数据系统.md | 黄 | 1 | 已完成(归档) | 2026-08-29 | headless 组件测试 R02_AC-1..5 全 PASS（test_level_suite.tscn）；Game.tscn 集成 LevelLoader 加载零 SCRIPT ERROR；R02_debug.tscn 真机入口逐 AC PASS |
 | R03 | 20250101130002-球体物理系统完整化.md | 黄 | 1 | 已完成(归档) | 2026-08-29 | headless 组件测试 R03_AC-1..5 全 PASS（tests/test_ball_physics.tscn，move_and_slide + 4 边界 StaticBody2D 反弹验证）；Ball.tscn 加 PhysicsMaterial(bounce=0/friction=0)；R03_debug.tscn 真机入口逐 AC PASS |
 | R04 | 20250101130003-球-块碰撞集成.md | 黄 | 1 | 已完成(归档) | 2026-08-29 | 真机 DebugLauncher 进 R04 后 logcat `R04_AC-1..5` 全 PASS + 零 `E godot` ERROR；截图 docs/evidence/R04.png（HUD「分数:50 剩余方块:0」+「关卡完成! 分数=50」）；实现用 `move_and_slide()` 后 `get_last_slide_collision()` 识别 `blocks` 组（本 Godot 版本无 `body_entered`） |
-| R05 | 20250101130004-任务系统.md | 黄 | 2 | 待开始 | — | — |
-| R06 | 20250101130005-商店系统.md | 黄 | 2 | 待开始 | — | — |
-| R07 | 20250101130006-玩家存档系统.md | 黄 | 2 | 待开始 | — | — |
-| R08 | 20250101130007-敌人系统.md | 红 | 2 | 待开始 | — | — |
-| R09 | 20250101130008-触摸输入映射配置.md | 绿 | 2 | 待开始 | — | — |
-| R10 | 20250101130009-游戏循环状态机与关卡管理.md | 黄 | 2 | 待开始 | — | — |
-| R11 | 20250101130010-导弹系统.md | 黄 | 2 | 待开始 | — | — |
-| R12 | 20250101130011-音频系统.md | 绿 | 3 | 待开始 | — | —（架构预留+静音 stub，原版无音源）|
-| R13 | 20250101130012-粒子特效系统.md | 绿 | 3 | 待开始 | — | — |
-| R14 | 20250101130013-完整UI层与Android导出验证.md | 黄 | 3 | 待开始 | — | — |
-| R15 | 20260101130014-资产迁移（精灵）.md | 红 | 0 | 待开始 | — | —（删除音频迁移）|
-| R16 | 20260101130015-原版内容数据搬运.md | 红 | 0 | 待开始 | — | —（缩小：方块/敌人/任务/商店；关卡由关卡内容设计供给）|
-| **关卡内容设计** | **20260101130019-关卡内容设计.md** | **红** | **0** | **待开始** | **—** | **—** |
-| R17 | 20260101130016-物理对等校验.md | 红 | 1 | 待开始 | — | — |
-| R18 | 20260101130017-画面动画对等规格.md | 黄 | 0 | 待开始 | — | — |
-| BASE-1 | 20250101120001-物理系统基础.md | — | 基础 | 进行中 | — | 基础定理 Gate-2；Game 接入待 R03/R17 |
-| BASE-2 | 20250101120002-方块系统基础.md | — | 基础 | 进行中 | — | 基础类型 Gate-2；全量类型待 R16 |
+| R05 | 20250101130004-任务系统.md | 黄 | 2 | 已完成(归档) | 2026-08-30 | 真机 R05_AC-1..5 全 PASS + 截图 docs/evidence/R05.png + 零 ERROR（docs/evidence/R05_logcat.txt）；需求文件 Gate-2 已验收 |
+| R06 | 20250101130005-商店系统.md | 黄 | 2 | 已完成(归档) | 2026-08-30 | 真机 R06_AC-1..5 全 PASS + 截图 docs/evidence/R06.png + 零 ERROR（docs/evidence/R06_logcat.txt）；需求文件 Gate-2 已验收 |
+| R07 | 20250101130006-玩家存档系统.md | 黄 | 2 | 已完成(归档) | 2026-08-30 | 真机 R07_AC-1..5 全 PASS + 截图 docs/evidence/R07.png + 零 ERROR（docs/evidence/R07_logcat.txt）；需求文件 Gate-2 已验收 |
+| R08 | 20250101130007-敌人系统.md | 红 | 2 | 已完成(归档) | 2026-08-30 | 真机 R08_AC-1..7 全 PASS（11 ev 敌人 + 7 Molecule + GUARDIAN 仅导弹 + 危险方块链 + 碰撞伤害/GameOver）+ 零 ERROR；截图 docs/evidence/R08.png；需求文件 Gate-2 已验收（agent-auto）|
+| R09 | 20250101130008-触摸输入映射配置.md | 绿 | 2 | 已完成(归档) | 2026-08-31 | 真机 R09_AC-1..5 全 PASS + 截图 docs/evidence/R09.png（Pad + 最近动作: aim_release，证明 aim_start/move/release 映射链路渲染可见）+ 零 ERROR |
+| R10 | 20250101130009-游戏循环状态机与关卡管理.md | 黄 | 2 | 已完成(归档) | 2026-08-31 | 真机 R10_AC-1..5 全 PASS + 截图 docs/evidence/R10.png（HUD 分数:10 生命:2 + 真实 120 块关卡 + 球单帧彩色动画）+ 零 ERROR |
+| R11 | 20250101130010-导弹系统.md | 黄 | 2 | 已完成(归档) | 2026-08-31 | 真机 R11_AC-1..5 全 PASS + 截图 docs/evidence/R11.png（导弹击杀 GUARDIAN，HUD 导弹:0）+ 零 ERROR |
+| R12 | 20250101130011-音频系统.md | 绿 | 3 | 已完成(归档) | 2026-08-31 | 真机 R12_AC-1..5 全 PASS + 截图 docs/evidence/R12.png（AudioManager 静音 stub 架构预留，原版无音源）+ 零 ERROR |
+| R13 | 20250101130012-粒子特效系统.md | 绿 | 3 | 已完成(归档) | 2026-08-31 | 真机 R13_AC-1..5 全 PASS + 截图 docs/evidence/R13.png（方块击碎粒子爆发）+ 零 ERROR |
+| R14 | 20250101130013-完整UI层与Android导出验证.md | 黄 | 3 | 已完成(归档) | 2026-08-31 | 真机 R14 入口（KEYCODE_E）MainMenu 渲染 + APK 导出成功 + 零 ERROR；截图 docs/evidence/R14.png |
+| R15 | 20260101130014-资产迁移（精灵）.md | 红 | 0 | 已完成(归档) | 2026-08-31 | 真机 R15_AC-1..5 全 PASS（球/方块/敌人/发射台精灵资源核对）+ 球 Sprite2D 帧循环动画 + 敌人占位兜底（原版缺图精灵）+ 截图 docs/evidence/R15.png |
+| R16 | 20260101130015-原版内容数据搬运.md | 红 | 0 | 已完成(归档) | 2026-08-31 | 真机 R16_AC-1..5 全 PASS（120 块 10 类型关卡 level_001/002/003 程序化生成全类型）+ 零 ERROR；截图 docs/evidence/R16.png |
+| **关卡内容设计** | **20260101130019-关卡内容设计.md** | **红** | **0** | **已完成(归档)** | **2026-08-31** | **补齐独立 `LEVEL_debug.tscn` 入口；最终真机全量回归 LEVEL_AC-1..5 全 PASS + 截图 docs/evidence/LEVEL.png（三关各 120 块、全 10 类型方块墙渲染）+ 零 Godot ERROR** |
+| R17 | 20260101130016-物理对等校验.md | 红 | 1 | 已完成(归档) | 2026-08-31 | 真机 R17_AC-1..5 全 PASS（反弹速度恒定 300 匀速弹球，RESTITUTION=1.0 对齐原版手感）+ 截图 docs/evidence/R17d.png |
+| R18 | 20260101130017-画面动画对等规格.md | 黄 | 0 | 已完成(归档) | 2026-08-31 | 真机 R18_AC-1..4 全 PASS（球单帧循环动画、非整张精灵表）+ 截图 docs/evidence/R18.png |
+| BASE-1 | 20250101120001-物理系统基础.md | — | 基础 | 已完成(归档) | 2026-08-31 | 基础定理 Gate-2；Game 接入验证（球物理接入真实关卡）+ 真机 BASE1 闭环截图 docs/evidence/BASE1.png |
+| BASE-2 | 20250101120002-方块系统基础.md | — | 基础 | 已完成(归档) | 2026-08-31 | 基础类型 Gate-2；全量 10 类型方块 Game 接入渲染验证 + 真机 BASE2 闭环截图 docs/evidence/BASE2.png |
 
 ---
 

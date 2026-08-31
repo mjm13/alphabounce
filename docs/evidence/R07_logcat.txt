@@ -1,0 +1,31 @@
+08-30 17:51:23.259  1952  4089 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher} from uid 2000
+08-30 17:51:23.478  1952  1985 D Boost   : hostingType=activity, hostingName={com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher}, callerPackage=null, isSystem=true, isBoostNeeded=false.
+08-30 17:51:23.479  1952  1985 I ActivityManager: Start proc 25997:com.eternaltwin.alphabounce/u0a235 for activity {com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher} caller=null
+08-30 17:51:23.603 24889 25058 D VA_ActivityUtils: getTopActivity packageName:ComponentInfo{com.eternaltwin.alphabounce/com.godot.game.GodotApp}
+08-30 17:51:24.272 25997 25997 D ForceDarkHelper: updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@8e01463
+08-30 17:51:24.274 25997 25997 D ForceDarkHelper: updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@8e01463
+08-30 17:51:24.285 25997 25997 D GodotActivity: Launch intent Intent { flg=0x10000000 cmp=com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher } with parameters []
+08-30 17:51:24.330 25997 25997 D ForceDarkHelper: updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@8e01463
+08-30 17:51:24.710  3711 14737 I XMSF-actMonitor_MonitorManager: onActivityResumed: ActivityInfo{name='com.godot.game.GodotApp', pkg='com.eternaltwin.alphabounce', callerPkg='null', windowMode=-1, displayId=-1, appBounds=Rect(81, 0 - 2340, 1032), duration=-1},activityInfoQueue:30,curMonitorStrategy=
+08-30 17:51:24.710 25997 25997 W Looper  : Slow Looper main: Activity com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher is 621ms late (wall=513ms running=350ms ClientTransaction{ callbacks=[android.app.servertransaction.LaunchActivityItem] lifecycleRequest=android.app.servertransaction.ResumeActivityItem }) because of 2 msg, msg 2 took 618ms (seq=2 running=488ms runnable=74ms late=4ms h=android.app.ActivityThread$H w=110)
+08-30 17:51:24.710  4698  5188 D AppUpdateXmsfLauncher: activityResumed intent : Intent { cmp=com.eternaltwin.alphabounce/com.godot.game.GodotApp (has extras) }
+08-30 17:51:24.710 24889 25753 I VA_ActivityStateHelper: activityResumed componentName ComponentInfo{com.eternaltwin.alphabounce/com.godot.game.GodotApp}
+08-30 17:51:24.711 25997 25997 W Looper  : Slow Looper main: Activity com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher is 1135ms late (wall=0ms running=0ms ClientTransaction{ callbacks=[android.app.servertransaction.TopResumedActivityChangeItem] }) because of 3 msg, msg 2 took 618ms (seq=2 running=488ms runnable=74ms late=4ms h=android.app.ActivityThread$H w=110), msg 3 took 513ms (seq=3 running=350ms runnable=24ms late=621ms h=android.app.ActivityThread$H w=159)
+08-30 17:51:24.711  2370  2370 D RecentsImpl: mActivityStateObserver com.godot.game.GodotApp
+08-30 17:51:24.711  2370  2370 W RecentsImpl: onResumed className=com.godot.game.GodotApp   mIsInAnotherPro=false
+08-30 17:51:24.730  5594 15167 E atom    : compute failed, caused by CustomError(statusCode=ERROR_PKG_LOADING_BY_NOT_HIT, rawError=model pkg loading failed due to not hit
+08-30 17:51:24.763 25997 26303 I godot   : Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+08-30 17:51:24.798  1952  1977 I Timeline: Timeline: Activity_windows_visible id: ActivityRecord{832cb4e u0 com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher t832} time:42202295
+08-30 17:51:24.800  1952  1983 I ActivityTaskManager: Displayed com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher: +1s540ms
+08-30 17:51:24.869 25997 26303 I godot   : Vulkan 1.1.117 - Forward Mobile - Using Device #0: Qualcomm - Adreno (TM) 616
+08-30 17:51:24.870 24889 25058 D VA_ActivityUtils: getTopActivity packageName:ComponentInfo{com.eternaltwin.alphabounce/com.godot.game.GodotApp}
+08-30 17:51:26.060 25997 26303 I godot   : 
+08-30 17:51:26.805 25997 26303 I godot   : R19_AC-1 PASS
+08-30 17:51:26.925 25997 26303 I godot   : R19_AC-2 PASS
+08-30 17:51:33.774 25997 26303 I godot   : DBG_KEY: keycode=56 physical=56
+08-30 17:51:33.774 25997 26303 I godot   : DBG_ENTER: idx=7 -> R07
+08-30 17:51:33.794 25997 26303 I godot   : R07_AC-3 PASS
+08-30 17:51:33.795 25997 26303 I godot   : R07_AC-1 PASS
+08-30 17:51:33.795 25997 26303 I godot   : R07_AC-2 PASS
+08-30 17:51:33.795 25997 26303 I godot   : R07_AC-4 PASS
+08-30 17:51:33.796 25997 26303 I godot   : R07_AC-5 PASS

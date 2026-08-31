@@ -1,4 +1,4 @@
-﻿extends EditorScript
+extends EditorScript
 
 func _run():
 	print("Setting up MCP addon...")

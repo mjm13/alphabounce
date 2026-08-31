@@ -19,7 +19,7 @@ Godot 4.x 版 AlphaBounce 游戏项目，将 Haxe/Pixi.js 源码完整重构为 
 ## Execution plan（完全对标原版）
 
 - 完整执行计划与状态追踪表：`docs/requirements/execution-plan.md`（每完成一需求回填 状态/完成日期/验收证据）
-- 头条状态（2026-08-29）：R00 已完成；BASE-1/BASE-2 进行中；R01 已完成（2026-08-29，Pad发射台）；R02 已完成（2026-08-29，关卡网格与关卡数据系统）；R03 已完成（2026-08-29，球体物理系统完整化，**真机闭环已补跑**）；R04–R18 待开始。
+- 头条状态（2026-08-31）：R00–R18 + BASE-1/2 + 关卡内容设计 + R19 全部完成(归档)，均经**最终真机 DebugLauncher 全量 22 入口回归**逐 AC 验收 + 截图取证 + 零真实 Godot ERROR（系统 `E/chromium` 日志已排除）。本轮（2026-08-31）补齐并复核：R09 触摸输入映射（Pad + aim_release 渲染）、R10 游戏循环（120 块真实关卡 + 球动画）、R11 导弹系统（导弹击杀 GUARDIAN）、R12 音频静音 stub 架构预留、R13 粒子特效爆发、LEVEL 关卡内容设计（补齐独立 `LEVEL_debug.tscn` 入口，三关 360 块全 10 类型渲染）、R14 完整 UI 层、R15 资产迁移（球 Sprite2D 帧循环动画 + 敌人占位兜底）、R16 原版内容数据搬运（level_001/002/003 全 10 类型方块程序化生成）、R17 物理对等（RESTITUTION=1.0 匀速弹球，速度恒定 300）、R18 画面动画对等（球单帧循环、非整张精灵表）、BASE-1/2 接入 Game 闭环（球物理 + 10 类型方块渲染）、R08 敌人精灵视觉补齐（11 ev + 7 Molecule 实体渲染）。证据落盘 `docs/evidence/`。
 - 真机验收门禁（**不可绕过**，硬门禁）：游戏/物理/交互/敌人/UI 需求须 android-debug 真机闭环（构建→安装→启动→进 DebugLauncher 验收入口→logcat 抓 `R0x_AC` 全 PASS→截图→零 ERROR）；headless 单测/代码 review **不构成** Gate-2 完成证据。可复跑步骤与证据落盘见 `godot-android-debug` 技能「真机验收闭环」一节 + `42-verification-output.mdc` #11。
 
 ## Dev environment tips

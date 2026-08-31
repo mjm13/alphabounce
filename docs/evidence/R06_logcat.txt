@@ -1,0 +1,59 @@
+08-30 17:50:35.277  1952  4083 I ActivityTaskManager: START u0 {flg=0x10000000 cmp=com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher} from uid 2000
+08-30 17:50:35.399  1952  1985 D Boost   : hostingType=activity, hostingName={com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher}, callerPackage=null, isSystem=true, isBoostNeeded=false.
+08-30 17:50:35.422  1952  1985 I ActivityManager: Start proc 24392:com.eternaltwin.alphabounce/u0a235 for activity {com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher} caller=null
+08-30 17:50:35.869 24392 24392 D ForceDarkHelper: updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@8e01463
+08-30 17:50:35.872 24392 24392 D ForceDarkHelper: updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@8e01463
+08-30 17:50:35.878 24392 24392 D GodotActivity: Launch intent Intent { flg=0x10000000 cmp=com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher } with parameters []
+08-30 17:50:35.907 24392 24392 D ForceDarkHelper: updateByCheckExcludeList: pkg: com.eternaltwin.alphabounce activity: com.godot.game.GodotApp@8e01463
+08-30 17:50:36.176  4698  4732 D AppUpdateXmsfLauncher: activityResumed intent : Intent { cmp=com.eternaltwin.alphabounce/com.godot.game.GodotApp (has extras) }
+08-30 17:50:36.176  3711 26852 I XMSF-actMonitor_MonitorManager: onActivityResumed: ActivityInfo{name='com.godot.game.GodotApp', pkg='com.eternaltwin.alphabounce', callerPkg='null', windowMode=-1, displayId=-1, appBounds=Rect(81, 0 - 2340, 1032), duration=-1},activityInfoQueue:30,curMonitorStrategy=
+08-30 17:50:36.176 24392 24392 W Looper  : Slow Looper main: Activity com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher is 574ms late (wall=0ms running=0ms ClientTransaction{ callbacks=[android.app.servertransaction.TopResumedActivityChangeItem] }) because of 2 msg, msg 1 took 294ms (seq=2 running=264ms runnable=6ms late=2ms h=android.app.ActivityThread$H w=110), msg 2 took 373ms (seq=3 running=302ms runnable=14ms late=201ms h=android.app.ActivityThread$H w=159)
+08-30 17:50:36.178  2370  2370 D RecentsImpl: mActivityStateObserver com.godot.game.GodotApp
+08-30 17:50:36.178  2370  2370 W RecentsImpl: onResumed className=com.godot.game.GodotApp   mIsInAnotherPro=false
+08-30 17:50:36.194  5594 16775 E atom    : compute failed, caused by CustomError(statusCode=ERROR_PKG_LOADING_BY_NOT_HIT, rawError=model pkg loading failed due to not hit
+08-30 17:50:36.231 24392 24433 I godot   : Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+08-30 17:50:36.259  1952  1983 I ActivityTaskManager: Displayed com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher: +980ms
+08-30 17:50:36.280  1952  1977 I Timeline: Timeline: Activity_windows_visible id: ActivityRecord{4cdced0 u0 com.eternaltwin.alphabounce/com.godot.game.GodotAppLauncher t831} time:42153777
+08-30 17:50:36.299 24392 24433 I godot   : Vulkan 1.1.117 - Forward Mobile - Using Device #0: Qualcomm - Adreno (TM) 616
+08-30 17:50:37.126 24392 24433 I godot   : 
+08-30 17:50:37.897 24392 24433 I godot   : R19_AC-1 PASS
+08-30 17:50:38.025 24392 24433 I godot   : R19_AC-2 PASS
+08-30 17:50:38.823 24644 24823 E chromium: [ERROR:variations_seed_loader.cc(37)] Seed missing signature.
+08-30 17:50:39.679  1041  1310 E OMXNodeInstance: getConfig(0xf6428de0:google.mp3.decoder, ConfigAndroidVendorExtension(0x6f100004)) ERROR: Undefined(0x80001001)
+08-30 17:50:39.686  1041  2289 E OMXNodeInstance: getConfig(0xf6429200:google.mp3.decoder, ConfigAndroidVendorExtension(0x6f100004)) ERROR: Undefined(0x80001001)
+08-30 17:50:39.701 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error csp
+08-30 17:50:39.701 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error ||57577.live^$csp=script-src
+08-30 17:50:39.702 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error csp
+08-30 17:50:39.702 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error .html?android=hx*&_$csp=script-src
+08-30 17:50:39.702 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error csp
+08-30 17:50:39.703 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error .xyz/?channelCode=$csp=script-src
+08-30 17:50:39.703 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error csp
+08-30 17:50:39.703 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error /dayu2.html?channelCode=$csp=script-src
+08-30 17:50:39.731 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error websocket
+08-30 17:50:39.731 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error /socket?platform=*&href=$third-party,websocket
+08-30 17:50:39.732 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error csp
+08-30 17:50:39.732 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error ://*:*/yeyue.html?k=$csp=script-src
+08-30 17:50:39.732 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error csp
+08-30 17:50:39.732 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error ://*:*/chunyu.html?k=$csp=script-src
+08-30 17:50:39.736 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error generichide
+08-30 17:50:39.736 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error @@||colamanga.com^$generichide
+08-30 17:50:39.743 24889 25058 D VA_ActivityUtils: getTopActivity packageName:ComponentInfo{com.eternaltwin.alphabounce/com.godot.game.GodotApp}
+08-30 17:50:39.754 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(776)] <AdBlock> BlockingRuleMatcher::ParseOption error document
+08-30 17:50:39.754 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error  @@||acfun.cn^$document
+08-30 17:50:39.762 24834 24918 E chromium: [ERROR:web_runtime_media_feature.cc(48)] [(0x200411a40)MiuiVideo:SetFeature] miui_video_enabled: 1, miui_mse_enabled: 0, force_miui_controls: 0, support_float_window: 1, support_full_screen: 1, float_window_playing_text: 视频正在以小窗模式播放
+08-30 17:50:39.769  1041 11894 E OMXNodeInstance: getConfig(0xf6428f00:google.mp3.decoder, ConfigAndroidVendorExtension(0x6f100004)) ERROR: Undefined(0x80001001)
+08-30 17:50:39.885  1041 22439 E OMXNodeInstance: getConfig(0xf6428f00:google.mp3.decoder, ConfigAndroidVendorExtension(0x6f100004)) ERROR: Undefined(0x80001001)
+08-30 17:50:40.056 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error /$script
+08-30 17:50:40.056 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error /\.(com|cn|top|xyz)\/(j|K)\/[0-9]{6}$/$script,third-party
+08-30 17:50:40.056 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(813)] <AdBlock> BlockingRuleMatcher::ParseOption error /$third-party
+08-30 17:50:40.056 24644 24859 E chromium: [ERROR:blocking_rule_matcher.cc(750)] <AdBlock> BlockingRuleMatcher::Parse error /\.(cc|com|top|xyz)\/i\/v$/$third-party,xmlhttprequest
+08-30 17:50:40.826  1041 22439 E OMXNodeInstance: getConfig(0xf6428f00:google.mp3.decoder, ConfigAndroidVendorExtension(0x6f100004)) ERROR: Undefined(0x80001001)
+08-30 17:50:40.827 24889 25006 E ro.e    : 2026-08-30 17:50:40.823 [IO_task_2] ERROR ro.e - downloadService is null
+08-30 17:50:41.116  1041 22439 E OMXNodeInstance: getConfig(0xf6428f60:google.mp3.decoder, ConfigAndroidVendorExtension(0x6f100004)) ERROR: Undefined(0x80001001)
+08-30 17:50:45.822 24392 24433 I godot   : DBG_KEY: keycode=55 physical=55
+08-30 17:50:45.822 24392 24433 I godot   : DBG_ENTER: idx=6 -> R06
+08-30 17:50:45.827 24392 24433 I godot   : R06_AC-1 PASS
+08-30 17:50:45.827 24392 24433 I godot   : R06_AC-2 PASS
+08-30 17:50:45.827 24392 24433 I godot   : R06_AC-3 PASS
+08-30 17:50:45.827 24392 24433 I godot   : R06_AC-4 PASS
+08-30 17:50:46.288 24392 24433 I godot   : R06_AC-5 PASS

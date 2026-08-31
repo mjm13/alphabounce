@@ -8,9 +8,9 @@ const REQ_ITEMS := [
 	{"id": "R03", "name": "球体物理系统完整化"},
 	{"id": "R04", "name": "球-块碰撞集成"},
 	{"id": "R05", "name": "任务系统"},
-	{"id": "R06", "name": "商店系统"},
-	{"id": "R07", "name": "玩家存档系统"},
-	{"id": "R08", "name": "敌人系统（全量）"},
+	{"id": "R06", "name": "商店系统", "scene": "R06_shop_debug.tscn"},
+	{"id": "R07", "name": "玩家存档系统", "scene": "R07_save_debug.tscn"},
+	{"id": "R08", "name": "敌人系统（全量）", "scene": "R08_enemy_debug.tscn"},
 	{"id": "R09", "name": "触摸输入映射配置"},
 	{"id": "R10", "name": "游戏循环状态机与关卡管理"},
 	{"id": "R11", "name": "导弹系统"},
@@ -26,7 +26,75 @@ const REQ_ITEMS := [
 	{"id": "BASE2", "name": "方块系统基础"},
 ]
 
+# 静态预载 R05 验收入口，确保真机导出包包含该场景及其依赖（MissionManager / MissionPanel）。
+# headless 导出不会扫描未导入的新文件，preload 使其成为 DebugLauncher 的静态依赖而被打包。
+const R05_SCENE := preload("res://debug/R05_debug.tscn")
+
+# 静态预载 R06 验收入口，确保真机导出包含 ShopManager / ShopPanel 及其依赖。
+const R06_SCENE := preload("res://debug/R06_shop_debug.tscn")
+
+# 静态预载 R07 验收入口，确保真机导出包含 PlayerData 及其依赖。
+const R07_SCENE := preload("res://debug/R07_save_debug.tscn")
+
+# 静态预载 R08 验收入口，确保真机导出包含全量敌人系统（BaseEnemy/EvEnemy/Molecule/EnemyManager）。
+const R08_SCENE := preload("res://debug/R08_enemy_debug.tscn")
+
+# 静态预载 R01-R04 验收入口，确保 headless 导出也打包这些独立验收场景（避免仅字符串路径引用被漏打包）。
+const R01_SCENE := preload("res://debug/R01_debug.tscn")
+const R02_SCENE := preload("res://debug/R02_debug.tscn")
+const R03_SCENE := preload("res://debug/R03_debug.tscn")
+const R04_SCENE := preload("res://debug/R04_debug.tscn")
+
+# 静态预载 R09 验收入口，确保 headless 导出打包触摸输入映射场景及其依赖（TouchInputManager）。
+const R09_SCENE := preload("res://debug/R09_debug.tscn")
+
+# 静态预载 R10 验收入口，确保 headless 导出打包真实 Game 场景及其依赖（Game/LevelLoader/TouchInputManager）。
+const R10_SCENE := preload("res://debug/R10_debug.tscn")
+
+# 静态预载 R11 验收入口，确保 headless 导出打包导弹系统场景及其依赖（Missile）。
+const R11_SCENE := preload("res://debug/R11_debug.tscn")
+
+# 静态预载 R12 验收入口，确保 headless 导出打包音频系统场景及其依赖（AudioManager）。
+const R12_SCENE := preload("res://debug/R12_debug.tscn")
+
+# 静态预载 R13 验收入口，确保 headless 导出打包粒子特效系统场景及其依赖（ParticleManager）。
+const R13_SCENE := preload("res://debug/R13_debug.tscn")
+
+# 静态预载 BASE1/BASE2 验收入口，确保 headless 导出打包物理/方块系统基础场景。
+const BASE1_SCENE := preload("res://debug/BASE1_debug.tscn")
+const BASE2_SCENE := preload("res://debug/BASE2_debug.tscn")
+
+# 静态预载 R14 验收入口，确保 headless 导出打包完整 UI 层（MainMenu 及其依赖）。
+const R14_SCENE := preload("res://debug/R14_debug.tscn")
+
+# 静态预载 R16 验收入口，确保 headless 导出打包内容数据迁移场景及其依赖（Game/LevelLoader/Block）。
+const R16_SCENE := preload("res://debug/R16_debug.tscn")
+
+# 静态预载 R15 验收入口，确保 headless 导出打包资产迁移核对场景。
+const R15_SCENE := preload("res://debug/R15_debug.tscn")
+
+# 静态预载 R17 验收入口，确保 headless 导出打包物理对等校验场景及其依赖（Ball）。
+const R17_SCENE := preload("res://debug/R17_debug.tscn")
+
+# 静态预载 R18 验收入口，确保 headless 导出打包画面动画对等证据场景及其依赖（Ball）。
+const R18_SCENE := preload("res://debug/R18_debug.tscn")
+
+# 静态预载 LEVEL 验收入口，确保 headless 导出打包关卡内容设计场景及其依赖（LevelLoader）。
+const LEVEL_SCENE := preload("res://debug/LEVEL_debug.tscn")
+
 func _ready() -> void:
+	# 真机免点按自动跳转：若 user://debug_auto_req.txt 存在则直接进入对应需求场景
+	var auto_path := "user://debug_auto_req.txt"
+	if FileAccess.file_exists(auto_path):
+		var f := FileAccess.open(auto_path, FileAccess.READ)
+		if f != null:
+			var req_id := f.get_line().strip_edges()
+			f.close()
+			if req_id.length() > 0:
+				print("DBG_AUTOJUMP -> %s" % req_id)
+				_enter(req_id)
+				return
+
 	# AC-1 证据：DebugLauncher 自身加载并列出全部条目
 	print_ac("R19", 1, true)
 
@@ -57,7 +125,12 @@ func _on_req_pressed(req_id: String) -> void:
 	_enter(req_id)
 
 func _enter(req_id: String) -> void:
-	var path := "res://debug/%s_debug.tscn" % req_id
+	var scene_name := "%s_debug.tscn" % req_id
+	for item in REQ_ITEMS:
+		if item["id"] == req_id and item.has("scene"):
+			scene_name = item["scene"]
+			break
+	var path := "res://debug/%s" % scene_name
 	if ResourceLoader.exists(path):
 		get_tree().change_scene_to_file(path)
 	else:
