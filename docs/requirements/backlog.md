@@ -38,6 +38,8 @@
 | BL-20250101-22 | v0.2.0 | UI导出 | Android Release AAB | 首期Debug即可 | P1 | open | 发布阶段 |
 | BL-20260829-01 | v0.1.0 | R02/R03 | android-debug 真机闭环（构建→安装→启动→进 DebugLauncher 验收入口→logcat 抓 R0x_AC 全 PASS→截图→零 ERROR） | 已于 2026-08-29 在设备 582ddb67（MI_9_SE）跑通：R02_AC-1..5 / R03_AC-1..5 全 PASS + 零 Godot ERROR/SCRIPT ERROR + 截图 docs/evidence/R02.png、R03.png | P1 | done | 对应 shipped 文档真机小节已补证据，Gate-2 已验收 |
 
+| BL-20260831-01 | v0.3.0 | 关卡 | 全部24星区(星球)系统 | 仅3星静态JSON | P0 | open | 拆4切片 R25(星区数据ZoneInfo✅2026-08-31)/R26(星图导航)/R27(程序化关卡生成)/R28(端到端联通)；原版为按坐标+区域程序化生成，"24星"=24星区ZoneInfo |
+
 ## 维护规则
 
 - 仅收录来自 Gate-0 `partial/reject` 或收尾阶段显式 Deferred 的事项。
