@@ -20,6 +20,13 @@ run/main_scene="res://scenes/main/Main.tscn"
 config/features=PackedStringArray("4.7")
 config/icon="res://icon.svg"
 
+[autoload]
+
+MissionManager="*res://scripts/systems/mission_manager.gd"
+ShopManager="*res://scripts/systems/shop_manager.gd"
+PlayerData="*res://scripts/systems/player_data.gd"
+EnemyManager="*res://scripts/systems/enemy_manager.gd"
+
 [display]
 
 window/size/viewport_width=800

@@ -1,4 +1,4 @@
-﻿extends TestBase
+extends TestBase
 
 # R03 球体物理系统完整化 组件测试：覆盖 AC-1..AC-5。
 # 场景（test_ball_physics.tscn）含 Ball + 4 个边界 StaticBody2D；本脚本在 _physics_process 中驱动仿真。

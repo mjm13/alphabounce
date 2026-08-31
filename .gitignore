@@ -40,3 +40,16 @@ temp/
 # Godot editor export cache (regenerated on every export; not meaningful to track)
 game/.godot/exported/
 game/.godot/editor/export-*.cfg
+
+# Python caches
+**/__pycache__/
+*.pyc
+
+# Local signing keys (not for VCS)
+game/.android/
+
+# Stale duplicate export preset (Godot uses export_presets.cfg without leading dot)
+.export_presets.cfg
+
+# Godot editor cache (fully regenerated on open; not meaningful to track)
+game/.godot/
