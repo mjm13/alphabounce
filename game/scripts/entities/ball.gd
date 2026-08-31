@@ -8,6 +8,7 @@ extends CharacterBody2D
 const SPEED = 300.0
 const BOUNCE_DAMPING = 0.9  # 预留：可选逐帧阻尼（默认不启用，保持原版匀速弹球）
 const RESTITUTION = 1.0     # [R17] 原版匀速弹球：反弹不衰减速度，保持恒定速率
+const MAX_STEP = 8.0        # [R21] CCD 安全步长(px)：每物理子步位移上限，≤ 最薄碰撞体厚度，避免高速穿墙
 
 @export var ball_type: int = 0  # 0: normal, 1: fire, 2: ice
 
@@ -54,23 +55,38 @@ func _process(delta: float) -> void:
 			sp.texture = _frames[_frame_idx]
 
 func _physics_process(delta: float) -> void:
-	# [业务逻辑] 仅在发射后推进；先积分速度，再用 move_and_slide 物理步进，碰撞后按法向反射（restitution）。
+	# [R21][业务逻辑] 仅在发射后推进；先积分速度，再按 MAX_STEP 子步进 move_and_slide（CCD），
+	# 每步检测碰撞并按法向反射（restitution）。常态 speed=300 单帧 ~5px<MAX_STEP → 步数=1，行为等价无 CCD。
 	if not is_launched:
 		return
 	velocity += acceleration * delta
 	velocity *= friction
-	var pre := velocity
-	move_and_slide()
-	var collision := get_last_slide_collision()
-	if collision != null:
-		var normal := collision.get_normal()
-		velocity = pre.bounce(normal) * RESTITUTION
-		# [R04] 物理滑动碰撞识别方块并造成伤害（本 Godot 版本无 body_entered 信号，改用 get_slide_collision）
-		var collider = collision.get_collider()
-		if collider != null and collider.is_in_group("blocks"):
-			if collider.has_method("hit"):
-				collider.hit(1)
-			emit_signal("block_hit", collider)
+	var speed := velocity.length()
+	if speed < 0.001:
+		return
+	var phys_delta := get_physics_process_delta_time()
+	var remaining := speed * delta           # 本帧总位移
+	var steps := int(ceil(remaining / MAX_STEP))
+	if steps < 1:
+		steps = 1
+	for i in steps:
+		var dist := MAX_STEP if remaining > MAX_STEP else remaining
+		# 设置临时速度使本物理步恰好位移 dist（move_and_slide 内部按 phys_delta 移动）
+		velocity = velocity.normalized() * (dist / phys_delta)
+		move_and_slide()
+		var collision := get_last_slide_collision()
+		if collision != null:
+			var normal := collision.get_normal()
+			velocity = velocity.bounce(normal) * RESTITUTION
+			# [R04] 物理滑动碰撞识别方块并造成伤害（本 Godot 版本无 body_entered 信号，改用 get_slide_collision）
+			var collider = collision.get_collider()
+			if collider != null and collider.is_in_group("blocks"):
+				if collider.has_method("hit"):
+					collider.hit(1)
+				emit_signal("block_hit", collider)
+		remaining -= dist
+	# [R21] 末尾归一到原速率，保持匀速弹球（RESTITUTION=1.0），避免子步速度残差累积
+	velocity = velocity.normalized() * speed
 
 func collide_with_block(block_position: Vector2) -> void:
 	# [业务逻辑] 与方块碰撞：按入射方向反射速度（restitution），独立于 Godot 物理信号，便于单测。
