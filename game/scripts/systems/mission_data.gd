@@ -9,6 +9,7 @@ var title: String = ""
 var cond_type: String = ""
 var cond_value: int = 0
 var reward: String = ""
+var requires: Array[String] = []   # [R20] 前置任务 id 列表（0..N，构成无环 DAG）
 
 
 static func from_dict(d: Dictionary) -> MissionData:
@@ -20,6 +21,9 @@ static func from_dict(d: Dictionary) -> MissionData:
 	md.cond_type = str(d.get("cond_type", ""))
 	md.cond_value = int(d.get("cond_value", 0))
 	md.reward = str(d.get("reward", ""))
+	var raw_req = d.get("requires", [])
+	for r in raw_req:
+		md.requires.append(str(r))
 	if md.mission_id.is_empty():
 		return null
 	return md

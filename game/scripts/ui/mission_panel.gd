@@ -21,11 +21,26 @@ func refresh() -> void:
 		var h := HBoxContainer.new()
 		var icon := Label.new()
 		var st: int = MissionManager.get_status(m.mission_id)
-		var s_txt := "未开始" if st == -1 else ("进行中" if st == 0 else "已完成")
-		var icon_txt := "⬜" if st == -1 else ("🟦" if st == 0 else "✅")
+		var icon_txt: String
+		var s_txt: String
+		if st == -2:
+			icon_txt = "🔒"
+			s_txt = "锁定"
+		elif st == -1:
+			icon_txt = "⬜"
+			s_txt = "可接取"
+		elif st == 0:
+			icon_txt = "🟦"
+			s_txt = "进行中"
+		else:
+			icon_txt = "✅"
+			s_txt = "已完成"
 		icon.text = icon_txt
 		var lbl := Label.new()
-		lbl.text = "%s  [%s]" % [m.title, s_txt]
+		if st == -2:
+			lbl.text = "%s  [锁定] 需先完成：%s" % [m.title, MissionManager.missing_requires(m.mission_id)]   # [R20]
+		else:
+			lbl.text = "%s  [%s]" % [m.title, s_txt]
 		h.add_child(icon)
 		h.add_child(lbl)
 		_list.add_child(h)
