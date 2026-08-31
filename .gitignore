@@ -53,3 +53,18 @@ game/.android/
 
 # Godot editor cache (fully regenerated on open; not meaningful to track)
 game/.godot/
+
+# Build/test temp artifacts
+build_result.txt
+start2.txt
+*_ac_result.txt
+*_logcat_filtered.txt
+
+# Scratch helper scripts
+scripts/_*.gd
+scripts/_*.py
+strip_bom.ps1
+
+# Agent/runtime transient state
+.workbuddy/
+.codebuddy/teams/
