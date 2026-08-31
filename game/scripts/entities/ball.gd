@@ -71,13 +71,16 @@ func _physics_process(delta: float) -> void:
 		steps = 1
 	for i in steps:
 		var dist := MAX_STEP if remaining > MAX_STEP else remaining
-		# 设置临时速度使本物理步恰好位移 dist（move_and_slide 内部按 phys_delta 移动）
-		velocity = velocity.normalized() * (dist / phys_delta)
+		# 本物理步位移向量（碰撞前入射速度）。注意：Godot 4 的 move_and_slide 会改写 velocity 为
+		# 滑动速度（去掉法向分量），故反弹必须基于入射速度 incoming 反射；若基于 move_and_slide 之后的
+		# 速度反射，正面/斜碰都会丢失法向分量，导致球贴墙滑行甚至停滞（restitution 手感缺陷）。
+		var incoming := velocity.normalized() * (dist / phys_delta)
+		velocity = incoming
 		move_and_slide()
 		var collision := get_last_slide_collision()
 		if collision != null:
 			var normal := collision.get_normal()
-			velocity = velocity.bounce(normal) * RESTITUTION
+			velocity = incoming.bounce(normal) * RESTITUTION
 			# [R04] 物理滑动碰撞识别方块并造成伤害（本 Godot 版本无 body_entered 信号，改用 get_slide_collision）
 			var collider = collision.get_collider()
 			if collider != null and collider.is_in_group("blocks"):
