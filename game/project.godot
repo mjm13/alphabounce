@@ -18,7 +18,7 @@ godot_mcp/path="res://addons/godot_mcp/plugin.cfg"
 config/name="AlphaBounce"
 run/main_scene="res://scenes/main/Main.tscn"
 config/features=PackedStringArray("4.7")
-config/icon="res://icon.svg"
+config/icon="res://icon_alphabounce.png"
 
 [autoload]
 
@@ -68,3 +68,8 @@ tap_escape={
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
 anchors_and_margins/use_screen_constants=true
+
+[android]
+
+adaptive_icon_foreground="res://icon_alphabounce.png"
+adaptive_icon_background="res://icon_alphabounce.png"

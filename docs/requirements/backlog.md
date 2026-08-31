@@ -34,7 +34,7 @@
 | BL-20250101-18 | v0.2.0 | 游戏循环 | 球体穿墙CCD修复 | 首期可接受 | P1 | done | 已兑现为 R21 球体穿墙CCD修复（2026-08-31 交付，headless TDD 验证；真机待补） |
 | BL-20250101-19 | v0.2.0 | 球体物理 | restitution微调 | 手感优化 | P2 | done | 已兑现为 R23 球体反弹restitution物理手感回归（2026-08-31 交付；回归测试发现并修复 move_and_slide 后反射丢失法向分量的真实反弹缺陷，headless TDD 验证；真机待补） |
 | BL-20250101-20 | v0.2.0 | 存档系统 | 存档版本号 | 首期无版本迁移 | P2 | done | 已兑现为 R22 存档版本号与迁移（2026-08-31 交付，headless TDD 验证；真机待补） |
-| BL-20250101-21 | v0.2.0 | UI导出 | 应用图标设计 | 占位图标 | P2 | open | 美术资源到位后 |
+| BL-20250101-21 | v0.2.0 | UI导出 | 应用图标设计 | 占位图标 | P2 | done | 已兑现为 R24 应用图标设计与接入（2026-08-31 交付；AI 生成 Alphabounce 主题图标 + 接入 project.godot 桌面/Android 自适应图标；headless 工程加载零 icon ERROR；真机视觉验收待补） |
 | BL-20250101-22 | v0.2.0 | UI导出 | Android Release AAB | 首期Debug即可 | P1 | open | 发布阶段 |
 | BL-20260829-01 | v0.1.0 | R02/R03 | android-debug 真机闭环（构建→安装→启动→进 DebugLauncher 验收入口→logcat 抓 R0x_AC 全 PASS→截图→零 ERROR） | 已于 2026-08-29 在设备 582ddb67（MI_9_SE）跑通：R02_AC-1..5 / R03_AC-1..5 全 PASS + 零 Godot ERROR/SCRIPT ERROR + 截图 docs/evidence/R02.png、R03.png | P1 | done | 对应 shipped 文档真机小节已补证据，Gate-2 已验收 |
 
